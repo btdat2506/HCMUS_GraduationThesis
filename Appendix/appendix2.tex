@@ -1,0 +1,16 @@
+\appendix
+\renewcommand{\thechapter}{B} % Set Appendix Chapter Label to B
+
+\chapter{MỘT SỐ LỖI THƯỜNG GẶP}
+\label{Appendix2}
+
+Phần này bao gồm một số lỗi thường gặp và cách khắc phục trong quá trình triển khai và gỡ lỗi hệ thống Nios V với DMA.
+
+\section{Lỗi Tạo BSP hoặc Biên dịch Ứng dụng}
+\label{sec:trouble_bsp_app}
+
+Một lỗi phổ biến khi chạy lệnh \texttt{niosv-app} là báo không tìm thấy tệp hoặc thư mục nguồn.
+\begin{itemize}
+    \item \textbf{Nguyên nhân:} Đường dẫn đến thư mục \texttt{app}, \texttt{bsp}, hoặc tệp mã nguồn C (\texttt{-s=...}) không chính xác so với vị trí hiện tại (hoặc không tồn tại) của Nios V Shell. 
+    \item \textbf{Khắc phục:} Đảm bảo đã \texttt{cd} vào thư mục gốc của dự án Quartus (\texttt{DMANiosVIntern}) trước khi chạy lệnh \texttt{niosv-app}. Kiểm tra lại các đường dẫn tương đối (\texttt{software/app}, \texttt{software/bsp}) trong lệnh. Tên tệp mã nguồn C trong thư mục \texttt{app} phải khớp với tên được chỉ định bởi tham số \texttt{-s}.
+\end{itemize}

@@ -1,0 +1,132 @@
+@article{chipyard,
+  author={Amid, Alon and Biancolin, David and Gonzalez, Abraham and Grubb, Daniel and Karandikar, Sagar and Liew, Harrison and Magyar,   Albert and Mao, Howard and Ou, Albert and Pemberton, Nathan and Rigge, Paul and Schmidt, Colin and Wright, John and Zhao, Jerry and Shao, Yakun Sophia and Asanovi\'{c}, Krste and Nikoli\'{c}, Borivoje},
+  journal={IEEE Micro},
+  title={Chipyard: Integrated Design, Simulation, and Implementation Framework for Custom SoCs},
+  year={2020},
+  volume={40},
+  number={4},
+  pages={10-21},
+  doi={10.1109/MM.2020.2996616},
+  ISSN={1937-4143},
+}
+
+@inbook{gemini-dac,
+author = {Genc, Hasan and Kim, Seah and Amid, Alon and Haj-Ali, Ameer and Iyer, Vighnesh and Prakash, Pranav and Zhao, Jerry and Grubb, Daniel and Liew, Harrison and Mao, Howard and Ou, Albert and Schmidt, Colin and Steffl, Samuel and Wright, John and Stoica, Ion and Ragan-Kelley, Jonathan and Asanovic, Krste and Nikolic, Borivoje and Shao, Yakun Sophia},
+title = {Gemmini: Enabling Systematic Deep-Learning Architecture Evaluation via Full-Stack Integration},
+year = {2022},
+isbn = {9781665432740},
+publisher = {IEEE Press},
+url = {https://doi.org/10.1109/DAC18074.2021.9586216},
+abstract = {DNN accelerators are often developed and evaluated in isolation without considering the cross-stack, system-level effects in real-world environments. This makes it difficult to appreciate the impact of System-on-Chip (SoC) resource contention, OS overheads, and programming-stack inefficiencies on overall performance/energy-efficiency. To address this challenge, we present Gemmini, an open-source1, full-stack DNN accelerator generator. Gemmini generates a wide design-space of efficient ASIC accelerators from a flexible architectural template, together with flexible programming stacks and full SoCs with shared resources that capture system-level effects. Gemmini-generated accelerators have also been fabricated, delivering up to three orders-of-magnitude speedups over high-performance CPUs on various DNN benchmarks.},
+booktitle = {Proceedings of the 58th Annual ACM/IEEE Design Automation Conference},
+pages = {769–774},
+numpages = {6}
+}
+
+@techreport{asanovic2016rocketchip,
+  title={{The Rocket Chip Generator}},
+  author={Asanovi{\'c}, Krste and Avi{\v{z}}ienis, Rimas and Bachrach, Jonathan and Beamer, Scott and Biancolin, David and Celio, Christopher and Cook, Henry and Dabbelt, Palmer and Hauser, John and Izraelevitz, Adam and Karandikar, Sagar and Keller, Benjamin and Kim, Donggyu and Koenig, John and Lee, Yunsup and Love, Eric and Maas, Martin and Magyar, Albert and Mao, Howard and Moreto, Miquel and Ou, Albert and Patterson, David and Richards, Brian and Schmidt, Colin and Twigg, Stephen and Vo, Huy and Waterman, Andrew},
+  year={2016},
+  institution={Electrical Engineering and Computer Sciences, University of California, Berkeley},
+  number={UCB/EECS-2016-17},
+  url={http://www.eecs.berkeley.edu/Pubs/TechRpts/2016/EECS-2016-17.html}
+}
+
+@ARTICLE{celio2018broom,
+  author={Celio, Christopher and Chiu, Pi-Feng and Asanović, Krste and Nikolić, Borivoje and Patterson, David},
+  journal={IEEE Micro}, 
+  title={BROOM: An Open-Source Out-of-Order Processor With Resilient Low-Voltage Operation in 28-nm CMOS}, 
+  year={2019},
+  volume={39},
+  number={2},
+  pages={52-60},
+  keywords={Open source software;Random access memory;Design methodology;CMOS process;Generators;Voltage control;Agile software development},
+  doi={10.1109/MM.2019.2897782}}
+
+
+@inproceedings{zhao2020sonicboom_ieee,
+  title={{SonicBOOM: The 3rd Generation Berkeley Out-of-Order Machine}},
+  author={Zhao, Jerry and Gonzalez, Abraham and Korpan, Ben and Asanovic, Krste},
+  booktitle={2020 Workshop on Computer Architecture Research with RISC-V (CARRV)},
+  year={2020},
+  doi={10.1109/CARRV51705.2020.9408173},
+  publisher={IEEE}
+}
+
+
+
+@INPROCEEDINGS{6241660,
+  author={Bachrach, Jonathan and Vo, Huy and Richards, Brian and Lee, Yunsup and Waterman, Andrew and Avižienis, Rimas and Wawrzynek, John and Asanović, Krste},
+  booktitle={DAC Design Automation Conference 2012}, 
+  title={Chisel: Constructing hardware in a Scala embedded language}, 
+  year={2012},
+  volume={},
+  number={},
+  pages={1212-1221},
+  keywords={Hardware;Hardware design languages;Generators;Registers;Wires;Vectors;Finite impulse response filter;CAD},
+  doi={10.1145/2228360.2228584}
+}
+
+@inproceedings{bachrach2012chisel,
+  title={{Chisel: Constructing Hardware in a Scala Embedded Language}},
+  author={Bachrach, Jonathan and Asher, Huu and Jevnikar, Jonathan and Nikolic, Borivoje and Patterson, David and Asanovic, Krste},
+  booktitle={Proceedings of the 49th Annual Design Automation Conference (DAC)},
+  pages={645-654},
+  year={2012},
+  doi={10.1145/2228362.2228479}, 
+  publisher={ACM}
+}
+
+@inproceedings{10.1145/2228360.2228584,
+author = {Bachrach, Jonathan and Vo, Huy and Richards, Brian and Lee, Yunsup and Waterman, Andrew and Avi\v{z}ienis, Rimas and Wawrzynek, John and Asanovi\'{c}, Krste},
+title = {Chisel: constructing hardware in a Scala embedded language},
+year = {2012},
+isbn = {9781450311991},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/2228360.2228584},
+doi = {10.1145/2228360.2228584},
+abstract = {In this paper we introduce Chisel, a new hardware construction language that supports advanced hardware design using highly parameterized generators and layered domain-specific hardware languages. By embedding Chisel in the Scala programming language, we raise the level of hardware design abstraction by providing concepts including object orientation, functional programming, parameterized types, and type inference. Chisel can generate a high-speed C++-based cycle-accurate software simulator, or low-level Verilog designed to map to either FPGAs or to a standard ASIC flow for synthesis. This paper presents Chisel, its embedding in Scala, hardware examples, and results for C++ simulation, Verilog emulation and ASIC synthesis.},
+booktitle = {Proceedings of the 49th Annual Design Automation Conference},
+pages = {1216–1225},
+numpages = {10},
+keywords = {CAD},
+location = {San Francisco, California},
+series = {DAC '12}
+}
+
+@techreport{asanovic2014riscv,
+  author    = {Asanovi{'c}, Krste and Patterson, David A.},
+  title     = {Instruction sets should be free: The case for RISC-V},
+  institution = {EECS Department, University of California, Berkeley},
+  year      = {2014},
+  number    = {UCB/EECS-2014-146},
+  url       = {http://www.eecs.berkeley.edu/Pubs/TechRpts/2014/EECS-2014-146.html}
+}
+
+@misc{genc2019gemmini,
+  author       = {Genc, Hasan and Haj-Ali, Ameer and Iyer, Vighnesh and Mao, Howard and Schmidt, Colin and Amid, Alon and Zhao, Jerry and Grubb, Daniel and Liew, Harrison and Ou, Albert and Steffl, Samuel and Wright, John and Stoica, Ion and Ragan-Kelley, Jonathan and Asanovi{'c}, Krste and Nikoli{'c}, Borivoje and Shao, Yakun Sophia},
+  title        = {Gemmini: An agile systolic array generator enabling systematic evaluations of deep-learning architectures},
+  year         = {2019},
+  eprint       = {1911.09925},
+  archivePrefix = {arXiv},
+  primaryClass = {cs.AR}
+}
+
+@inproceedings{karandikar2018firesim,
+  author    = {Karandikar, Sagar and Mao, Howard and Kim, Donggyu and Biancolin, David and Amid, Alon and Lee, Dayeol and Han, Nathan and Gope, Dima and Schmidt, Colin and Eckert, Chris and Ou, Albert and Pemberton, Nathan and Wright, John and Cook, Henry and Asanovi{'c}, Krste and Nikoli{'c}, Borivoje and Bachrach, Jonathan},
+  title     = {{FireSim: FPGA-Accelerated Cycle-Exact Scale-Out System Simulation in the Public Cloud}},
+  booktitle = {Proceedings of the 45th Annual International Symposium on Computer Architecture (ISCA)},
+  pages     = {29-42},
+  year      = {2018},
+  doi       = {10.1109/ISCA.2018.00013}
+}
+
+@techreport{waterman2015riscvpriv,
+  author    = {Waterman, Andrew and Lee, Yunsup and Patterson, David A. and Asanovi{'c}, Krste},
+  title     = {The RISC-V instruction set manual volume II: Privileged architecture version 1.7},
+  institution = {EECS Department, University of California, Berkeley},
+  year      = {2015},
+  number    = {UCB/EECS-2015-49},
+  url       = {https://www2.eecs.berkeley.edu/Pubs/TechRpts/2015/EECS-2015-49.html}
+}

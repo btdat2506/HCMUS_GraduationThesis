@@ -1,0 +1,257 @@
+% Last update: 17/08/2024
+
+% Chú ý: đọc các phần chú ý đóng khung của file này và chỉnh lại cho phù hợp.
+
+\documentclass[twoside,a4paper,14pt,openright]{extreport}
+% font size
+\usepackage[fontsize=13pt]{scrextend}
+% Font tiếng Việt
+\usepackage[T5]{fontenc}
+\usepackage[utf8]{inputenc}
+\DeclareTextSymbolDefault{\DH}{T1}
+
+\usepackage{placeins} % Add this package
+
+% Tài liệu tham khảo
+\usepackage[
+	sorting=nty,
+	backend=bibtex,
+	defernumbers=true]{biblatex}
+\usepackage[unicode]{hyperref} % Bookmark tiếng Việt
+\addbibresource{References/references.bib}
+
+\makeatletter
+\def\blx@maxline{77}
+\makeatother
+
+% Chèn hình, các hình trong luận văn được để trong thư mục Images/
+\usepackage{graphicx}
+\graphicspath{ {Images/} }
+\usepackage{caption}
+\usepackage[export]{adjustbox}
+
+% Chèn và định dạng mã nguồn
+\usepackage{listings}
+\usepackage{color}
+\usepackage{xcolor}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% Chèn và định dạng mã giả
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+
+% Bảng biểu
+\usepackage{multirow}
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+% Đổi tên mặc định
+\renewcommand{\chaptername}{CHƯƠNG}
+\renewcommand{\figurename}{Hình}
+\renewcommand{\tablename}{Bảng}
+\renewcommand{\contentsname}{MỤC LỤC}
+\renewcommand{\listfigurename}{DANH SÁCH CÁC HÌNH}
+\renewcommand{\listtablename}{DANH SÁCH CÁC BẢNG}
+\renewcommand{\appendixname}{PHỤ LỤC}
+
+% Định dạng chapter
+\usepackage{titlesec}
+
+% Chỉ đánh số tới độ sâu là 3
+\setcounter{secnumdepth}{3}
+
+\titleformat{\chapter}
+    [block]
+    {\filcenter\normalfont\bfseries\normalsize}{\chaptername \ \thechapter :}{10pt}{\normalsize}
+\titlespacing*{\chapter}{0pt}{-10pt}{10pt} %khoảng cách giữa chapter và đầu trang
+
+\titleformat{\section}
+    {\normalfont\bfseries\normalsize}{\thesection}{1em}{}
+ 
+\titleformat{\subsection}
+    {\normalfont\bfseries\normalsize}{\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+    {\normalfont\bfseries\normalsize}{\thesubsubsection}{1em}{}
+
+% Dãn dòng 1.5
+\usepackage{setspace}
+\onehalfspacing
+
+% Thụt vào đầu dòng
+\usepackage{indentfirst}
+
+% Bottom right page numbering
+\usepackage{fancyhdr} % for use of \pageref{LastPage}
+\pagestyle{fancy} % Turn on the style
+\fancyhf{} % Start with clearing everything in the header and footer
+% Set the right side of the footer to be the page number
+\fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{0pt}%
+% Redefine plain style, which is used for titlepage and chapter beginnings
+% From https://tex.stackexchange.com/a/30230/828
+\fancypagestyle{plain}{%
+    \renewcommand{\headrulewidth}{0pt}%
+    \fancyhf{}%
+    \fancyfoot[R]{\thepage}%
+}
+
+% Canh lề
+\usepackage[
+  twoside,
+  top=20mm,
+  bottom=20mm,
+  left=25mm,
+  right=20mm,
+  footskip = 15mm,
+  includefoot]{geometry}
+
+% Trang bìa
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\newcommand\HRule{\rule{\textwidth}{1pt}}
+
+% Danh sách chữ viết tắt
+\usepackage{myacronyms}
+
+% ifelse
+\usepackage{ifthen}
+
+\newcommand\myemptypage{
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\newpage
+}
+
+\usepackage[inkscapelatex=false]{svg}
+\usepackage{tikz-timing}
+
+\usepackage{booktabs}   % Cho bảng đẹp hơn
+\usepackage{subcaption} % Cho hình ảnh con (subfigure)
+% ========================================================================================= %
+% CHÚ Ý: Thông tin chung về KLTN - sinh viên điền vào đây để tự động update các trang khác  %
+% ========================================================================================= %
+\newcommand{\displayTenSV}[1]{#1} % Dấu ~ là khoảng trắng không được tách (các chữ nối với nhau bằng dấu ~ sẽ nằm cùng 1 dòng
+\newcommand{\tenKL}{Thiết~kế~và~Tích~hợp~Bộ~điều~khiển DMA~Tùy~chỉnh~trên~FPGA trong~Hệ~thống~SoC~Nios~V/m} % Chú ý dấu ~ trong tên khóa luận
+\newcommand{\tenGVHD}{TS.~Huỳnh~Hữu~Thuận}
+\newcommand{\tenBM}{}
+\newcommand{\locationdateauto}[1]{Tp. #1, tháng \ifnum\month<10 0\fi\the\month/\the\year}
+\begin{document}
+
+\input{Title/title.tex}
+% Sau trang Title, các bạn chèn nhận xét gủa GVHD và GVPB. Nhận xét sẽ được giáo vụ phát sau buổi bảo vệ để các bạn đóng quyển.
+
+\pagenumbering{roman} % Đánh số i, ii, iii, ...
+
+%\addcontentsline{toc}{chapter}{Lời cam đoan}
+%\include{Appendix/reassurances}
+%\include{Appendix/editComfirmation}
+%\include{Appendix/thanks}
+%\include{Appendix/commitment}
+
+%\include{Appendix/tomtat}
+
+%\include{Appendix/tomtat_en}
+
+% \phantomsection
+% \addcontentsline{toc}{chapter}{Đề cương chi tiết}
+% \include{Appendix/decuong}
+
+% Mục lục, danh sách hình, danh sách bảng
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{MỤC LỤC}
+\tableofcontents
+% Danh sách chữ viết tắt
+\printglossary[type=\acronymtype,
+                title=DANH SÁCH CHỮ VIẾT TẮT, 
+                toctitle=DANH SÁCH CHỮ VIẾT TẮT
+                ]
+
+\cleardoublepage
+\newpage
+\phantomsection
+\addcontentsline{toc}{chapter}{\listfigurename}
+\listoffigures
+
+\cleardoublepage
+\newpage
+\phantomsection
+\addcontentsline{toc}{chapter}{\listtablename}
+\listoftables
+
+\cleardoublepage
+
+\pagenumbering{arabic} % Đánh số 1, 2, 3, ...
+
+% Các chương nội dung
+\include{chapter1}
+
+\include{chapter2}
+
+\include{chapter3}
+
+% \include{chapter4}
+
+% \include{chapter5}
+
+% \include{chapter6}
+
+% Công trình của tác giả (nếu không có thì comment 02 dòng dưới)
+\cleardoublepage
+\newpage
+\phantomsection
+%\addcontentsline{toc}{chapter}{DANH MỤC CÔNG TRÌNH CỦA TÁC GIẢ}
+%\include{Appendix/publish}
+
+% In tài liệu tham khảo
+\cleardoublepage
+\newpage
+\phantomsection
+\addcontentsline{toc}{chapter}{TÀI LIỆU THAM KHẢO}
+\printbibheading[title={TÀI LIỆU THAM KHẢO}]
+
+\printbibliography[heading=subbibliography, title={Tiếng Việt}, keyword=Viet, resetnumbers=true]
+
+\DeclareNameAlias{sortname}{last-first}
+%\DeclareNameAlias{default}{last-first}
+
+\printbibliography[heading=subbibliography, title={Tiếng Anh}, notkeyword=Viet, resetnumbers=true] 
+% ===================================================================== %
+% CHÚ Ý: phải gán lại resetnumbers=số tài liệu tham khảo tiếng Việt + 1 %
+% ===================================================================== %
+
+% Phần phụ lục
+\include{Appendix/appendix1}
+\include{Appendix/appendix2}
+
+\end{document} 

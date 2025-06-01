@@ -1,0 +1,31 @@
+\contentsline {chapter}{MỤC LỤC}{i}{section*.1}%
+\contentsline {chapter}{DANH SÁCH CHỮ VIẾT TẮT}{iii}{section*.3}%
+\contentsline {chapter}{DANH SÁCH CÁC HÌNH}{v}{section*.5}%
+\contentsline {chapter}{DANH SÁCH CÁC BẢNG}{vii}{section*.7}%
+\contentsline {chapter}{\numberline {1}INTRODUCTION}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {2}THEORETICAL FOUNDATION}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Chipyard Framework}{3}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Overview of Chipyard}{3}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Key Components of Chipyard}{3}{subsection.2.1.2}%
+\contentsline {section}{\numberline {2.2}Rocket Chip and RISC-V}{4}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}The RISC-V Instruction Set Architecture (ISA)}{4}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Rocket Chip SoC Generator}{5}{subsection.2.2.2}%
+\contentsline {section}{\numberline {2.3}Gemmini Accelerator}{7}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Linux on RISC-V SoCs}{8}{section.2.4}%
+\contentsline {section}{\numberline {2.5}Time-Series Anomaly Detection}{9}{section.2.5}%
+\contentsline {chapter}{\numberline {3}IMPLEMENTATION}{11}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Target SoC Architecture: Rocket Core 64-bit Big Core with Gemmini 16x16 Accelerator (\texttt {Rocket64b1gem16})}{11}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Key Architectural Components and Their Configuration}{12}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Gemmini Accelerator Integration and System Interface}{13}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Gemmini's Internal Architecture and Operational Parameters}{13}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}CPU Core and Base System Configuration}{15}{subsection.3.2.3}%
+\contentsline {section}{\numberline {3.3}Memory Hierarchy, Coherence, and System Interconnect}{16}{section.3.3}%
+\contentsline {section}{\numberline {3.4}FPGA Realization and Software Stack for Linux Environment}{16}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Boot Process and Software Components}{17}{subsection.3.4.1}%
+\contentsline {section}{\numberline {3.5}Chipyard Framework and Rationale for Time-Series Anomaly Detection}{19}{section.3.5}%
+\contentsline {section}{\numberline {3.6}Implementation of the Time-Series Anomaly Detection System}{20}{section.3.6}%
+\contentsline {chapter}{TÀI LIỆU THAM KHẢO}{21}{section*.10}%
+\contentsline {chapter}{\numberline {A}MÃ NGUỒN CỦA THIẾT KẾ}{23}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Mã Verilog Top-Level cho DMANiosV}{23}{section.A.1}%
+\contentsline {chapter}{\numberline {B}MỘT SỐ LỖI THƯỜNG GẶP}{25}{appendix.A}%
+\contentsline {section}{\numberline {B.1}Lỗi Tạo BSP hoặc Biên dịch Ứng dụng}{25}{section.A.1}%
