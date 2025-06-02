@@ -1,33 +1,26 @@
 \relax 
 \providecommand{\transparent@use}[1]{}
 \providecommand\hyper@newdestlabel[2]{}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}IMPLEMENTATION}{11}{chapter.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}IMPLEMENTATION DETAILS OF ANOMALY DETECTION SYSTEM}{23}{chapter.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{Chapter3}{{3}{11}{IMPLEMENTATION}{chapter.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}Target SoC Architecture: Rocket Core 64-bit Big Core with Gemmini 16x16 Accelerator (\texttt  {Rocket64b1gem16})}{11}{section.3.1}\protected@file@percent }
-\newlabel{sec:soc_config_rocket64b1gem16}{{3.1}{11}{Target SoC Architecture: Rocket Core 64-bit Big Core with Gemmini 16x16 Accelerator (\texttt {Rocket64b1gem16})}{section.3.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}Key Architectural Components and Their Configuration}{12}{section.3.2}\protected@file@percent }
-\newlabel{sec:key_config_components}{{3.2}{12}{Key Architectural Components and Their Configuration}{section.3.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Gemmini Accelerator Integration and System Interface}{13}{subsection.3.2.1}\protected@file@percent }
-\newlabel{sec:gemmini_integration}{{3.2.1}{13}{Gemmini Accelerator Integration and System Interface}{subsection.3.2.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Gemmini's Internal Architecture and Operational Parameters}{13}{subsection.3.2.2}\protected@file@percent }
-\newlabel{sec:gemmini_architecture}{{3.2.2}{13}{Gemmini's Internal Architecture and Operational Parameters}{subsection.3.2.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}CPU Core and Base System Configuration}{15}{subsection.3.2.3}\protected@file@percent }
-\newlabel{sec:cpu_base_config}{{3.2.3}{15}{CPU Core and Base System Configuration}{subsection.3.2.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.3}Memory Hierarchy, Coherence, and System Interconnect}{16}{section.3.3}\protected@file@percent }
-\newlabel{sec:memory_coherence_interconnect}{{3.3}{16}{Memory Hierarchy, Coherence, and System Interconnect}{section.3.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.4}FPGA Realization and Software Stack for Linux Environment}{16}{section.3.4}\protected@file@percent }
-\newlabel{sec:fpga_realization_software_stack}{{3.4}{16}{FPGA Realization and Software Stack for Linux Environment}{section.3.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Boot Process and Software Components}{17}{subsection.3.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3.5}Chipyard Framework and Rationale for Time-Series Anomaly Detection}{19}{section.3.5}\protected@file@percent }
-\newlabel{sec:framework_rationale_timeseries}{{3.5}{19}{Chipyard Framework and Rationale for Time-Series Anomaly Detection}{section.3.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.6}Implementation of the Time-Series Anomaly Detection System}{20}{section.3.6}\protected@file@percent }
-\newlabel{sec:implementation_of_the_time_series_anomaly_detection_system}{{3.6}{20}{Implementation of the Time-Series Anomaly Detection System}{section.3.6}{}}
+\newlabel{Chapter3}{{3}{23}{IMPLEMENTATION DETAILS OF ANOMALY DETECTION SYSTEM}{chapter.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Time-Series Anomaly Detection Algorithm}{23}{section.3.1}\protected@file@percent }
+\newlabel{sec:anomaly_detection_algorithm}{{3.1}{23}{Time-Series Anomaly Detection Algorithm}{section.3.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Dataset and Preprocessing}{23}{section.3.2}\protected@file@percent }
+\newlabel{sec:dataset_preprocessing}{{3.2}{23}{Dataset and Preprocessing}{section.3.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Software Implementation and Training}{23}{section.3.3}\protected@file@percent }
+\newlabel{sec:software_implementation_training}{{3.3}{23}{Software Implementation and Training}{section.3.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Deployment on Gemmini-Accelerated SoC}{23}{section.3.4}\protected@file@percent }
+\newlabel{sec:deployment_on_soc}{{3.4}{23}{Deployment on Gemmini-Accelerated SoC}{section.3.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.5}Performance Evaluation and Results}{23}{section.3.5}\protected@file@percent }
+\newlabel{sec:performance_evaluation_results}{{3.5}{23}{Performance Evaluation and Results}{section.3.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.6}Implementation of the Time-Series Anomaly Detection System}{23}{section.3.6}\protected@file@percent }
+\newlabel{sec:implementation_of_the_time_series_anomaly_detection_system}{{3.6}{23}{Implementation of the Time-Series Anomaly Detection System}{section.3.6}{}}
 \@setckpt{chapter3}{
-\setcounter{page}{21}
+\setcounter{page}{24}
 \setcounter{equation}{0}
-\setcounter{enumi}{0}
+\setcounter{enumi}{4}
 \setcounter{enumii}{0}
 \setcounter{enumiii}{0}
 \setcounter{enumiv}{0}
@@ -51,7 +44,7 @@
 \setcounter{citetotal}{0}
 \setcounter{multicitecount}{0}
 \setcounter{multicitetotal}{0}
-\setcounter{instcount}{25}
+\setcounter{instcount}{17}
 \setcounter{maxnames}{3}
 \setcounter{minnames}{1}
 \setcounter{maxitems}{3}
@@ -157,10 +150,10 @@
 \setcounter{bbx:relatedcount}{0}
 \setcounter{bbx:relatedtotal}{0}
 \setcounter{section@level}{0}
-\setcounter{Item}{0}
+\setcounter{Item}{8}
 \setcounter{Hfootnote}{0}
-\setcounter{bookmark@seq@number}{26}
-\setcounter{caption@flags}{0}
+\setcounter{bookmark@seq@number}{27}
+\setcounter{caption@flags}{2}
 \setcounter{continuedfloat}{0}
 \setcounter{lstnumber}{1}
 \setcounter{parentequation}{0}

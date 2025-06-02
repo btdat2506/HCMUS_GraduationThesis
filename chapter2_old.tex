@@ -1,0 +1,135 @@
+% Lưu ý: Đảm bảo đã thêm \usepackage{booktabs} và \usepackage{subcaption} vào main.tex
+% Lưu ý: Cần chuẩn bị các file ảnh từ PDF và thêm các môi trường \begin{figure}...\end{figure} tương ứng.
+\chapter{THEORETICAL FOUNDATION} % Revised Title
+\label{Chapter2}
+
+\section{Chipyard Framework}
+\label{sec:chipyard}
+
+\subsection{Overview of Chipyard}
+\label{sec:chipyard_overview}
+% \begin{figure}[htbp]
+%     \centering
+%     \includegraphics[width=0.8\textwidth]{figures/chipyard_overview.png}
+%     \caption{Overview of the Chipyard Framework}
+%     \label{fig:chipyard_overview}
+% \end{figure}
+
+Chipyard is an open-source System-on-Chip (SoC) design framework that facilitates the agile development of complex, customized hardware systems \cite{chipyard}. It provides an integrated environment that brings together a vast collection of \gls{rtl} (Register Transfer Level) generators, simulation tools, and implementation flows. The primary goal of Chipyard is to enable rapid architectural exploration, design, and evaluation of SoCs, particularly those incorporating specialized hardware accelerators and heterogeneous core configurations.
+
+\subsection{Key Components of Chipyard}
+\label{sec:chipyard_key_components}
+
+\begin{itemize}
+    \item \textbf{RTL Generators:} Chipyard leverages a rich library of open-source, generator-based IP blocks. These generators, primarily written in \gls{chisel} (Constructing Hardware In a Scala Embedded Language), allow for highly parameterized and composable hardware designs. This includes RISC-V cores (like Rocket and \gls{boom}), caches, interconnects, peripherals, and domain-specific accelerators \cite{chipyard}.
+
+    \item \textbf{SoC Configuration:} Designs in Chipyard are specified through a powerful configuration system. Users can define the SoC architecture, select IP blocks, and customize their parameters without directly modifying the \gls{rtl} source code. This promotes modularity and reusability \cite[p.~27]{chipyard}.
+
+    \item \textbf{FIRRTL Intermediate Representation:} Chisel designs are elaborated into \gls{firrtl} (Flexible Intermediate Representation for RTL). Chipyard utilizes \gls{firrtl} transformations to adapt the generated hardware for various downstream tools and flows, such as software simulation, \gls{fpga} emulation, and ASIC implementation \cite{chipyard}.
+
+    \item \textbf{Simulation and Verification:} Chipyard supports multiple simulation methodologies:
+
+    \begin{itemize}
+        \item Software RTL Simulation: Cycle-accurate simulation using tools like Verilator or commercial simulators for detailed debugging and verification \cite[p.~29]{chipyard}.
+
+        \item FPGA-Accelerated Simulation (FireSim): For faster, full-system validation with long-running workloads, Chipyard integrates FireSim. FireSim enables cycle-exact simulation on cloud-hosted \glspl{fpga}, providing a scalable and accessible platform for pre-silicon performance evaluation \cite{karandikar2018firesim, chipyard}. 
+
+        \item VLSI Implementation (Hammer): For physical design, Chipyard includes Hammer, a VLSI flow that abstracts process-technology and EDA-tool specifics, enabling more portable and reusable physical design scripts \cite{chipyard}.
+
+        \item Workload Management (FireMarshal): Chipyard provides FireMarshal for generating and managing software workloads, including Linux distributions, to run on the simulated or emulated hardware \cite{chipyard}.
+    \end{itemize}
+\end{itemize}
+
+Chipyard's methodology promotes an agile hardware development process, allowing for iterative design, continuous integration, and validation of physically realizable custom \glspl{soc}. This research utilizes Chipyard as the foundational framework for constructing and evaluating the Rocket Chip-based \gls{soc} with the Gemmini accelerator.
+
+\section{Rocket Chip and RISC-V}
+\label{sec:rocketchip_riscv}
+
+The foundation of the processing system developed in this thesis lies in the RISC-V instruction set architecture and its implementation through the Rocket Chip SoC generator.
+
+\subsection{The RISC-V Instruction Set Architecture (ISA)}
+\label{sec:riscv_isa}
+
+The RISC-V ISA represents a paradigm shift in processor design, moving away from proprietary, closed architectures towards a free and open standard. This openness is a crucial enabler for innovation, allowing researchers, academics, and industry professionals to design, implement, and extend processor architectures without restrictive licensing fees or access limitations \cite{asanovic2014riscv}. RISC-V is designed with simplicity, modularity, and extensibility at its core.
+
+Key characteristics of the RISC-V ISA relevant to this work include:
+\begin{itemize}
+    \item \textbf{Modularity:} The ISA is defined as a small base integer instruction set (e.g., RV32I for 32-bit, RV64I for 64-bit systems) with multiple standard optional extensions that can be added to meet specific application needs. This thesis focuses on an RV64I base. Common extensions include 'M' for integer multiplication and division, 'A' for atomic instructions, 'F' for single-precision floating-point, 'D' for double-precision floating-point, and 'C' for compressed instructions. The combination of IMAFD is often referred to as 'G' for general-purpose computing \cite{asanovic2016rocketchip}.
+
+    \item \textbf{Extensibility:} RISC-V reserves a significant portion of its opcode space for custom, non-standard extensions. This allows for the tight integration of specialized hardware, such as the Gemmini accelerator used in this research, directly into the processor's instruction set if desired, or via coprocessor interfaces.
+
+    \item \textbf{Privileged Architecture:} To support complex operating systems like Linux, RISC-V defines a privileged architecture with multiple modes of operation, including Machine (M), Supervisor (S), and User (U) modes. The Supervisor mode, along with mechanisms for virtual memory management (Memory Management Unit - MMU) and interrupt handling, is essential for OS functionality \cite{waterman2015riscvpriv}.
+
+    \item \textbf{Growing Ecosystem:} The open nature of RISC-V has fostered a rapidly expanding ecosystem of compatible cores, development tools (compilers like GCC and LLVM, simulators like Spike and QEMU), and operating system ports (including Linux and FreeBSD).
+\end{itemize}
+
+\subsection{Rocket Chip SoC Generator}
+\label{sec:rocketchip_generator}
+
+Rocket Chip is a highly influential open-source SoC generator that produces synthesizable RTL for systems based on the RISC-V ISA \cite{asanovic2016rocketchip}. It is a cornerstone of the Chipyard framework and is itself developed using Chisel. Instead of being a fixed processor design, Rocket Chip is a generator capable of producing a wide variety of SoC configurations, from simple microcontrollers to complex multi-core systems capable of running full operating systems.
+
+Key aspects of the Rocket Chip generator utilized or relevant to this thesis include:
+\begin{itemize}
+    \item \textbf{Core Generators:}
+    \begin{itemize}
+        \item Rocket Core: This is a highly configurable, in-order, scalar RISC-V core generator. It can be parameterized to implement various ISA subsets (e.g., RV64G as used in this project). Crucially for this research, it features a sophisticated Memory Management Unit (MMU) supporting page-based virtual memory, configurable branch prediction mechanisms, and non-blocking data caches. These features, along with its support for Supervisor mode, make it well-suited for running operating systems like Linux \cite[p.~4]{asanovic2016rocketchip}. This is the primary core utilized in this thesis.
+
+        \item BOOM (Berkeley Out-of-Order Machine): Rocket Chip also includes a generator for BOOM, an out-of-order, superscalar core designed for higher performance applications, demonstrating the generator's versatility \cite[p.~5]{asanovic2016rocketchip}.
+    \end{itemize}
+
+    \item \textbf{Cache Hierarchy:} The generator provides configurable L1 instruction and data caches for each core, as well as an optional shared L2 cache. Parameters such as cache size, associativity, number of banks, and replacement policies can be customized to explore different points in the design space \cite[p.~3]{asanovic2016rocketchip}.
+
+    \item \textbf{TileLink Interconnect:} Rocket Chip employs TileLink, an open-source, chip-scale interconnect protocol designed to connect various components within the SoC, including cores, caches, memory controllers, and peripherals. TileLink supports cache coherence, enabling the construction of complex, coherent multi-core systems and accelerator integrations \cite[p.~6]{asanovic2016rocketchip} \cite[p.~15]{chipyard}.
+
+    \item \textbf{RoCC (Rocket Custom Coprocessor) Interface:} This standardized interface facilitates the integration of custom hardware accelerators, termed RoCC accelerators, with Rocket or BOOM cores. Accelerators connected via RoCC can be issued custom instructions decoded by the core, can access core registers, and can interact with the memory system. They can share the core's L1 data cache and Page Table Walker (PTW) for virtual memory support, or connect directly to the TileLink fabric for higher bandwidth memory access \cite[p.~5]{asanovic2016rocketchip} \cite[p.~13]{chipyard}. The Gemmini accelerator in this thesis is integrated using this interface.
+\end{itemize}
+
+This research specifically leverages the Rocket core generator within the Chipyard framework to construct a 64-bit RISC-V system (based on the Rocket64b1gem16 configuration), which is then targeted for implementation and evaluation on a Xilinx VC707 FPGA board.
+
+\section{Gemmini Accelerator}
+\label{sec:gemmini_accelerator}
+
+Gemmini is a highly configurable, open-source systolic array-based matrix multiplication accelerator generator, designed to accelerate machine learning workloads, particularly deep neural networks \cite{genc2019gemmini, chipyard}. It is typically integrated into a Chipyard-based SoC as a RoCC accelerator, allowing it to be controlled by custom RISC-V instructions executed on a host core like Rocket.
+
+Key Features of Gemmini:
+\begin{itemize}
+    \item \textbf{Systolic Array Architecture:} Gemmini employs a 2D systolic array of processing elements (PEs) to perform matrix multiplications efficiently. The dimensions of this array, dataflow (e.g., weight-stationary, output-stationary), and data types are configurable.
+
+    \item \textbf{On-Chip Scratchpad Memory:} It includes dedicated on-chip SRAM (scratchpad memory) for storing input activations, weights, and partial sums, reducing reliance on off-chip memory bandwidth.
+
+    \item \textbf{Configurability:} Gemmini offers extensive parameterization, allowing designers to explore a wide design space. This includes the systolic array dimensions, scratchpad memory sizes, data precision, and the interface to the memory system.
+
+    \item \textbf{RoCC Integration:} As a RoCC accelerator, Gemmini can be issued commands by the CPU. These commands can configure the accelerator, load data into its scratchpads, and initiate matrix multiplication operations. It can leverage the CPU's virtual memory system through the RoCC interface for memory accesses \cite[p.~13]{chipyard}.
+\end{itemize}
+
+In this thesis, the Gemmini accelerator is integrated with the Rocket core to provide hardware acceleration for the matrix multiplication operations that are fundamental to many machine learning algorithms. The successful execution of tests from gemmini-rocc-tests confirms the functional integration of Gemmini within the built system.
+
+\section{Linux on RISC-V SoCs}
+\label{sec:linux_on_riscv}
+
+Running a full-fledged operating system like Linux on a custom-designed RISC-V SoC involves several key software and hardware components working in concert. The ability to boot Linux signifies a mature and functional hardware platform capable of supporting complex software stacks. The project eugene-tarassov/vivado-risc-v, referenced in the current results, provides a specific environment and set of configurations for achieving this on a Xilinx VC707 board.
+
+General components and processes involved include:
+\begin{itemize}
+    \item \textbf{RISC-V Privileged Architecture:} The RISC-V ISA includes a privileged architecture specification that defines different privilege modes (Machine, Supervisor, User), control and status registers (CSRs), and mechanisms for memory management (MMU) and interrupt handling. A Linux-capable core must implement the Supervisor mode and support virtual memory \cite{waterman2015riscvpriv}. Rocket Chip cores, like the one used, provide this support \cite{asanovic2016rocketchip}.
+
+    \item \textbf{Bootloader:} A bootloader is the first piece of software that runs after system reset. Its primary role is to initialize the hardware (e.g., memory controller, console) and then load the operating system kernel into memory and transfer execution to it. Common bootloaders for RISC-V include:
+    \begin{itemize}
+        \item Berkeley Boot Loader (BBL): Often used with Rocket Chip, BBL can run in Machine mode and provides a Supervisor-mode execution environment for the Linux kernel. It typically includes a device tree blob.
+
+        \item U-Boot: A more versatile and widely used bootloader that supports multiple architectures, including RISC-V.
+    \end{itemize}
+
+    \item \textbf{Device Tree (DTB):} The Device Tree Blob is a data structure passed to the kernel by the bootloader. It describes the hardware components of the system (e.g., number of cores, memory map, peripherals, interrupt controllers) in a standardized way, allowing the kernel to be hardware-agnostic to a certain extent.
+
+    \item \textbf{Linux Kernel:} A port of the Linux kernel for the RISC-V architecture is required. This kernel must include drivers for the specific peripherals present in the SoC (e.g., UART for console, network interface, block device controller if present).
+
+    \item \textbf{Root Filesystem:} Once the kernel is running, it mounts a root filesystem which contains the user-space applications, libraries, and system utilities that constitute the Linux distribution (e.g., Debian, Fedora, Buildroot).
+\end{itemize}
+
+The vivado-risc-v project likely provides pre-compiled versions or build scripts for these components, specifically tailored for the Rocket Chip configuration deployed on the VC707, including necessary FPGA-specific configurations (e.g., for DDR memory controller, Ethernet, UART through JTAG or physical pins). Successfully booting Debian Linux demonstrates that the custom SoC, including the Rocket core, memory system, and peripherals, are functioning correctly and are sufficiently robust to support a complex operating system.
+
+\section{Time-Series Anomaly Detection}
+\label{sec:time_series_anomaly}
+
+This subsection will be elaborated upon once the machine learning model for arrhythmia time-series anomaly detection is developed and implemented. It will cover the theoretical underpinnings of the chosen anomaly detection algorithms, relevant time-series analysis techniques, and how these map to the capabilities of the Gemmini-accelerated RISC-V platform.

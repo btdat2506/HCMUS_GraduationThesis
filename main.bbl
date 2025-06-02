@@ -358,6 +358,64 @@
     \field{year}{2016}
   \endentry
 
+  \entry{bachrach2012chisel}{inproceedings}{}{}
+    \name{author}{6}{}{%
+      {{hash=BJ}{%
+         family={Bachrach},
+         familyi={B\bibinitperiod},
+         given={Jonathan},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=AH}{%
+         family={Asher},
+         familyi={A\bibinitperiod},
+         given={Huu},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=JJ}{%
+         family={Jevnikar},
+         familyi={J\bibinitperiod},
+         given={Jonathan},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=NB}{%
+         family={Nikolic},
+         familyi={N\bibinitperiod},
+         given={Borivoje},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=PD}{%
+         family={Patterson},
+         familyi={P\bibinitperiod},
+         given={David},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=AK}{%
+         family={Asanovic},
+         familyi={A\bibinitperiod},
+         given={Krste},
+         giveni={K\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {ACM}%
+    }
+    \strng{namehash}{BJ+1}
+    \strng{fullhash}{BJAHJJNBPDAK1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{B}
+    \field{sortinithash}{B}
+    \field{booktitle}{Proceedings of the 49th Annual Design Automation
+  Conference (DAC)}
+    \verb{doi}
+    \verb 10.1145/2228362.2228479
+    \endverb
+    \field{pages}{645\bibrangedash 654}
+    \field{title}{{Chisel: Constructing Hardware in a Scala Embedded Language}}
+    \field{year}{2012}
+  \endentry
+
   \entry{genc2019gemmini}{misc}{}{}
     \name{author}{17}{}{%
       {{hash=GH}{%
@@ -599,6 +657,55 @@
     \field{title}{{FireSim: FPGA-Accelerated Cycle-Exact Scale-Out System
   Simulation in the Public Cloud}}
     \field{year}{2018}
+  \endentry
+
+  \entry{kung1982systolic}{article}{}{}
+    \name{author}{1}{}{%
+      {{hash=K}{%
+         family={Kung},
+         familyi={K\bibinitperiod},
+      }}%
+    }
+    \keyw{Costs;Hardware;Assembly systems;Computer architecture;Data flow
+  computing;Concurrent computing;Application software;Signal processing;Image
+  processing;Computer interfaces}
+    \strng{namehash}{K1}
+    \strng{fullhash}{K1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{K}
+    \field{sortinithash}{K}
+    \verb{doi}
+    \verb 10.1109/MC.1982.1653825
+    \endverb
+    \field{number}{1}
+    \field{pages}{37\bibrangedash 46}
+    \field{title}{Why systolic architectures?}
+    \field{volume}{15}
+    \field{journaltitle}{Computer}
+    \field{year}{1982}
+  \endentry
+
+  \entry{opensbi_project}{software}{}{}
+    \name{author}{1}{}{%
+      {{hash=R}{%
+         family={{RISC-V International OpenSBI Project Contributors}},
+         familyi={R\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{R1}
+    \strng{fullhash}{R1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{R}
+    \field{sortinithash}{R}
+    \field{howpublished}{GitHub repository}
+    \field{note}{Accessed: November 28, 2023}
+    \field{title}{{OpenSBI: RISC-V Open Source Supervisor Binary Interface}}
+    \verb{url}
+    \verb https://github.com/riscv-software-src/opensbi
+    \endverb
+    \field{year}{2023}
   \endentry
 
   \entry{waterman2015riscvpriv}{report}{}{}

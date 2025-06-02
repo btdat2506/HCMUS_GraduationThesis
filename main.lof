@@ -1,5 +1,13 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Logos: Chisel, FIRRTL, and CHIPS Alliance.}}{3}{figure.caption.7}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Chisel and FIRRTL workflow.}}{4}{figure.caption.8}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Chipyard logo.}}{5}{figure.caption.9}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Multiple disparate design flows supported by the Chipyard framework through generators and transformations. A series of FIRRTL transformations consumes generators with a custom configuration, and outputs appropriate Verilog and associated collateral for different design stage platforms.}}{7}{figure.caption.10}%
+\contentsline {figure}{\numberline {2.5}{\ignorespaces The Rocket core pipeline.}}{9}{figure.caption.11}%
+\contentsline {figure}{\numberline {2.6}{\ignorespaces The Rocket microarchitecture.}}{11}{figure.caption.12}%
+\contentsline {figure}{\numberline {2.7}{\ignorespaces Gemmini logo.}}{13}{figure.caption.13}%
+\contentsline {figure}{\numberline {2.8}{\ignorespaces Gemmini hardware architectural template overview.}}{14}{figure.caption.14}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

@@ -411,6 +411,9 @@ INPUT chapter1.aux
 INPUT .\chapter2.aux
 INPUT .\chapter2.aux
 INPUT chapter2.aux
+INPUT .\chapter3.aux
+INPUT .\chapter3.aux
+INPUT chapter3.aux
 INPUT .\Appendix\appendix1.aux
 INPUT .\Appendix\appendix1.aux
 INPUT Appendix\appendix1.aux
@@ -469,11 +472,11 @@ INPUT D:\Program Files\MikTex\texmfs\install\fonts\tfm\public\cm\cmsy6.tfm
 INPUT D:\Program Files\MikTex\texmfs\install\fonts\tfm\public\cm\cmex10.tfm
 INPUT D:\Program Files\MikTex\texmfs\install\fonts\tfm\public\amsfonts\cmextra\cmex9.tfm
 INPUT D:\Program Files\MikTex\texmfs\install\fonts\tfm\public\amsfonts\cmextra\cmex7.tfm
+INPUT D:\Program Files\MikTex\texmfs\install\fonts\tfm\vntex\vnr\vnr12.tfm
 OUTPUT main.toc
 INPUT .\main.acr
 INPUT .\main.acr
 INPUT main.acr
-INPUT D:\Program Files\MikTex\texmfs\install\fonts\tfm\vntex\vnr\vnr12.tfm
 INPUT .\main.lof
 INPUT .\main.lof
 INPUT main.lof
@@ -494,13 +497,79 @@ OUTPUT chapter2.aux
 INPUT .\chapter2.tex
 INPUT .\chapter2.tex
 INPUT chapter2.tex
+INPUT .\Images\01_Chisel_chisel.pdf
+INPUT .\Images\01_Chisel_chisel.pdf
+INPUT .\Images\01_Chisel_chisel.pdf
+INPUT .\Images\01_Chisel_chisel.pdf
+INPUT .\Images\01_Chisel_chisel.pdf
+INPUT .\Images\01_Chisel_chisel.pdf
+INPUT .\Images\01_Chisel_firrtl.pdf
+INPUT .\Images\01_Chisel_firrtl.pdf
+INPUT .\Images\01_Chisel_firrtl.pdf
+INPUT .\Images\01_Chisel_firrtl.pdf
+INPUT .\Images\01_Chisel_firrtl.pdf
+INPUT .\Images\01_Chisel_firrtl.pdf
+INPUT .\Images\01_Chisel_chips_alliance.pdf
+INPUT .\Images\01_Chisel_chips_alliance.pdf
+INPUT .\Images\01_Chisel_chips_alliance.pdf
+INPUT .\Images\01_Chisel_chips_alliance.pdf
+INPUT .\Images\01_Chisel_chips_alliance.pdf
+INPUT .\Images\01_Chisel_chips_alliance.pdf
 INPUT D:\Program Files\MikTex\texmfs\install\fonts\tfm\jknappen\ec\tcrm1200.tfm
-INPUT D:\Program Files\MikTex\texmfs\install\fonts\tfm\vntex\vnr\vnti12.tfm
-INPUT D:\Program Files\MikTex\texmfs\install\fonts\tfm\vntex\vnr\vncsc10.tfm
+INPUT .\Images\01_Chisel_flow.pdf
+INPUT .\Images\01_Chisel_flow.pdf
+INPUT .\Images\01_Chisel_flow.pdf
+INPUT .\Images\01_Chisel_flow.pdf
+INPUT .\Images\01_Chisel_flow.pdf
+INPUT .\Images\01_Chisel_flow.pdf
+INPUT .\Images\02_Chipyard_ChipyardLogo.pdf
+INPUT .\Images\02_Chipyard_ChipyardLogo.pdf
+INPUT .\Images\02_Chipyard_ChipyardLogo.pdf
+INPUT .\Images\02_Chipyard_ChipyardLogo.pdf
+INPUT .\Images\02_Chipyard_ChipyardLogo.pdf
+INPUT .\Images\02_Chipyard_ChipyardLogo.pdf
+INPUT .\Images\02_Chipyard_ChipyardFlow.pdf
+INPUT .\Images\02_Chipyard_ChipyardFlow.pdf
+INPUT .\Images\02_Chipyard_ChipyardFlow.pdf
+INPUT .\Images\02_Chipyard_ChipyardFlow.pdf
+INPUT .\Images\02_Chipyard_ChipyardFlow.pdf
+INPUT .\Images\02_Chipyard_ChipyardFlow.pdf
 INPUT D:\Program Files\MikTex\texmfs\install\tex\latex\vntex\t5cmtt.fd
 INPUT D:\Program Files\MikTex\texmfs\install\tex\latex\vntex\t5cmtt.fd
 INPUT D:\Program Files\MikTex\texmfs\install\tex\latex\vntex\t5cmtt.fd
 INPUT D:\Program Files\MikTex\texmfs\install\fonts\tfm\vntex\vnr\vntt12.tfm
+INPUT .\Images\03_RocketCore_RISCV_Rocket5Pipeline.pdf
+INPUT .\Images\03_RocketCore_RISCV_Rocket5Pipeline.pdf
+INPUT .\Images\03_RocketCore_RISCV_Rocket5Pipeline.pdf
+INPUT .\Images\03_RocketCore_RISCV_Rocket5Pipeline.pdf
+INPUT .\Images\03_RocketCore_RISCV_Rocket5Pipeline.pdf
+INPUT .\Images\03_RocketCore_RISCV_Rocket5Pipeline.pdf
+INPUT .\Images\03_RocketCore_RISCV_Rocket6pipeline.pdf
+INPUT .\Images\03_RocketCore_RISCV_Rocket6pipeline.pdf
+INPUT .\Images\03_RocketCore_RISCV_Rocket6pipeline.pdf
+INPUT .\Images\03_RocketCore_RISCV_Rocket6pipeline.pdf
+INPUT .\Images\03_RocketCore_RISCV_Rocket6pipeline.pdf
+INPUT .\Images\03_RocketCore_RISCV_Rocket6pipeline.pdf
+INPUT .\Images\04_Gemmini_Logo.pdf
+INPUT .\Images\04_Gemmini_Logo.pdf
+INPUT .\Images\04_Gemmini_Logo.pdf
+INPUT .\Images\04_Gemmini_Logo.pdf
+INPUT .\Images\04_Gemmini_Logo.pdf
+INPUT .\Images\04_Gemmini_Logo.pdf
+INPUT .\Images\04_Gemmini_ArchitectureOverview.pdf
+INPUT .\Images\04_Gemmini_ArchitectureOverview.pdf
+INPUT .\Images\04_Gemmini_ArchitectureOverview.pdf
+INPUT .\Images\04_Gemmini_ArchitectureOverview.pdf
+INPUT .\Images\04_Gemmini_ArchitectureOverview.pdf
+INPUT .\Images\04_Gemmini_ArchitectureOverview.pdf
+INPUT .\chapter3.tex
+INPUT .\chapter3.tex
+OUTPUT chapter3.aux
+INPUT .\chapter3.tex
+INPUT .\chapter3.tex
+INPUT chapter3.tex
+INPUT D:\Program Files\MikTex\texmfs\install\fonts\tfm\vntex\vnr\vnti12.tfm
+INPUT D:\Program Files\MikTex\texmfs\install\fonts\tfm\vntex\vnr\vncsc10.tfm
 INPUT .\Appendix\appendix1.tex
 INPUT .\Appendix\appendix1.tex
 OUTPUT Appendix\appendix1.aux
@@ -520,6 +589,9 @@ INPUT chapter1.aux
 INPUT .\chapter2.aux
 INPUT .\chapter2.aux
 INPUT chapter2.aux
+INPUT .\chapter3.aux
+INPUT .\chapter3.aux
+INPUT chapter3.aux
 INPUT .\Appendix\appendix1.aux
 INPUT .\Appendix\appendix1.aux
 INPUT Appendix\appendix1.aux
@@ -532,6 +604,10 @@ INPUT main.run.xml
 OUTPUT main.run.xml
 INPUT D:\Program Files\MikTex\texmfs\data\fonts\pk\ljfour\jknappen\ec\dpi600\tcrm1200.pk
 INPUT D:\Program Files\MikTex\texmfs\data\fonts\pk\ljfour\jknappen\ec\dpi600\tcrm1200.pk
+INPUT D:\Program Files\MikTex\texmfs\install\fonts\type1\public\amsfonts\cm\cmr12.pfb
+INPUT D:\Program Files\MikTex\texmfs\install\fonts\type1\public\amsfonts\cm\cmr12.pfb
+INPUT D:\Program Files\MikTex\texmfs\install\fonts\type1\public\amsfonts\cm\cmsy10.pfb
+INPUT D:\Program Files\MikTex\texmfs\install\fonts\type1\public\amsfonts\cm\cmsy10.pfb
 INPUT D:\Program Files\MikTex\texmfs\install\fonts\type1\vntex\vnr\vnbx12.pfb
 INPUT D:\Program Files\MikTex\texmfs\install\fonts\type1\vntex\vnr\vnbx12.pfb
 INPUT D:\Program Files\MikTex\texmfs\install\fonts\type1\vntex\vnr\vncsc10.pfb
