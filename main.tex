@@ -161,7 +161,7 @@
 % CHÚ Ý: Thông tin chung về KLTN - sinh viên điền vào đây để tự động update các trang khác  %
 % ========================================================================================= %
 \newcommand{\displayTenSV}[1]{#1} % Dấu ~ là khoảng trắng không được tách (các chữ nối với nhau bằng dấu ~ sẽ nằm cùng 1 dòng
-\newcommand{\tenKL}{Thiết~kế~và~Tích~hợp~Bộ~điều~khiển DMA~Tùy~chỉnh~trên~FPGA trong~Hệ~thống~SoC~Nios~V/m} % Chú ý dấu ~ trong tên khóa luận
+\newcommand{\tenKL}{Nghiên~cứu~FPGA~ứng~dụng~AI} % Chú ý dấu ~ trong tên khóa luận
 \newcommand{\tenGVHD}{TS.~Huỳnh~Hữu~Thuận}
 \newcommand{\tenBM}{}
 \newcommand{\locationdateauto}[1]{Tp. #1, tháng \ifnum\month<10 0\fi\the\month/\the\year}
@@ -220,7 +220,7 @@
 
 \include{chapter3}
 
-% \include{chapter4}
+\include{chapter4}
 
 % \include{chapter5}
 
@@ -240,18 +240,19 @@
 \addcontentsline{toc}{chapter}{TÀI LIỆU THAM KHẢO}
 \printbibheading[title={TÀI LIỆU THAM KHẢO}]
 
-\printbibliography[heading=subbibliography, title={Tiếng Việt}, keyword=Viet, resetnumbers=true]
+% \printbibliography[heading=subbibliography, title={Tiếng Việt}, keyword=Viet, resetnumbers=true]
 
 \DeclareNameAlias{sortname}{last-first}
 %\DeclareNameAlias{default}{last-first}
 
-\printbibliography[heading=subbibliography, title={Tiếng Anh}, notkeyword=Viet, resetnumbers=true] 
+% \printbibliography[heading=subbibliography, title={Tiếng Anh}, notkeyword=Viet, resetnumbers=true] 
+\printbibliography[heading=subbibliography, resetnumbers=true] 
 % ===================================================================== %
 % CHÚ Ý: phải gán lại resetnumbers=số tài liệu tham khảo tiếng Việt + 1 %
 % ===================================================================== %
 
 % Phần phụ lục
-\include{Appendix/appendix1}
-\include{Appendix/appendix2}
+% \include{Appendix/appendix1}
+% \include{Appendix/appendix2}
 
 \end{document} 

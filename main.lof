@@ -1,13 +1,28 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Logos: Chisel, FIRRTL, and CHIPS Alliance.}}{3}{figure.caption.7}%
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Chisel and FIRRTL workflow.}}{4}{figure.caption.8}%
-\contentsline {figure}{\numberline {2.3}{\ignorespaces Chipyard logo.}}{5}{figure.caption.9}%
-\contentsline {figure}{\numberline {2.4}{\ignorespaces Multiple disparate design flows supported by the Chipyard framework through generators and transformations. A series of FIRRTL transformations consumes generators with a custom configuration, and outputs appropriate Verilog and associated collateral for different design stage platforms.}}{7}{figure.caption.10}%
-\contentsline {figure}{\numberline {2.5}{\ignorespaces The Rocket core pipeline.}}{9}{figure.caption.11}%
-\contentsline {figure}{\numberline {2.6}{\ignorespaces The Rocket microarchitecture.}}{11}{figure.caption.12}%
-\contentsline {figure}{\numberline {2.7}{\ignorespaces Gemmini logo.}}{13}{figure.caption.13}%
-\contentsline {figure}{\numberline {2.8}{\ignorespaces Gemmini hardware architectural template overview.}}{14}{figure.caption.14}%
+\contentsline {figure}{\numberline {2.1}{\ignorespaces RISC-V is managed by RISC-V International. Source \blx@tocontentsinit {0}\cite {riscv2024members}}}{3}{figure.caption.7}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Instruction encoding formats in RV32I. Source \blx@tocontentsinit {0}\cite {waterman2014riscv}}}{7}{figure.caption.9}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Instructions in the RV32I base instruction set. Source \blx@tocontentsinit {0}\cite {waterman2014riscv}}}{7}{figure.caption.10}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Instruction encoding format for ADDIW in 64-bit architecture. \blx@tocontentsinit {0}\cite {waterman2014riscv}}}{10}{figure.caption.13}%
+\contentsline {figure}{\numberline {2.5}{\ignorespaces Encoding format for 64-bit I-type shift instructions. \blx@tocontentsinit {0}\cite {waterman2014riscv}}}{10}{figure.caption.14}%
+\contentsline {figure}{\numberline {2.6}{\ignorespaces Encoding format for 64-bit R-type shift instructions for word operations. \blx@tocontentsinit {0}\cite {waterman2014riscv}}}{10}{figure.caption.15}%
+\contentsline {figure}{\numberline {2.7}{\ignorespaces Encoding formats for 64-bit LOAD and STORE instructions. \blx@tocontentsinit {0}\cite {waterman2014riscv}}}{11}{figure.caption.16}%
+\contentsline {figure}{\numberline {2.8}{\ignorespaces Process of handling instructions through pipeline stages.}}{12}{figure.caption.17}%
+\contentsline {figure}{\numberline {2.9}{\ignorespaces Pipeline of Rocket core. Source \blx@tocontentsinit {0}\cite {asanovic2016rocket}}}{14}{figure.caption.18}%
+\contentsline {figure}{\numberline {2.10}{\ignorespaces Berkeley Out-of-Order Machine Processor Architecture. Source \blx@tocontentsinit {0}\cite {celio2015boom}}}{14}{figure.caption.19}%
+\contentsline {figure}{\numberline {2.11}{\ignorespaces Chipyard, developed by UC Berkeley. Source: \blx@tocontentsinit {0}\cite {zhao2021chipyard}}}{16}{figure.caption.20}%
+\contentsline {figure}{\numberline {2.12}{\ignorespaces Component structure of Chipyard. Source: \blx@tocontentsinit {0}\cite {zhao2021chipyard}}}{16}{figure.caption.21}%
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces \texttt {Chisel} as a library within \texttt {Scala}. Source: CHIPS Alliance.}}{19}{figure.caption.22}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Structure of a \texttt {Rocket} Tile.}}{22}{figure.caption.23}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Proposed structure of a single-core RISC-V processor system with a \texttt {Gemmini} \texttt {RoCC} accelerator.}}{23}{figure.caption.24}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Connection model in \texttt {TileLink} and its interfaces. Source: \blx@tocontentsinit {0}\cite {sifive2017tilelink}}}{24}{figure.caption.25}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Channels in a \texttt {TileLink} connection between two agents. Source: \blx@tocontentsinit {0}\cite {sifive2017tilelink}}}{25}{figure.caption.27}%
+\contentsline {figure}{\numberline {3.6}{\ignorespaces \texttt {TileLink} \texttt {TL-UL} connection structure. Source: \blx@tocontentsinit {0}\cite {sifive2017tilelink}}}{27}{figure.caption.28}%
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Implementation structure of a heterogeneous multi-core processor system.}}{28}{figure.caption.29}%
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Peripherals in the Rocket Chip base system.}}{29}{figure.caption.30}%
+\contentsline {figure}{\numberline {3.9}{\ignorespaces \texttt {RoCC} co-processor core and MMIO peripheral core in \texttt {Rocket Chip}.}}{30}{figure.caption.31}%
 \addvspace {10\p@ }
-\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces High-level overview of the \texttt {Gemmini} accelerator integrated with a host CPU (\texttt {Rocket Core}) and system memory hierarchy.}}{34}{figure.caption.32}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Conceptual diagram of the \texttt {Gemmini} RoCC interface with the host CPU (\texttt {RISC-V CPU}), PTW, and L2 Cache/System Memory.}}{37}{figure.caption.33}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Layered programming model for \texttt {Gemmini}.}}{39}{figure.caption.34}%

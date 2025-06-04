@@ -1,5 +1,8 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {table}{\numberline {2.1}{\ignorespaces ABI names and functions of registers in RV32I. Source \blx@tocontentsinit {0}\cite {waterman2014riscv}}}{6}{table.caption.8}%
+\contentsline {table}{\numberline {2.2}{\ignorespaces Pseudo-instructions and their corresponding standard instructions. Source \blx@tocontentsinit {0}\cite {waterman2014riscv}}}{8}{table.caption.11}%
+\contentsline {table}{\numberline {2.3}{\ignorespaces Development status of extended RISC-V instruction sets. Source \blx@tocontentsinit {0}\cite {waterman2014riscv}}}{9}{table.caption.12}%
 \addvspace {10\p@ }
-\addvspace {10\p@ }
+\contentsline {table}{\numberline {3.1}{\ignorespaces \texttt {TileLink} operational configurations. Source: \blx@tocontentsinit {0}\cite {sifive2017tilelink}}}{24}{table.caption.26}%
 \addvspace {10\p@ }

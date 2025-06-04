@@ -1,0 +1,147 @@
+% !TEX encoding = UTF-8 Unicode
+% Ensure this file is saved with UTF-8 encoding
+
+\chapter{IMPLEMENTATION DETAILS OF ANOMALY DETECTION SYSTEM}
+\label{Chapter3}
+
+% This chapter will focus on the specifics of the time-series anomaly detection system itself,
+% including the model architecture, software implementation, dataset used, and how it leverages
+% the Gemmini-accelerated hardware platform detailed in Chapter 2.
+
+\section{Time-Series Anomaly Detection Algorithm}
+\label{sec:anomaly_detection_algorithm}
+% Describe the specific anomaly detection algorithm chosen (e.g., LSTM-based autoencoder, Transformer, etc.)
+% Theoretical background of the chosen model architecture.
+% Why this model is suitable for time-series data and anomaly detection.
+% Mathematical formulation if necessary.
+
+\section{Dataset and Preprocessing}
+\label{sec:dataset_preprocessing}
+% Describe the dataset used for training and evaluation (e.g., ECG, sensor data).
+% Source of the dataset.
+% Characteristics of the data (sampling rate, features, normal vs. anomalous data).
+% Preprocessing steps (e.g., normalization, segmentation, feature extraction).
+
+\section{Software Implementation and Training}
+\label{sec:software_implementation_training}
+% Programming language and libraries used for model implementation (e.g., Python, TensorFlow, PyTorch).
+% Details of the model training process (e.g., loss function, optimizer, hyperparameters, training duration).
+% How the model was trained (e.g., on a workstation with GPUs, or on the target platform if applicable for pre-training).
+
+\section{Deployment on Gemmini-Accelerated SoC}
+\label{sec:deployment_on_soc}
+% How the trained model is deployed onto the RISC-V SoC with Gemmini.
+% Quantization process details (e.g., tools used, calibration dataset, resulting precision).
+% Software stack used on the SoC for running inference (e.g., custom C/C++ application, runtime libraries for Gemmini).
+% Interfacing with Gemmini: How the application issues commands to Gemmini for acceleration.
+% Data flow: How time-series data is fed to Gemmini and results are retrieved.
+
+\section{Performance Evaluation and Results}
+\label{sec:performance_evaluation_results}
+% Metrics used for evaluating anomaly detection performance (e.g., precision, recall, F1-score, ROC AUC).
+% Metrics used for evaluating hardware acceleration (e.g., inference latency, throughput, energy consumption) on Gemmini vs. CPU-only.
+% Experimental setup for evaluation.
+% Presentation and discussion of results.
+% Comparison with other relevant works if applicable.
+
+\section{Implementation of the Time-Series Anomaly Detection System}
+\label{sec:implementation_of_the_time_series_anomaly_detection_system}
+% This section will be elaborated upon once the machine learning model for 
+% arrhythmia time-series anomaly detection is developed and implemented. 
+% It will cover the theoretical underpinnings of the chosen anomaly detection 
+% algorithms, relevant time-series analysis techniques, and how these map to 
+% the capabilities of the Gemmini-accelerated RISC-V platform.
+
+% The old content below will be removed or was moved to Chapter 2.
+
+%This chapter details the hardware architecture of the custom System-on-Chip (SoC) designed for this research, and its realization on an FPGA platform. The SoC was architected using the Chipyard SoC generation framework, which integrates the Rocket Chip generator (Asanović et al., 2016) for the core SoC infrastructure and CPU, all described using the Chisel hardware construction language. The practical FPGA deployment, enabling a full Debian Linux environment on an AMD/Xilinx VC707 board (the target for this work), was achieved by leveraging and adapting the infrastructure provided by the vivado-risc-v project (Tarassov, n.d.). This project supplies the necessary scripts, Verilog-based peripheral controllers (e.g., for DDR memory via Vivado IP, and open-source UART, SD card, and Ethernet controllers), and build system modifications to bridge the gap between the generated SoC RTL and a functional Linux-capable FPGA system. This approach combines the flexibility of academic SoC generators with a robust path to hardware prototyping. The use of the open RISC-V Instruction Set Architecture (ISA) is central to this endeavor, promoting transparency and customizability.
+
+%The specific SoC configuration developed for this thesis is descriptively termed the "Rocket Core 64-bit Big Core with Gemmini 16x16 accelerator." Within the project's build and configuration system, this specific design point is identified as \texttt{Rocket64b1gem16}. This system integrates a Gemmini systolic array accelerator—a specialized hardware unit designed for efficient Deep Neural Network (DNN) computation (Genc et al., 2021)—with a general-purpose RISC-V Rocket CPU core. The overall design aims to create a balanced system capable of running a full Linux distribution (Debian) while providing significant hardware acceleration for the target time-series anomaly detection workloads. The following sections describe the key architectural features of this SoC and the underlying design decisions.
+
+%\section{Target SoC Architecture: Rocket Core 64-bit Big Core with Gemmini 16x16 Accelerator (\texttt{Rocket64b1gem16})}
+%\label{sec:soc_config_rocket64b1gem16}
+
+%The \texttt{Rocket64b1gem16} system embodies a complete SoC. At its heart is a 64-bit RISC-V Rocket CPU core, specifically configured as a "big" core variant. This CPU acts as the main general-purpose processor, responsible for executing the Debian Linux operating system, managing system resources and peripherals, and orchestrating tasks for the specialized Gemmini accelerator. As documented by Asanović et al. (2016), the Rocket core is typically a 5-stage, single-issue, in-order scalar processor. The "big" core designation in this context signifies the inclusion of critical features like a Memory Management Unit (MMU), which is indispensable for supporting virtual memory and thus enabling a sophisticated operating system like Linux. It also incorporates a Floating Point Unit (FPU) for handling scalar floating-point calculations, although the primary computationally intensive DNN tasks are offloaded to Gemmini.
+
+%The central accelerator component is the Gemmini unit, configured with a $16 \times 16$ systolic array of Processing Elements (PEs). Each PE within this array is designed to perform a multiply-accumulate (MAC) operation on the specified data types per clock cycle. This array structure forms a highly parallel computation engine, exceptionally effective for the matrix multiplication and convolution operations that are foundational to most DNN workloads. Gemmini interacts with the rest of the SoC via a 64-bit wide Direct Memory Access (DMA) engine, which facilitates high-bandwidth data transfers between Gemmini's internal memories and the main system memory.
+
+%The SoC's memory subsystem includes a shared L2 cache. This cache is designed to be inclusive, meaning it maintains a superset of the data stored in the CPU's private L1 caches. The L2 cache aims to reduce the average memory access latency for the CPU and can also enhance the performance of Gemmini's DMA transfers by serving as a fast, on-chip data buffer. For software development and debugging purposes, the system is configured with multiple hardware breakpoints accessible via JTAG, a feature supported by the `vivado-risc-v` infrastructure. Essential system settings, such as the overall memory map (including DDR RAM interfaced via a controller typically provided by the Vivado IP catalog within the `vivado-risc-v` project), boot procedures from an SD card, and interrupt handling mechanisms, are established to create a fully functional computing platform.
+
+%\section{Key Architectural Components and Their Configuration}
+%\label{sec:key_config_components}
+
+%The SoC's architecture is constructed by integrating and parameterizing several key hardware blocks. This modular design philosophy, inherent in Chipyard and Rocket Chip, allows for the creation of SoCs tailored to specific requirements. The configuration and integration of the Gemmini accelerator are particularly critical for achieving the research objectives related to DNN acceleration.
+
+%\subsection{Gemmini Accelerator Integration and System Interface}
+%\label{sec:gemmini_integration}
+
+%The Gemmini accelerator is incorporated into the SoC fabric as a specialized co-processor unit. It is connected to the CPU and the system bus utilizing the RoCC (Rocket Custom Coprocessor) interface. This standard interface, a well-established part of the Rocket Chip ecosystem, enables the CPU to issue custom RISC-V instructions specifically decoded by Gemmini. These instructions are used to configure Gemmini's operational parameters, manage its internal state, and initiate data transfers and computations.
+
+%The computational core of Gemmini, the $16 \times 16$ array of PEs, is fed data through its dedicated DMA engine. This DMA engine communicates with the main system memory over a 64-bit wide data bus. The system's primary interconnect, a TileLink-based cache-coherent fabric as described by Asanović et al. (2016), is configured with a corresponding 64-bit (8-byte) data transfer granularity (\texttt{beatBytes}) to ensure efficient and protocol-compliant communication between Gemmini and other memory system components like the L2 cache and main DDR memory.
+
+%\subsection{Gemmini's Internal Architecture and Operational Parameters}
+%\label{sec:gemmini_architecture}
+
+%Gemmini itself is a highly configurable accelerator generator, designed around a systolic array architecture. Systolic arrays are particularly well-suited for DNN computations because they can effectively exploit the inherent parallelism and significant data reuse opportunities present in these algorithms, thereby minimizing the bottleneck of off-chip memory accesses (Genc et al., 2021). The specific instance of Gemmini within the \texttt{Rocket64b1gem16} SoC is configured with several important features that dictate its performance and capabilities:
+
+%\begin{itemize}
+%    \item \textbf{Data Representation and Quantization Strategy}: The accelerator is configured to process 8-bit signed integer input data and utilizes 32-bit signed integers for its internal accumulators. This configuration directly supports 8-bit quantized integer arithmetic for DNN inference. Quantization is a widely adopted technique to reduce the memory footprint of DNN models, lessen data transfer bandwidth, and decrease computational energy, often with only a minor impact on the model's predictive accuracy. The use of 32-bit accumulators is crucial for preserving numerical precision during the accumulation of many 8-bit product terms. Furthermore, Gemmini's hardware includes dedicated logic for applying per-tensor or per-channel scaling factors associated with quantization (as defined by parameters like \texttt{mvin\_scale\_args} and \texttt{acc\_scale\_args} in its configuration), which is essential for correctly performing arithmetic in the quantized domain.
+%    \item \textbf{Systolic Array Dataflow Versatility}: The Gemmini architecture, by default and in this configuration, supports both Weight Stationary (WS) and Output Stationary (OS) dataflows within its systolic array. This architectural flexibility allows the runtime software or compiler to select the most efficient data movement and computation scheduling strategy for different types of neural network layers. For instance, WS dataflow is often optimal for convolutional layers where filter weights are reused extensively across the input feature map, while OS dataflow can be more advantageous for layers like fully-connected layers or where output values are reused. This adaptability enhances overall computational efficiency across diverse DNN models (Genc et al., 2021).
+%    \item \textbf{On-Chip Memory Subsystem}: Gemmini incorporates a substantial internal memory hierarchy specifically designed to sustain high throughput in the systolic array:
+%        \begin{itemize}
+%            \item \textbf{Scratchpad Memory}: A 256KB SRAM-based scratchpad memory is provisioned within Gemmini. This high-speed, software-managed local memory is used to buffer input feature maps (activations) and model weights (filters) close to the PEs. Staging data in the scratchpad is fundamental to exploiting data reuse and minimizing latency by avoiding frequent accesses to slower off-chip system memory. The scratchpad is internally banked (typically configured with 4 banks) to allow for concurrent memory accesses, which helps in sustaining the data rate required by the PEs.
+%            \item \textbf{Accumulator Memory}: A separate 64KB memory is dedicated to storing the partial sums and final accumulated values computed by the PEs. This accumulator memory often features wider data paths to accommodate the 32-bit accumulated values and is also banked (typically with 2 banks) to facilitate concurrent read/write operations as results are updated and potentially passed back to the scratchpad or to output buffers.
+%        \end{itemize}
+%    \item \textbf{Hardware Acceleration for Ancillary DNN Operations}: Beyond the core matrix multiplication and convolution capabilities provided by the systolic array, the Gemmini unit is typically configured with hardware support for other common DNN operations. These often include max pooling and various non-linear activation functions (e.g., ReLU). Offloading these auxiliary operations to dedicated hardware within Gemmini further reduces the computational burden on the host CPU and streamlines the DNN processing pipeline.
+%    \item \textbf{Local TLB for Efficient Virtual Memory Addressing}: To operate effectively within the virtual memory environment managed by the Linux operating system running on the host CPU, Gemmini includes its own small Translation Lookaside Buffer (TLB), configured with 4 entries. This local TLB caches recently used virtual-to-physical address translations specifically for Gemmini's DMA operations. This significantly reduces the latency associated with address translation for Gemmini's memory requests by minimizing its reliance on the CPU's main page table walking hardware, which is especially beneficial when dealing with the large, and potentially non-contiguously allocated, data tensors common in DNN applications (Genc et al., 2021).
+%    \item \textbf{Instruction Control and Execution}: The host CPU controls Gemmini by issuing specialized custom instructions that are dispatched via the RoCC interface. These instructions fall into several categories: configuration instructions to set up Gemmini's operational modes and parameters (e.g., dataflow, activation functions); data movement instructions to trigger DMA transfers for loading input data and weights into the scratchpad (often termed `mvin`) and for storing results from the accumulator or scratchpad back to system memory (`mvout`); and computation instructions that initiate core operations like matrix multiplications or convolutions on the data resident in Gemmini's local memories.
+%\end{itemize}
+%This comprehensive set of features results in a Gemmini instance capable of performing 256 multiply-accumulate (MAC) operations per clock cycle on 8-bit input data, backed by a robust on-chip memory system and efficient mechanisms for data handling and control, making it a powerful DNN accelerator.
+
+%\subsection{CPU Core and Base System Configuration}
+%\label{sec:cpu_base_config}
+%The SoC's general-purpose computational needs are met by a single "big" Rocket CPU core. This configuration is critical for running the Debian Linux operating system, which in turn manages the overall system, file systems (on the SD card), networking (if an Ethernet controller from the `vivado-risc-v` project is included), and other user-space applications. The underlying base system configuration establishes essential parameters such as the physical memory map (defining address ranges for the DDR RAM, memory-mapped peripherals like UART and SD card controller, and the boot ROM), the initial boot sequence from the SD card (managed by OpenSBI and U-Boot, components typically part of the `vivado-risc-v` boot flow), and the setup for platform-level interrupt controllers. This forms the foundational environment for the CPU, the operating system, and the Gemmini accelerator.
+
+%\section{Memory Hierarchy, Coherence, and System Interconnect}
+%\label{sec:memory_coherence_interconnect}
+%The SoC employs a multi-level memory hierarchy to ensure efficient data access for all components. The Rocket CPU is equipped with private L1 instruction and data caches, providing low-latency access to frequently used code and data. A system-level L2 cache, configured to be inclusive of the L1 caches, sits at the next level. This L2 cache acts as a larger, shared buffer, reducing the need for accesses to the main off-chip DDR memory for both the CPU and potentially for Gemmini's DMA engine if frequently accessed data blocks are resident in the L2. The inclusive nature of this L2 cache simplifies the cache coherence protocols required to maintain a consistent view of memory across the system.
+
+%All major components, including the CPU core(s), the L2 cache, and the RoCC interface for Gemmini, are connected via the TileLink interconnect fabric. TileLink is a cache-coherent, chip-scale interconnect protocol developed as part of the Rocket Chip project (Asanović et al., 2016). It supports mechanisms to ensure that all bus masters (like the CPU and Gemmini's DMA engine) have a consistent view of memory. This is crucial for correctness when data is produced by one component (e.g., the CPU pre-processing data) and consumed by another (e.g., Gemmini processing that data), or vice-versa. Gemmini's DMA operations are thus coherent with the CPU caches, meaning data transfers correctly reflect the latest state of memory across the system.
+
+%\section{FPGA Realization and Software Stack for Linux Environment}
+%\label{sec:fpga_realization_software_stack}
+%The translation of the designed SoC into a functional hardware prototype on the AMD/Xilinx VC707 FPGA is facilitated by the `vivado-risc-v` project. This project not only provides Vivado project generation scripts for synthesizing the RISC-V SoC (including the custom \texttt{Rocket64b1gem16} configuration with Gemmini) and producing an FPGA bitstream, but also orchestrates the preparation of a complete software stack necessary to boot and run a Debian Linux distribution. The Xilinx Vivado Design Suite (version 2024.2 as used in this work) is employed for synthesis, place-and-route, and bitstream generation. The `vivado-risc-v` Makefile automates much of this complex software and hardware build process.
+
+%\subsection{Boot Process and Software Components}
+%The ability to run a full Linux distribution like Debian on the custom SoC is critical for complex application development, system testing, and leveraging a rich ecosystem of tools and libraries. The boot process on the FPGA involves several stages, with key software components prepared and integrated by the `vivado-risc-v` build system:
+
+%1.  **FPGA Boot ROM:** Upon power-on or reset, the RISC-V core begins execution from a small Boot ROM embedded within the FPGA logic. The contents of this Boot ROM are generated during the SoC build process. The `vivado-risc-v` Makefile processes Device Tree Source (DTS) files (`system.dts` specific to the Rocket Chip configuration, augmented with board-specific DTS information like `board/vc707/bootrom.dts`) to create a complete device tree and compile it into the `bootrom.img`. This Boot ROM performs minimal hardware initialization and its primary role is to locate and load the first stage of the main bootloader, typically `boot.elf`, from a designated location on the SD card.
+
+%2.  **RISC-V Open Source Supervisor Binary Interface (OpenSBI):** The `boot.elf` file loaded from the SD card begins with OpenSBI. OpenSBI serves as a crucial firmware layer, providing a standardized Supervisor Binary Interface between the underlying hardware (in M-mode, Machine mode) and the subsequent bootloader or operating system kernel (which runs in S-mode, Supervisor mode). It handles low-level hardware initializations, platform-specific configurations, and provides runtime services (e.g., console I/O, inter-processor interrupts in multi-core systems, timer management) to the S-mode software. The `vivado-risc-v` Makefile, as seen in its targets for `opensbi/build/platform/vivado-risc-v/firmware/fw\_payload.elf`, compiles OpenSBI, often applying specific patches or configurations (`patches/opensbi/*`) and crucially packaging the next stage bootloader (U-Boot) as its payload.
+
+%3.  **U-Boot (Universal Boot Loader):** Once OpenSBI initializes the necessary M-mode environment, it transfers control to its payload, which is U-Boot. U-Boot is a versatile and widely used bootloader in embedded systems. Its responsibilities include more extensive hardware initialization (e.g., setting up the DDR memory controller, initializing network interfaces if network boot is intended, interacting with the SD card controller). A key function of U-Boot in this context is to read the Linux kernel image (`Image`) and the flattened device tree blob (DTB) from the SD card into DDR memory. The `vivado-risc-v` Makefile details the process for building U-Boot (`u-boot/u-boot-nodtb.bin`), which involves applying patches (`patches/u-boot.patch`) and using a board-specific configuration (`vivado\_riscv64\_defconfig`, `vivado\_riscv64.h`) tailored for the RISC-V SoC environment. After loading, U-Boot prepares the boot arguments and jumps to the Linux kernel entry point.
+
+%4.  **Linux Kernel:** The Linux kernel is the heart of the operating system. The `vivado-risc-v` project facilitates the compilation of a RISC-V Linux kernel (from `linux-stable`), customized for the target hardware. The Makefile shows that specific patches (`patches/linux.patch`) are applied, custom drivers for FPGA-specific AXI-based peripherals (like `fpga-axi-sdc.c` for the SD card controller and `fpga-axi-eth.c` for Ethernet, which are open-source Verilog controllers in the `vivado-risc-v` design) are integrated, and a specific kernel configuration (`patches/linux.config`) is used. This ensures that the kernel can correctly recognize and manage the SoC's custom hardware components, including the peripherals essential for a functional system.
+
+%5.  **Debian Root Filesystem:** Once the Linux kernel is booted, it mounts a root filesystem, which contains all the user-space applications, libraries, and system utilities that constitute the Debian distribution. The `vivado-risc-v` project simplifies this by providing mechanisms to use a pre-built Debian RISC-V root filesystem (`rootfs.tar.gz`), which is then typically extracted and written to a partition on the SD card by the `./mk-sd-card` utility script. This allows the system to boot into a familiar Linux environment with access to package management (`apt`) and a vast collection of pre-compiled software.
+
+%The `vivado-risc-v` Makefile orchestrates the download of prebuilt toolchains (e.g., `workspace/gcc/tools.tar.gz`), patching of submodules (OpenSBI, U-Boot, Linux kernel, Rocket Chip itself), compilation of these boot components, and generation of HDL from Chisel sources. The `./mk-sd-card` script then assembles the `boot.elf` (OpenSBI+U-Boot), Linux kernel image, and the Debian root filesystem onto an SD card, making it bootable on the FPGA once programmed with the corresponding bitstream.
+
+%This comprehensive software stack, coupled with the custom hardware, transforms the FPGA into a fully operational RISC-V Linux server, providing a rich platform for developing and testing the time-series anomaly detection application accelerated by the Gemmini co-processor.
+
+%\section{Chipyard Framework and Rationale for Time-Series Anomaly Detection}
+%\label{sec:framework_rationale_timeseries}
+
+%\texttt{Rocket64b1gem16}) configuration was developed to address the computational demands inherent in time-series anomaly detection tasks that rely on Deep Neural Networks. The $16 \times 16$ systolic array within Gemmini delivers substantial parallel processing capability, ideal for the matrix-vector and matrix-matrix multiplications, as well as convolutions, that form the backbone of modern neural network architectures (such as LSTMs, Transformers, or specialized CNNs) frequently employed for analyzing sequential data. The 256KB on-chip scratchpad memory in Gemmini is dimensioned to locally store significant segments of input time-series data and the corresponding model parameters (weights and biases) during the processing of individual neural network layers. This local storage and reuse minimize the latency and energy overhead associated with frequent accesses to off-chip DDR memory.
+
+%The adoption of 8-bit quantized integer arithmetic, supported by the configured Gemmini instance, is a strategic choice for this application. Quantization significantly reduces the memory footprint of the deployed DNN models and lessens the bandwidth required for transferring weights and activations. These efficiencies are paramount when dealing with potentially long and high-volume time-series datasets, with the goal of maintaining high anomaly detection accuracy. The robust host CPU, running a full Debian Linux environment, provides the flexibility required for complex data preprocessing (e.g., normalization, feature extraction from raw time-series signals), post-processing of anomaly detection outputs, managing network communication, and handling overall system control and user interaction, while the Gemmini accelerator is dedicated to the high-performance execution of the core DNN inference computations.
+
+%This carefully architected SoC, realized on the VC707 FPGA via the `vivado-risc-v` project and running a full Debian Linux distribution, represents a balanced hardware platform. It combines the versatility of general-purpose processing with the efficiency of specialized, high-throughput hardware acceleration, specifically tailored to meet the challenges of deploying sophisticated DNN models for time-series anomaly detection.
+
+
+
+%\section{Implementation of the Time-Series Anomaly Detection System}
+%\label{sec:implementation_of_the_time_series_anomaly_detection_system}
+
+
+

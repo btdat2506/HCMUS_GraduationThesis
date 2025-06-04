@@ -1,147 +1,233 @@
-% !TEX encoding = UTF-8 Unicode
-% Ensure this file is saved with UTF-8 encoding
+\chapter{A Multi-Core RISC-V Processor System}
+\label{chap:MultiCoreRISCVSystem}
 
-\chapter{IMPLEMENTATION DETAILS OF ANOMALY DETECTION SYSTEM}
-\label{Chapter3}
+From the surveys and analyses in the preceding sections regarding processor cores and the two SoC development frameworks, it is evident that each of these research subjects possesses distinct advantages and limitations. However, for the research orientation and implementation of a processor system featuring a custom accelerator, the \texttt{Chipyard} framework and its library components are deemed most suitable for the objectives of this thesis. Not only does \texttt{Chipyard} effectively meet current requirements, but it also holds the potential for expansion to support more complex systems in the future.
 
-% This chapter will focus on the specifics of the time-series anomaly detection system itself,
-% including the model architecture, software implementation, dataset used, and how it leverages
-% the Gemmini-accelerated hardware platform detailed in Chapter 2.
+This chapter will present a more detailed exposition of the component structure and the process of constructing an SoC system, while also delving into the architecture of the \texttt{Rocket} processor core. The thesis will utilize high-level design languages \texttt{Chisel}/\texttt{Scala} to implement a single-core processor system integrated with the \texttt{Gemmini} \texttt{RoCC} accelerator, focusing on leveraging the components within an SoC system, and building the hardware and software design based on the \texttt{Chipyard} framework.
 
-\section{Time-Series Anomaly Detection Algorithm}
-\label{sec:anomaly_detection_algorithm}
-% Describe the specific anomaly detection algorithm chosen (e.g., LSTM-based autoencoder, Transformer, etc.)
-% Theoretical background of the chosen model architecture.
-% Why this model is suitable for time-series data and anomaly detection.
-% Mathematical formulation if necessary.
+\section{System Design Methodology with \texttt{Chisel}}
+\label{sec:design_methodology_chisel}
 
-\section{Dataset and Preprocessing}
-\label{sec:dataset_preprocessing}
-% Describe the dataset used for training and evaluation (e.g., ECG, sensor data).
-% Source of the dataset.
-% Characteristics of the data (sampling rate, features, normal vs. anomalous data).
-% Preprocessing steps (e.g., normalization, segmentation, feature extraction).
+As previously introduced, this thesis undertakes system design based on the components and tools within \texttt{Chipyard}. This framework and its library components are constructed from a diverse range of elements, all based on \texttt{Chisel}/\texttt{Scala}.
 
-\section{Software Implementation and Training}
-\label{sec:software_implementation_training}
-% Programming language and libraries used for model implementation (e.g., Python, TensorFlow, PyTorch).
-% Details of the model training process (e.g., loss function, optimizer, hyperparameters, training duration).
-% How the model was trained (e.g., on a workstation with GPUs, or on the target platform if applicable for pre-training).
+\subsection{\texttt{Chisel} and \texttt{Scala}}
+\label{subsec:chisel_scala}
 
-\section{Deployment on Gemmini-Accelerated SoC}
-\label{sec:deployment_on_soc}
-% How the trained model is deployed onto the RISC-V SoC with Gemmini.
-% Quantization process details (e.g., tools used, calibration dataset, resulting precision).
-% Software stack used on the SoC for running inference (e.g., custom C/C++ application, runtime libraries for Gemmini).
-% Interfacing with Gemmini: How the application issues commands to Gemmini for acceleration.
-% Data flow: How time-series data is fed to Gemmini and results are retrieved.
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Images/Chisel_logo.pdf}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}[b]{0.18\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Images/Chisel_Scala_Logo.pdf}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}[b]{0.18\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Images/Chisel_FIRRTL.pdf}
+    \end{subfigure}%
+    \hfill
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{Images/Chisel_ChipsAlliance.pdf}
+    \end{subfigure}
+    \caption{\texttt{Chisel} as a library within \texttt{Scala}. Source: CHIPS Alliance.}
+    \label{fig:chisel_ecosystem_logos}
+\end{figure}
 
-\section{Performance Evaluation and Results}
-\label{sec:performance_evaluation_results}
-% Metrics used for evaluating anomaly detection performance (e.g., precision, recall, F1-score, ROC AUC).
-% Metrics used for evaluating hardware acceleration (e.g., inference latency, throughput, energy consumption) on Gemmini vs. CPU-only.
-% Experimental setup for evaluation.
-% Presentation and discussion of results.
-% Comparison with other relevant works if applicable.
+\texttt{Chisel} is a Hardware Construction Language (HCL) developed at UC Berkeley, initially intended to enable hardware design through highly parameterized and hierarchically specific code generators. \texttt{Chisel} is used to define these generators, which then produce designs in \texttt{Verilog}, suitable for industry-standard RTL design flows. \texttt{Chisel} is classified as a Domain-Specific Language (DSL); more precisely, it is implemented as a library package for \texttt{Scala}, a high-level, multi-paradigm programming language that integrates features of both Object-Oriented Programming (OOP) and functional programming on the \texttt{Java} Virtual Machine (JVM). Furthermore, \texttt{Scala}'s functional programming capabilities support higher-order functions and immutable data structures, facilitating more maintainable code, which is crucial for reproducibility and collaboration in scientific research.
 
-\section{Implementation of the Time-Series Anomaly Detection System}
-\label{sec:implementation_of_the_time_series_anomaly_detection_system}
-% This section will be elaborated upon once the machine learning model for 
-% arrhythmia time-series anomaly detection is developed and implemented. 
-% It will cover the theoretical underpinnings of the chosen anomaly detection 
-% algorithms, relevant time-series analysis techniques, and how these map to 
-% the capabilities of the Gemmini-accelerated RISC-V platform.
+\texttt{Chisel}'s design aims to address the lack of object-oriented programming and pre-processing structures in existing Hardware Description Languages (HDLs), supporting the construction of more flexible generators. By being based on \texttt{Scala}, \texttt{Chisel} gains the flexibility to describe hardware with high levels of abstraction and modularity. This helps hardware designers describe circuits in a way that is easy to maintain, modify, and extend, especially for large and complex designs such as microprocessors and specialized digital signal processing cores. \texttt{Scala}'s robust type system, diverse numerical representations and variables, immutability, and support for functional programming make it an ideal foundation for \texttt{Chisel}, aiding in error checking during hardware and circuit description and encouraging reusable design patterns.
 
-% The old content below will be removed or was moved to Chapter 2.
+In the context of hardware design based on \texttt{Chisel} and \texttt{Scala}, \texttt{sbt} (Simple Build Tool) plays a crucial role, optimizing the design management and development process. Built specifically for \texttt{Scala} and \texttt{Java} projects, \texttt{sbt} is the build tool used by the majority of \texttt{Scala} developers. Essentially, \texttt{sbt} acts as the compiler when working with \texttt{Chisel} and \texttt{Scala}. Using \texttt{sbt} simplifies the process of structuring projects for hardware design with \texttt{Chisel} in \texttt{Chipyard}, as well as enabling integration with many other open-source projects.
 
-%This chapter details the hardware architecture of the custom System-on-Chip (SoC) designed for this research, and its realization on an FPGA platform. The SoC was architected using the Chipyard SoC generation framework, which integrates the Rocket Chip generator (Asanović et al., 2016) for the core SoC infrastructure and CPU, all described using the Chisel hardware construction language. The practical FPGA deployment, enabling a full Debian Linux environment on an AMD/Xilinx VC707 board (the target for this work), was achieved by leveraging and adapting the infrastructure provided by the vivado-risc-v project (Tarassov, n.d.). This project supplies the necessary scripts, Verilog-based peripheral controllers (e.g., for DDR memory via Vivado IP, and open-source UART, SD card, and Ethernet controllers), and build system modifications to bridge the gap between the generated SoC RTL and a functional Linux-capable FPGA system. This approach combines the flexibility of academic SoC generators with a robust path to hardware prototyping. The use of the open RISC-V Instruction Set Architecture (ISA) is central to this endeavor, promoting transparency and customizability.
+\subsection{\texttt{Verilator} Simulation Tool}
+\label{subsec:verilator}
 
-%The specific SoC configuration developed for this thesis is descriptively termed the "Rocket Core 64-bit Big Core with Gemmini 16x16 accelerator." Within the project's build and configuration system, this specific design point is identified as \texttt{Rocket64b1gem16}. This system integrates a Gemmini systolic array accelerator—a specialized hardware unit designed for efficient Deep Neural Network (DNN) computation (Genc et al., 2021)—with a general-purpose RISC-V Rocket CPU core. The overall design aims to create a balanced system capable of running a full Linux distribution (Debian) while providing significant hardware acceleration for the target time-series anomaly detection workloads. The following sections describe the key architectural features of this SoC and the underlying design decisions.
+In the hardware design process, evaluating the functionality of the design is critically important. With \texttt{Chipyard}, system designs, from simple to complex structures, can be effectively realized and tested thanks to integrated tools and RTL simulators like \texttt{Verilator}, which are readily available within the project framework.
 
-%\section{Target SoC Architecture: Rocket Core 64-bit Big Core with Gemmini 16x16 Accelerator (\texttt{Rocket64b1gem16})}
-%\label{sec:soc_config_rocket64b1gem16}
+\texttt{Verilator} is an open-source program, prominent in the field of RTL simulation due to its unique method of converting ("Verilating") \texttt{Verilog} or \texttt{SystemVerilog} into \texttt{C++} or \texttt{SystemC}, creating a highly optimized executable program. Unlike traditional simulators, \texttt{Verilator} does not directly interpret \texttt{Verilog} during simulation. Instead, it generates \texttt{C++} or \texttt{SystemC} program files by parsing the hardware code, performing syntax checking, linting, and optionally inserting debug points and coverage analysis to enhance the correctness and accuracy of evaluation and verification. This "Verilated" output file can be configured to run in single-threaded or multi-threaded mode on a development server, offering an advantage for simulating complex or computationally demanding designs. After the "Verilated" code is generated, it is compiled by a standard \texttt{C++} compiler such as \texttt{GCC}, \texttt{Clang}, or \texttt{MSVC++}, and is typically combined with a user-provided wrapper file to manage the initialization of the Verilated model.
 
-%The \texttt{Rocket64b1gem16} system embodies a complete SoC. At its heart is a 64-bit RISC-V Rocket CPU core, specifically configured as a "big" core variant. This CPU acts as the main general-purpose processor, responsible for executing the Debian Linux operating system, managing system resources and peripherals, and orchestrating tasks for the specialized Gemmini accelerator. As documented by Asanović et al. (2016), the Rocket core is typically a 5-stage, single-issue, in-order scalar processor. The "big" core designation in this context signifies the inclusion of critical features like a Memory Management Unit (MMU), which is indispensable for supporting virtual memory and thus enabling a sophisticated operating system like Linux. It also incorporates a Floating Point Unit (FPU) for handling scalar floating-point calculations, although the primary computationally intensive DNN tasks are offloaded to Gemmini.
+\texttt{Verilator} offers high simulation performance, especially for designs requiring substantial resources, due to its high speed and cycle accuracy. \texttt{Verilator}'s compilation approach makes it up to 100 times faster than interpretive simulators like Icarus \texttt{Verilog} (which is also open-source), and with multi-threading, performance can increase by an additional 2-10 times, achieving a total improvement of up to 1000 times. This makes \texttt{Verilator} suitable for RISC-V multi-core processor designs ranging from simple to complex, and competitive even with commercial simulators such as Synopsys VCS, Cadence Incisive, or Mentor ModelSim.
 
-%The central accelerator component is the Gemmini unit, configured with a $16 \times 16$ systolic array of Processing Elements (PEs). Each PE within this array is designed to perform a multiply-accumulate (MAC) operation on the specified data types per clock cycle. This array structure forms a highly parallel computation engine, exceptionally effective for the matrix multiplication and convolution operations that are foundational to most DNN workloads. Gemmini interacts with the rest of the SoC via a 64-bit wide Direct Memory Access (DMA) engine, which facilitates high-bandwidth data transfers between Gemmini's internal memories and the main system memory.
+\section{The \texttt{Rocket} Processor Core}
+\label{sec:rocket_core}
 
-%The SoC's memory subsystem includes a shared L2 cache. This cache is designed to be inclusive, meaning it maintains a superset of the data stored in the CPU's private L1 caches. The L2 cache aims to reduce the average memory access latency for the CPU and can also enhance the performance of Gemmini's DMA transfers by serving as a fast, on-chip data buffer. For software development and debugging purposes, the system is configured with multiple hardware breakpoints accessible via JTAG, a feature supported by the `vivado-risc-v` infrastructure. Essential system settings, such as the overall memory map (including DDR RAM interfaced via a controller typically provided by the Vivado IP catalog within the `vivado-risc-v` project), boot procedures from an SD card, and interrupt handling mechanisms, are established to create a fully functional computing platform.
+As introduced in the previous chapter, \texttt{Rocket} is a 5-stage, in-order processor core compliant with the RISC-V instruction set architecture, with RV32G and RV64G variants. Currently, the development of the \texttt{Rocket} core is maintained by the CHIPS Alliance. \texttt{Rocket} is written in the \texttt{Chisel} hardware design language, based on the \texttt{Scala} programming language, and is a key component of the \texttt{Rocket Chip} SoC Generator toolchain.
 
-%\section{Key Architectural Components and Their Configuration}
-%\label{sec:key_config_components}
+When implemented, each \texttt{Rocket} core is combined with L1 data and instruction caches. This memory operates locally for each core and, in a multi-core system, is responsible for storing temporary variables generated during the execution of the pipeline, helping to reduce congestion when multiple cores attempt to store data. Together with the Page Table Walker (\texttt{PTW}), a Tile within the SoC is formed. This \texttt{Rocket} Tile (Figure \ref{fig:rocket_tile_structure}) is considered a fundamental unit in the \texttt{Rocket Chip} SoC system and can be replicated to create multi-core processor systems, meeting the demands for performance and flexibility in modern SoC design.
 
-%The SoC's architecture is constructed by integrating and parameterizing several key hardware blocks. This modular design philosophy, inherent in Chipyard and Rocket Chip, allows for the creation of SoCs tailored to specific requirements. The configuration and integration of the Gemmini accelerator are particularly critical for achieving the research objectives related to DNN acceleration.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Images/RocketTile_Basic.pdf}
+    \caption{Structure of a \texttt{Rocket} Tile.}
+    \label{fig:rocket_tile_structure}
+\end{figure}
 
-%\subsection{Gemmini Accelerator Integration and System Interface}
-%\label{sec:gemmini_integration}
+Due to the object-oriented nature of \texttt{Chisel}, the language used for its design, \texttt{Rocket} itself is written from object classes that can be defined and reconfigured according to implementation needs, such as \texttt{WithNBigCore()}, \texttt{WithNMedCore()}, \texttt{WithNSmallCore()}, and \texttt{WithNTinyCore()}. Additionally, instead of implementing the \texttt{Rocket} core, the \texttt{BOOM} core can also be integrated in its place, and many other peripherals can be integrated into a Tile unit.
 
-%The Gemmini accelerator is incorporated into the SoC fabric as a specialized co-processor unit. It is connected to the CPU and the system bus utilizing the RoCC (Rocket Custom Coprocessor) interface. This standard interface, a well-established part of the Rocket Chip ecosystem, enables the CPU to issue custom RISC-V instructions specifically decoded by Gemmini. These instructions are used to configure Gemmini's operational parameters, manage its internal state, and initiate data transfers and computations.
+\section{\texttt{Rocket Chip} SoC Structure}
+\label{sec:rocketchip_soc_structure}
 
-%The computational core of Gemmini, the $16 \times 16$ array of PEs, is fed data through its dedicated DMA engine. This DMA engine communicates with the main system memory over a 64-bit wide data bus. The system's primary interconnect, a TileLink-based cache-coherent fabric as described by Asanović et al. (2016), is configured with a corresponding 64-bit (8-byte) data transfer granularity (\texttt{beatBytes}) to ensure efficient and protocol-compliant communication between Gemmini and other memory system components like the L2 cache and main DDR memory.
+This system generator includes multiple components, not just the processor core but also the on-chip system bus (SoC bus), specifically \texttt{TileLink}. \texttt{TileLink} comprises a peripheral bus, control bus, and memory bus, along with arbiters and system controllers. Additionally, the system integrates peripheral components such as DRAM, GPIO, UART, and, critically for this thesis, supports tightly-coupled accelerators like \texttt{Gemmini} via the \texttt{RoCC} interface. Figure \ref{fig:single_core_gemmini_system} below depicts the generalized structure of the single-core RISC-V processor system with a \texttt{Gemmini} \texttt{RoCC} accelerator, which forms the basis for the development in this thesis.
 
-%\subsection{Gemmini's Internal Architecture and Operational Parameters}
-%\label{sec:gemmini_architecture}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Images/RocketChip_Gemmini_Diagram.pdf}
+    \caption{Proposed structure of a single-core RISC-V processor system with a \texttt{Gemmini} \texttt{RoCC} accelerator.}
+    \label{fig:single_core_gemmini_system}
+\end{figure}
 
-%Gemmini itself is a highly configurable accelerator generator, designed around a systolic array architecture. Systolic arrays are particularly well-suited for DNN computations because they can effectively exploit the inherent parallelism and significant data reuse opportunities present in these algorithms, thereby minimizing the bottleneck of off-chip memory accesses (Genc et al., 2021). The specific instance of Gemmini within the \texttt{Rocket64b1gem16} SoC is configured with several important features that dictate its performance and capabilities:
+\subsection{Bus and Interconnect}
+\label{subsec:bus_interconnect}
 
-%\begin{itemize}
-%    \item \textbf{Data Representation and Quantization Strategy}: The accelerator is configured to process 8-bit signed integer input data and utilizes 32-bit signed integers for its internal accumulators. This configuration directly supports 8-bit quantized integer arithmetic for DNN inference. Quantization is a widely adopted technique to reduce the memory footprint of DNN models, lessen data transfer bandwidth, and decrease computational energy, often with only a minor impact on the model's predictive accuracy. The use of 32-bit accumulators is crucial for preserving numerical precision during the accumulation of many 8-bit product terms. Furthermore, Gemmini's hardware includes dedicated logic for applying per-tensor or per-channel scaling factors associated with quantization (as defined by parameters like \texttt{mvin\_scale\_args} and \texttt{acc\_scale\_args} in its configuration), which is essential for correctly performing arithmetic in the quantized domain.
-%    \item \textbf{Systolic Array Dataflow Versatility}: The Gemmini architecture, by default and in this configuration, supports both Weight Stationary (WS) and Output Stationary (OS) dataflows within its systolic array. This architectural flexibility allows the runtime software or compiler to select the most efficient data movement and computation scheduling strategy for different types of neural network layers. For instance, WS dataflow is often optimal for convolutional layers where filter weights are reused extensively across the input feature map, while OS dataflow can be more advantageous for layers like fully-connected layers or where output values are reused. This adaptability enhances overall computational efficiency across diverse DNN models (Genc et al., 2021).
-%    \item \textbf{On-Chip Memory Subsystem}: Gemmini incorporates a substantial internal memory hierarchy specifically designed to sustain high throughput in the systolic array:
-%        \begin{itemize}
-%            \item \textbf{Scratchpad Memory}: A 256KB SRAM-based scratchpad memory is provisioned within Gemmini. This high-speed, software-managed local memory is used to buffer input feature maps (activations) and model weights (filters) close to the PEs. Staging data in the scratchpad is fundamental to exploiting data reuse and minimizing latency by avoiding frequent accesses to slower off-chip system memory. The scratchpad is internally banked (typically configured with 4 banks) to allow for concurrent memory accesses, which helps in sustaining the data rate required by the PEs.
-%            \item \textbf{Accumulator Memory}: A separate 64KB memory is dedicated to storing the partial sums and final accumulated values computed by the PEs. This accumulator memory often features wider data paths to accommodate the 32-bit accumulated values and is also banked (typically with 2 banks) to facilitate concurrent read/write operations as results are updated and potentially passed back to the scratchpad or to output buffers.
-%        \end{itemize}
-%    \item \textbf{Hardware Acceleration for Ancillary DNN Operations}: Beyond the core matrix multiplication and convolution capabilities provided by the systolic array, the Gemmini unit is typically configured with hardware support for other common DNN operations. These often include max pooling and various non-linear activation functions (e.g., ReLU). Offloading these auxiliary operations to dedicated hardware within Gemmini further reduces the computational burden on the host CPU and streamlines the DNN processing pipeline.
-%    \item \textbf{Local TLB for Efficient Virtual Memory Addressing}: To operate effectively within the virtual memory environment managed by the Linux operating system running on the host CPU, Gemmini includes its own small Translation Lookaside Buffer (TLB), configured with 4 entries. This local TLB caches recently used virtual-to-physical address translations specifically for Gemmini's DMA operations. This significantly reduces the latency associated with address translation for Gemmini's memory requests by minimizing its reliance on the CPU's main page table walking hardware, which is especially beneficial when dealing with the large, and potentially non-contiguously allocated, data tensors common in DNN applications (Genc et al., 2021).
-%    \item \textbf{Instruction Control and Execution}: The host CPU controls Gemmini by issuing specialized custom instructions that are dispatched via the RoCC interface. These instructions fall into several categories: configuration instructions to set up Gemmini's operational modes and parameters (e.g., dataflow, activation functions); data movement instructions to trigger DMA transfers for loading input data and weights into the scratchpad (often termed `mvin`) and for storing results from the accumulator or scratchpad back to system memory (`mvout`); and computation instructions that initiate core operations like matrix multiplications or convolutions on the data resident in Gemmini's local memories.
-%\end{itemize}
-%This comprehensive set of features results in a Gemmini instance capable of performing 256 multiply-accumulate (MAC) operations per clock cycle on 8-bit input data, backed by a robust on-chip memory system and efficient mechanisms for data handling and control, making it a powerful DNN accelerator.
+In the design of Systems-on-Chip (SoCs), bus architecture plays a backbone role, connecting and coordinating the operation of all components within the system. Particularly for modern multi-core processor systems, development trends focus on using crossbar-type bus architectures instead of Time Shared Buses. A crossbar, specifically a fully-connected crossbar structure, is considered a form of hardware switching fabric, allowing any input port to connect directly to any output port simultaneously. The outstanding advantage of this architecture lies in its ability to provide high bandwidth and low latency, effectively meeting performance requirements in applications such as networking equipment, multi-core processors, and high-performance storage systems. The optimization in data transmission offered by this architecture is a key factor in improving the overall performance of modern SoC systems.
 
-%\subsection{CPU Core and Base System Configuration}
-%\label{sec:cpu_base_config}
-%The SoC's general-purpose computational needs are met by a single "big" Rocket CPU core. This configuration is critical for running the Debian Linux operating system, which in turn manages the overall system, file systems (on the SD card), networking (if an Ethernet controller from the `vivado-risc-v` project is included), and other user-space applications. The underlying base system configuration establishes essential parameters such as the physical memory map (defining address ranges for the DDR RAM, memory-mapped peripherals like UART and SD card controller, and the boot ROM), the initial boot sequence from the SD card (managed by OpenSBI and U-Boot, components typically part of the `vivado-risc-v` boot flow), and the setup for platform-level interrupt controllers. This forms the foundational environment for the CPU, the operating system, and the Gemmini accelerator.
+For \texttt{Rocket Chip}, the \texttt{TileLink} \cite{sifive2017tilelink} system communication bus was developed concurrently with the project and the RISC-V instruction set, and is widely used in open-source system research at present.
 
-%\section{Memory Hierarchy, Coherence, and System Interconnect}
-%\label{sec:memory_coherence_interconnect}
-%The SoC employs a multi-level memory hierarchy to ensure efficient data access for all components. The Rocket CPU is equipped with private L1 instruction and data caches, providing low-latency access to frequently used code and data. A system-level L2 cache, configured to be inclusive of the L1 caches, sits at the next level. This L2 cache acts as a larger, shared buffer, reducing the need for accesses to the main off-chip DDR memory for both the CPU and potentially for Gemmini's DMA engine if frequently accessed data blocks are resident in the L2. The inclusive nature of this L2 cache simplifies the cache coherence protocols required to maintain a consistent view of memory across the system.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{TileLink_Topology.pdf}
+    \caption{Connection model in \texttt{TileLink} and its interfaces. Source: \cite{sifive2017tilelink}}
+    \label{fig:tilelink_connection_model}
+\end{figure}
 
-%All major components, including the CPU core(s), the L2 cache, and the RoCC interface for Gemmini, are connected via the TileLink interconnect fabric. TileLink is a cache-coherent, chip-scale interconnect protocol developed as part of the Rocket Chip project (Asanović et al., 2016). It supports mechanisms to ensure that all bus masters (like the CPU and Gemmini's DMA engine) have a consistent view of memory. This is crucial for correctness when data is produced by one component (e.g., the CPU pre-processing data) and consumed by another (e.g., Gemmini processing that data), or vice-versa. Gemmini's DMA operations are thus coherent with the CPU caches, meaning data transfers correctly reflect the latest state of memory across the system.
+\texttt{TileLink} is a highly parameterizable, open-source, shared memory interconnect protocol based on the aforementioned crossbar structure, designed to connect diverse modules for SoCs. \texttt{TileLink} is implemented via a hierarchical, point-to-point network that can be easily scaled. This protocol provides memory-mapped access for multiple controllers, ensuring memory coherency while supporting efficient communication between processors, DMAs, and peripheral devices.
 
-%\section{FPGA Realization and Software Stack for Linux Environment}
-%\label{sec:fpga_realization_software_stack}
-%The translation of the designed SoC into a functional hardware prototype on the AMD/Xilinx VC707 FPGA is facilitated by the `vivado-risc-v` project. This project not only provides Vivado project generation scripts for synthesizing the RISC-V SoC (including the custom \texttt{Rocket64b1gem16} configuration with Gemmini) and producing an FPGA bitstream, but also orchestrates the preparation of a complete software stack necessary to boot and run a Debian Linux distribution. The Xilinx Vivado Design Suite (version 2024.2 as used in this work) is employed for synthesis, place-and-route, and bitstream generation. The `vivado-risc-v` Makefile automates much of this complex software and hardware build process.
+A \texttt{TileLink} bus system can support a combination of multiple communicating agents, each capable of supporting different configured subsets of the protocol. The \texttt{TileLink} specification includes three levels of operational configuration for agents, presented in Table \ref{tab:tilelink_configs}.
 
-%\subsection{Boot Process and Software Components}
-%The ability to run a full Linux distribution like Debian on the custom SoC is critical for complex application development, system testing, and leveraging a rich ecosystem of tools and libraries. The boot process on the FPGA involves several stages, with key software components prepared and integrated by the `vivado-risc-v` build system:
+\begin{table}[h!]
+\centering
+\caption{\texttt{TileLink} operational configurations. Source: \cite{sifive2017tilelink}}
+\label{tab:tilelink_configs}
+\begin{tabular}{|l|c|c|c|}
+\hline
+ & \textbf{TL-UL} & \textbf{TL-UH} & \textbf{TL-C} \\
+\hline
+\textbf{Read/Write operations} & y & y & y \\
+\textbf{Multibeat messages} & . & y & y \\
+\textbf{Atomic operations} & . & y & y \\
+\textbf{Hint operations} & . & y & y \\
+\textbf{Cache block transfers} & . & . & y \\
+\textbf{Channels B+C+E} & . & . & y \\
+\hline
+\end{tabular}
+\end{table}
 
-%1.  **FPGA Boot ROM:** Upon power-on or reset, the RISC-V core begins execution from a small Boot ROM embedded within the FPGA logic. The contents of this Boot ROM are generated during the SoC build process. The `vivado-risc-v` Makefile processes Device Tree Source (DTS) files (`system.dts` specific to the Rocket Chip configuration, augmented with board-specific DTS information like `board/vc707/bootrom.dts`) to create a complete device tree and compile it into the `bootrom.img`. This Boot ROM performs minimal hardware initialization and its primary role is to locate and load the first stage of the main bootloader, typically `boot.elf`, from a designated location on the SD card.
+\texttt{TileLink} clearly distinguishes between cached and uncached communications. The simplest level is \texttt{TileLink} Uncached Lightweight (\texttt{TL-UL}), which only supports basic read and write operations to memory, for individual words. The next, more complex level is \texttt{TileLink} Uncached Heavyweight (\texttt{TL-UH}), which adds features such as "hints," "atomic" operations, and burst accesses but does not support coherent caching. Here, "hints" refers to a feature where a request command seeks data information external to the executing command from masters, and "atomic" refers to operations that lock access rights in a system with multiple masters, which could be microprocessors. Finally, \texttt{TileLink} Cached (\texttt{TL-C}) is the full protocol, supporting the use of coherent caches within the system.
 
-%2.  **RISC-V Open Source Supervisor Binary Interface (OpenSBI):** The `boot.elf` file loaded from the SD card begins with OpenSBI. OpenSBI serves as a crucial firmware layer, providing a standardized Supervisor Binary Interface between the underlying hardware (in M-mode, Machine mode) and the subsequent bootloader or operating system kernel (which runs in S-mode, Supervisor mode). It handles low-level hardware initializations, platform-specific configurations, and provides runtime services (e.g., console I/O, inter-processor interrupts in multi-core systems, timer management) to the S-mode software. The `vivado-risc-v` Makefile, as seen in its targets for `opensbi/build/platform/vivado-risc-v/firmware/fw\_payload.elf`, compiles OpenSBI, often applying specific patches or configurations (`patches/opensbi/*`) and crucially packaging the next stage bootloader (U-Boot) as its payload.
+For integrating peripheral hardware, all three bus configuration levels can be used. The communication connection diagram, at its most complete level, between a custom peripheral hardware and an agent is shown in Figure \ref{fig:tilelink_channels}.
 
-%3.  **U-Boot (Universal Boot Loader):** Once OpenSBI initializes the necessary M-mode environment, it transfers control to its payload, which is U-Boot. U-Boot is a versatile and widely used bootloader in embedded systems. Its responsibilities include more extensive hardware initialization (e.g., setting up the DDR memory controller, initializing network interfaces if network boot is intended, interacting with the SD card controller). A key function of U-Boot in this context is to read the Linux kernel image (`Image`) and the flattened device tree blob (DTB) from the SD card into DDR memory. The `vivado-risc-v` Makefile details the process for building U-Boot (`u-boot/u-boot-nodtb.bin`), which involves applying patches (`patches/u-boot.patch`) and using a board-specific configuration (`vivado\_riscv64\_defconfig`, `vivado\_riscv64.h`) tailored for the RISC-V SoC environment. After loading, U-Boot prepares the boot arguments and jumps to the Linux kernel entry point.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{TileLink_FiveChannel.pdf}
+    \caption{Channels in a \texttt{TileLink} connection between two agents. Source: \cite{sifive2017tilelink}}
+    \label{fig:tilelink_channels}
+\end{figure}
 
-%4.  **Linux Kernel:** The Linux kernel is the heart of the operating system. The `vivado-risc-v` project facilitates the compilation of a RISC-V Linux kernel (from `linux-stable`), customized for the target hardware. The Makefile shows that specific patches (`patches/linux.patch`) are applied, custom drivers for FPGA-specific AXI-based peripherals (like `fpga-axi-sdc.c` for the SD card controller and `fpga-axi-eth.c` for Ethernet, which are open-source Verilog controllers in the `vivado-risc-v` design) are integrated, and a specific kernel configuration (`patches/linux.config`) is used. This ensures that the kernel can correctly recognize and manage the SoC's custom hardware components, including the peripherals essential for a functional system.
+In this \texttt{TileLink} protocol, the defined communication channels include \texttt{A}, \texttt{B}, \texttt{C}, \texttt{D}, and \texttt{E}, each undertaking specific roles in the interaction process between a master (M) and a slave (S), and all have a defined direction of transmission as depicted in the figure above.
+\begin{itemize}
+    \item \textbf{Channel A:} This is the initiation channel, where M sends requests to S, establishing the initial step of the communication process.
+    \item \textbf{Channel B:} This channel is used when M requests a cache block from S, ensuring necessary data is queried.
+    \item \textbf{Channel C:} Used for S to respond to M's request for a cache block, playing a crucial role in providing necessary data to M.
+    \item \textbf{Channel D:} This is the general response channel, where S sends the final response to M after processing requests.
+    \item \textbf{Channel E:} This channel ensures transaction completion by performing the final handshake for cache block transfer between the two parties.
+\end{itemize}
 
-%5.  **Debian Root Filesystem:** Once the Linux kernel is booted, it mounts a root filesystem, which contains all the user-space applications, libraries, and system utilities that constitute the Debian distribution. The `vivado-risc-v` project simplifies this by providing mechanisms to use a pre-built Debian RISC-V root filesystem (`rootfs.tar.gz`), which is then typically extracted and written to a partition on the SD card by the `./mk-sd-card` utility script. This allows the system to boot into a familiar Linux environment with access to package management (`apt`) and a vast collection of pre-compiled software.
+The priority order for these channels is as follows: \texttt{A} < \texttt{B} < \texttt{C} < \texttt{D} < \texttt{E}, where channel \texttt{A} has the lowest priority and \texttt{E} has the highest. Prioritization in the \texttt{TileLink} bus system ensures that messages transmitted through the system do not fall into a hold-and-wait loop. In other words, the message flow through all channels between agents is maintained as a directed acyclic graph, enabling the \texttt{TileLink} protocol to operate without encountering deadlocks, ensuring continuous and uninterrupted data flow within the system.
 
-%The `vivado-risc-v` Makefile orchestrates the download of prebuilt toolchains (e.g., `workspace/gcc/tools.tar.gz`), patching of submodules (OpenSBI, U-Boot, Linux kernel, Rocket Chip itself), compilation of these boot components, and generation of HDL from Chisel sources. The `./mk-sd-card` script then assembles the `boot.elf` (OpenSBI+U-Boot), Linux kernel image, and the Debian root filesystem onto an SD card, making it bootable on the FPGA once programmed with the corresponding bitstream.
+% The choice of TileLink bus configuration depends on the component desired to be connected to the system; in this thesis, these are cryptographic algorithm accelerator cores designed separately using Verilog HDL. For this purpose, the TileLink configuration used for integration is TL-UL, which only includes channels A and D between M and S, as shown in Figure \ref{fig:tilelink_tl_ul_structure}.
 
-%This comprehensive software stack, coupled with the custom hardware, transforms the FPGA into a fully operational RISC-V Linux server, providing a rich platform for developing and testing the time-series anomaly detection application accelerated by the Gemmini co-processor.
-
-%\section{Chipyard Framework and Rationale for Time-Series Anomaly Detection}
-%\label{sec:framework_rationale_timeseries}
-
-%\texttt{Rocket64b1gem16}) configuration was developed to address the computational demands inherent in time-series anomaly detection tasks that rely on Deep Neural Networks. The $16 \times 16$ systolic array within Gemmini delivers substantial parallel processing capability, ideal for the matrix-vector and matrix-matrix multiplications, as well as convolutions, that form the backbone of modern neural network architectures (such as LSTMs, Transformers, or specialized CNNs) frequently employed for analyzing sequential data. The 256KB on-chip scratchpad memory in Gemmini is dimensioned to locally store significant segments of input time-series data and the corresponding model parameters (weights and biases) during the processing of individual neural network layers. This local storage and reuse minimize the latency and energy overhead associated with frequent accesses to off-chip DDR memory.
-
-%The adoption of 8-bit quantized integer arithmetic, supported by the configured Gemmini instance, is a strategic choice for this application. Quantization significantly reduces the memory footprint of the deployed DNN models and lessens the bandwidth required for transferring weights and activations. These efficiencies are paramount when dealing with potentially long and high-volume time-series datasets, with the goal of maintaining high anomaly detection accuracy. The robust host CPU, running a full Debian Linux environment, provides the flexibility required for complex data preprocessing (e.g., normalization, feature extraction from raw time-series signals), post-processing of anomaly detection outputs, managing network communication, and handling overall system control and user interaction, while the Gemmini accelerator is dedicated to the high-performance execution of the core DNN inference computations.
-
-%This carefully architected SoC, realized on the VC707 FPGA via the `vivado-risc-v` project and running a full Debian Linux distribution, represents a balanced hardware platform. It combines the versatility of general-purpose processing with the efficiency of specialized, high-throughput hardware acceleration, specifically tailored to meet the challenges of deploying sophisticated DNN models for time-series anomaly detection.
-
-
-
-%\section{Implementation of the Time-Series Anomaly Detection System}
-%\label{sec:implementation_of_the_time_series_anomaly_detection_system}
+The choice of \texttt{TileLink} bus configuration is relevant for connecting various memory-mapped peripherals within the system. For general-purpose MMIO peripherals, which might include cryptographic algorithm accelerators designed in \texttt{Verilog} HDL (if they were to be integrated as MMIO devices), the \texttt{TL-UL} configuration, comprising only channels \texttt{A} and \texttt{D} between M and S (as shown in Figure \ref{fig:tilelink_tl_ul_structure}), is often sufficient. However, for the primary accelerator in this thesis, the \texttt{Gemmini} core, integration is achieved through the \texttt{RoCC} interface, which provides a more tightly-coupled path to the processor core, rather than as a \texttt{TileLink}-attached MMIO peripheral. Details on the \texttt{RoCC} interface are discussed further in Section \ref{subsec:peripheral_components}. For other standard MMIO peripherals, a wrapper from the \texttt{Rocket Chip} library, using \texttt{Chisel}/\texttt{Scala}, can be inherited and customized to connect their signals to the appropriate system bus, typically the peripheral bus.
 
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{TileLink_Overview.pdf} % Replace placeholder.png with your actual image file
+    \caption{\texttt{TileLink} \texttt{TL-UL} connection structure. Source: \cite{sifive2017tilelink}}
+    \label{fig:tilelink_tl_ul_structure}
+\end{figure}
 
+At the system configuration level, a wrapper from the \texttt{Rocket Chip} library, using \texttt{Chisel}/\texttt{Scala}, can be inherited and customized to convert the signals of the accelerator core to the system bus, in this case, the peripheral bus. Details for this interface will be further elaborated in subsequent sections of this thesis.
+
+\subsection{Memory and Cache}
+\label{subsec:memory_cache}
+
+Each Tile in the system is integrated with a processor core and an L1 cache that is flexibly configurable. By default design with \texttt{Chisel}, the L1 cache has a size of 16 KiB, organized multi-dimensionally with sets and ways. The L1 cache uses a set-associative cache structure, dividing the memory region into sets, each set containing a fixed number of data blocks (ways). When a memory address access request occurs, the index derived from the address maps it to a specific set. The cache controller then searches for the data block within the ways of that set. This design supports both instruction and data storage, optimizing access performance and increasing the hit rate compared to caches with lower associativity.
+
+In addition to the L1 cache, the system also integrates a shared L2 cache, connected to all cores via the \texttt{TileLink} bus system. The L2 cache acts as an intermediate storage repository, allowing processor cores and other components in the system to perform read/write data requests. This is a coordination mechanism that helps reduce pressure on the main memory and improves overall processing performance. The L2 cache controller also ensures fairness in resource allocation, using a queuing system to manage access requests.
+
+At a higher level, the system also supports the integration of external memory, such as DRAM or SRAM, through open-source controllers or specialized IPs from FPGA implementation toolkits. Additionally, an interface with \texttt{DRAMSim} is supported for integration when performing full-system simulation. This provides flexibility and scalability, meeting various requirements in practical applications.
+
+\subsection{Core-Complex}
+\label{subsec:core_complex}
+
+As previously mentioned, the \texttt{Chipyard} framework and library consist of many component definition classes that can form a \texttt{Rocket Chip} system. This allows for the formation of a complex system with diverse processor cores and peripherals, specifically heterogeneous architecture systems comprising multiple different processors like \texttt{Rocket} and \texttt{BOOM} coexisting on the system.
+
+In these multi-core processor structures, each individual core will be uniquely identified with a different hart ID, ordered according to the system configuration. An example can be referenced below with a configuration comprising one \texttt{Rocket} core and one \texttt{BOOM} core. The corresponding block diagram configuration when generating the system will be as shown in Figure \ref{fig:heterogeneous_cores_system} below.
+
+% Same, which one sounds better?
+% As previously mentioned, the Chipyard framework and library consist of many component definition classes that can form a Rocket Chip system. This allows for the formation of a complex system with diverse processor cores and peripherals. A key capability is the creation of systems with heterogeneous architectures, potentially comprising multiple different processor cores like Rocket and BOOM coexisting on the same system, as illustrated in Figure \ref{fig:heterogeneous_cores_system}.
+
+% In such multi-core processor structures, each individual processor core would be uniquely identified with a different hart ID, ordered according to the system configuration. For instance, a configuration might include one Rocket core alongside a BOOM core.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{RocketBOOM_CoreComplex.pdf} % Replace placeholder.png with your actual image file
+    \caption{Implementation structure of a heterogeneous multi-core processor system.}
+    \label{fig:heterogeneous_cores_system}
+\end{figure}
+
+A heterogeneous SoC system is an implementation approach also considered in this thesis to combine different processor cores to optimize performance and energy efficiency. At the application scale, lightweight cores can handle simple tasks with low power consumption, while high-performance cores support hyper-threading and out-of-order execution to process complex tasks. This design ensures flexibility, resource optimization, and superior performance for diverse applications.
+
+\subsection{Peripheral Components}
+\label{subsec:peripheral_components}
+
+In the base system configuration class of \texttt{Rocket Chip}, many peripheral components are initialized and integrated by default to support both simulation and deployment on FPGA hardware for the SoC system. This configuration includes basic I/O devices such as PWM, interrupt controllers, JTAG, ROM, external memory, and standard peripheral interfaces, ensuring that basic communication, storage, and control requirements are met. In particular, common peripheral devices like UART, SPI Flash, and GPIO are implemented to support serial communication, storage management, and flexible control within the system.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{RocketChip_Peripherals.pdf}
+    \caption{Peripherals in the Rocket Chip base system.}
+    \label{fig:rocketchip_base_peripherals}
+\end{figure}
+
+%  \begin{figure}[h!]
+% \centering
+% \includegraphics[width=0.8\textwidth]{placeholder.png} % Still using placeholder for this general example
+% \caption{Implementation structure of a heterogeneous multi-core processor system (e.g., Rocket and BOOM). This illustrates a general capability of Chipyard.}
+% \label{fig:heterogeneous_cores_system} % Kept the original label, adjust if needed
+% \end{figure}
+
+% A heterogeneous SoC with multiple distinct processor cores is an advanced implementation option that can be used to optimize performance and energy efficiency. At an application scale, lightweight cores could handle simple tasks with low power consumption, while high-performance cores could support features like hyper-threading and out-of-order execution for complex tasks. While the system developed in this thesis focuses on a single Rocket core augmented by the Gemmini RoCC accelerator, understanding Chipyard's capacity for heterogeneous multi-processor designs highlights its flexibility and potential for future, more complex applications. The design principles of modularity and clear interfacing within Chipyard facilitate such varied configurations.
+
+All these components are developed based on the open-source \texttt{Rocket Chip} library, with hardware designs like \texttt{Rocket} and \texttt{BOOM} realized on the \texttt{Chisel} platform. When external memory is needed in design and simulation, the \texttt{AXI4} (Advanced eXtensible Interface 4) interface can be integrated as an intermediate layer, allowing effective connection with DRAM or SPI Flash models. Concurrently, serial protocols like JTAG are integrated to ensure accurate debugging capabilities and efficient serial communication, configured to connect with the \texttt{TileLink} bus. The \texttt{Rocket Chip} system also supports flexible configuration through special control ports, including custom boot pins and chip identification ports. Furthermore, the \texttt{Rocket Chip} system provides the capability to directly map bus interfaces such as \texttt{AXI4} Memory and MMIO (Memory-Mapped IO), allowing for expanded compatibility and optimized performance in complex SoC applications.
+
+To expand the capability of integrating components and peripheral cores to form highly parameterized custom systems suitable for specific applications, the \texttt{Rocket Chip} architecture provides two flexible methods for peripheral integration. Specifically, the system can integrate a peripheral core as a \texttt{RoCC} (\texttt{Rocket} Custom Co-processor), located within each tile, or integrate at the system communication level via the MMIO mechanism. These methods facilitate in-depth customization, meeting various requirements for each specific application.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{RocketChip_WithMMIO.pdf} % Replace placeholder.png with your actual image file
+    \caption{\texttt{RoCC} co-processor core and MMIO peripheral core in \texttt{Rocket Chip}.}
+    \label{fig:rocc_mmio_rocketchip}
+\end{figure}
+
+MMIO Peripherals are custom peripherals attached directly to the \texttt{TileLink} bus, while Tightly-Coupled \texttt{RoCC} Accelerators are custom peripherals attached directly to the arbiter and processor within each Tile, in parallel with the processor core. With the \texttt{TileLink}-Attached MMIO method, the processor communicates with MMIO devices through registers mapped into memory at addresses on the system. Through these registers, control mechanisms or data transfer can be customized to suit the application of the peripheral core. Conversely, in the \texttt{RoCC} Accelerator method, communication is performed via a custom protocol and non-standard ISA instructions, which are configured and defined separately within the encoding space of the RISC-V ISA. For \texttt{Rocket} and \texttt{BOOM}, each core can control up to four accelerators through custom opcodes, sharing resources with the microprocessor. Instructions executed with \texttt{RoCC} cores have the format \texttt{customX rd, rs1, rs2, funct}. Here, \texttt{X} is a number from 0-3, determining the opcode that controls the routing of the instruction to a specific accelerator. The fields \texttt{rd}, \texttt{rs1}, \texttt{rs2} are the register numbers for the destination register and two source registers, and the \texttt{funct} field is a 7-bit integer that the accelerator can use to differentiate various instructions.
+
+Peripherals connected as \texttt{RoCCs} have a distinct advantage due to their high customizability and direct connection and control via custom ISA instructions. This allows for specialized performance optimization, particularly useful for cores requiring large, complex computational workloads or applications needing extremely fast response times. Communication via a custom protocol and leveraging the RISC-V ISA helps \texttt{RoCC} utilize CPU resources efficiently, while also offering flexibility in designing specialized accelerator processors. The \texttt{Gemmini} accelerator, central to this thesis, is a prime example of a \texttt{RoCC}-based component, designed for high-throughput matrix multiplication and tightly integrated with the \texttt{Rocket} core.
+
+While \texttt{RoCC} implementation can require a custom software toolchain for its specialized instructions, the performance benefits for demanding applications like those targeted by \texttt{Gemmini} often justify this investment. For this thesis, the integration of the \texttt{Gemmini} accelerator via the \texttt{RoCC} interface is deemed the most appropriate approach to achieve the desired performance for deep learning workloads.
+
+Conversely, the MMIO \texttt{TileLink}-Attached method is widely used for integrating general-purpose memory-mapped peripheral devices. In this model, peripheral devices provide a set of registers (e.g., \texttt{Chisel} Registers) to communicate with microprocessors or other masters on the system bus. This method is suitable for peripherals where the tight coupling and custom instruction set of \texttt{RoCC} are not necessary.
+
+To minimize design complexity for MMIO peripherals, the \texttt{Rocket Chip} architecture provides the \texttt{regmap} interface, which allows for the automatic generation of much of the necessary linking logic. Designers can use \texttt{TLRegisterRouter} or create a \texttt{LazyModule} and initialize \texttt{TLRegisterNode} to integrate such devices. Since \texttt{TileLink} is the official protocol used in SoCs based on \texttt{Rocket Chip} and \texttt{Chipyard}, designing MMIO peripheral devices (other than the primary \texttt{RoCC} accelerator) would typically focus on integration with this protocol.
+
+% Original version
+% However, this method also comes with some notable drawbacks. Firstly, implementing RoCC requires a custom software toolchain to synthesize special execution instructions, leading to longer development times and potentially increasing system complexity. Secondly, leveraging RoCC is only truly necessary for applications demanding extremely high performance; for use cases not requiring special optimization, this method may not provide value commensurate with the investment of effort. Dependence on non-standard instructions can reduce compatibility and scalability in diverse system designs. The development and integration of peripherals using the MMIO TileLink approach is deemed more suitable for the purposes of this thesis.
+
+% The MMIO TileLink-Attached method is widely used in designing memory-mapped peripheral devices. In this model, peripheral devices provide a set of registers, specifically Chisel Registers, to communicate with microprocessors or other masters on the system bus. By writing data to these registers, microprocessors can adjust settings or send commands to the peripheral device or accelerator core. Conversely, by reading from these registers, the microprocessor can query the status or receive results and data from the peripheral device or accelerator core.
+
+% To minimize design complexity, the Rocket Chip architecture provides the "regmap" interface, which allows for the automatic generation of much of the necessary linking logic. Instead of manually writing management nodes and register-exposing logic, designers can easily use TLRegisterRouter or create a LazyModule and initialize TLRegisterNode to integrate the device into the system. The simplest way to create an MMIO peripheral device is to use a configuration class like TLRegisterRouter, or AXI4RegisterRouter if choosing to use the AXI4 bus. This abstracts the details of the interconnect protocol with the peripheral bus (PBUS) and provides a convenient interface for defining memory-mapped registers. Since TileLink is the official protocol used in SoCs based on Rocket Chip and Chipyard, designing MMIO peripheral devices typically focuses on integration with this protocol, ensuring consistency and efficiency throughout the system.

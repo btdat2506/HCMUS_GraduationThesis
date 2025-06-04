@@ -1,328 +1,290 @@
-\chapter{Hardware Implementation}
-\label{Chapter2}
+\chapter{RISC-V Microprocessor Instruction Set Architecture}
 
-% This chapter details the foundational hardware architecture and the software environment that brings your custom SoC to life. It explains the tools, frameworks, and specific components used in the design and implementation of your system.
+\section{Overview of RISC-V}
 
-\section{Chisel HDL}
-\label{sec:chisel_hdl}
+Designing and developing a microprocessor, or Central Processing Unit (CPU), is a complex process requiring the collaboration of many experts in fields such as digital logic design, compiler development, and operating systems, along with significant financial resources. Major vendors like ARM, with prominent processor lines such as Cortex-M and Cortex-A, often impose high licensing fees and strict confidentiality requirements on their designs. This creates considerable barriers to hardware and software research and customization, particularly for academic institutions or small businesses. In response to these limitations, the RISC-V architecture \cite{waterman2014riscv, waterman2015riscvprivileged} was developed and introduced as an open-source solution, providing a flexible platform that eliminates licensing costs and allows for need-based customization. By fostering innovation and opening up a freer research ecosystem, RISC-V is reshaping the traditional approach to microprocessor development, aiming for more efficient and comprehensive solutions.
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
     \centering
-    \begin{subfigure}[b]{0.3\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{Images/01_Chisel_chisel.pdf}
-    \end{subfigure}%
-    \hfill
-    \begin{subfigure}[b]{0.2\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{Images/01_Chisel_firrtl.pdf}
-    \end{subfigure}%
-    \hfill
-    \begin{subfigure}[b]{0.2\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{Images/01_Chisel_chips_alliance.pdf}
-    \end{subfigure}
-    \caption{Logos: Chisel, FIRRTL, and CHIPS Alliance.}
-    \label{fig:chisel_ecosystem_logos}
+    \includegraphics[width=0.5\textwidth]{RISCV_Logo.pdf}
+    \caption{RISC-V is managed by RISC-V International. Source \cite{riscv2024members}}
+    \label{fig:riscv_international}
 \end{figure}
 
-\subsection{Theoretical Aspects of Chisel}
-\label{sec:chisel_theoretical}
-Chisel (Constructing Hardware In a Scala Embedded Language) is a hardware construction language (HCL) embedded in the Scala programming language. Unlike traditional Hardware Description Languages (HDLs) like Verilog or VHDL, Chisel leverages the power of a modern software language to describe hardware circuits. This approach allows for more productive and robust hardware design, especially for complex systems \cite{bachrach2012chisel}. Chisel is permissively licensed (Apache 2.0) under the guidance of CHIPS Alliance.
+Essentially, RISC-V is an open-source microprocessor instruction set architecture (ISA), designed and developed based on the Reduced Instruction Set Computer (RISC) methodology, and it represents the fifth generation of this design approach. For a program executing on a microprocessor, the RISC design methodology stipulates that the microprocessor executes only simple assembly (machine code) instructions, which have a fixed length and are executed within a single, uniform clock cycle. A complex task is performed by multiple assembly instructions, making the instruction set simple, compact, and easy to develop hardware for rapidly. This is entirely different from the Complex Instruction Set Computer (CISC) architecture, which aims to complete a task with the fewest possible assembly instructions. To achieve this, CISC microprocessors must be designed to execute structurally complex assembly instructions, capable of performing multiple specialized functions sequentially and executing over multiple clock cycles.
 
-% Motivation for Chisel
-The motivation behind Chisel stems from the increasing complexity of SoC designs. Traditional HDLs, while effective for describing hardware at a low level, can become cumbersome and error-prone when dealing with large, highly parameterized, or configurable systems. Chisel aims to address these challenges by introducing software engineering principles like abstraction, parameterization, and generation into the hardware design process. It seeks to improve design reusability, reduce development time, and enhance verification capabilities.
-
-% Key Concepts/Benefits
-Key concepts and benefits of Chisel include:
+Originating as a project developed by researchers and graduate students at the University of California, Berkeley in 2010, the initial purpose of RISC-V was to create a practical ISA to support research and teaching in computer architecture, deployable on both hardware and software without licensing requirements. The original authors of RISC-V were individuals with considerable experience in computer design. Consequently, for stable development, RISC-V aimed for several goals, most of which have been achieved, including:
 \begin{itemize}
-    \item \textbf{Generators:} Chisel excels at creating parameterized hardware generators. Designers can write code that generates specific hardware instances based on a set of parameters. This is extremely powerful for creating configurable components like CPUs, caches, or accelerators, where a single generator can produce many different variations tailored to specific needs.
-    \item \textbf{High-Level Abstraction:} By being embedded in Scala, Chisel allows designers to express hardware at a much higher level of abstraction than traditional HDLs. This includes using object-oriented programming, functional programming constructs, and rich type systems to describe complex hardware structures more concisely and intuitively.
-    \item \textbf{Modularity \& Composability:} Chisel promotes the creation of modular and composable hardware components. Designs can be broken down into smaller, reusable modules that can be easily interconnected to build larger systems. This aligns with modern software engineering practices and facilitates team-based design.
-    \item \textbf{Type Safety:} Scala's strong static type system, inherited by Chisel, helps catch many common design errors at compile time rather than during lengthy simulations. This leads to more robust designs and faster debugging cycles.
-    \item \textbf{FIRRTL:} Chisel is powered by FIRRTL (Flexible Intermediate Representation for RTL), a hardware compiler framework implemented by LLVM CIRCT. Chisel designs are compiled into FIRRTL, which serves as a common interchange format that can be transformed and optimized before being converted into Verilog for synthesis or simulation. This decoupling allows for a vibrant ecosystem of tools and backends to operate on Chisel-generated hardware \cite{chipyard}.
+    \item A complete, fully open-source ISA, free for academic, educational, and industrial use, with practical applicability suitable not only for experimental simulation but also for hardware implementation.
+    \item An ISA not oriented towards complex microarchitectures or fixed by any specific implementation technology (FPGA, ASIC, full-custom, etc.) but still allowing for efficient implementation in any of these directions.
+    \item An ISA divided into base ISAs, usable for developing hardware accelerators or for educational purposes, and optional standard extensions to support general software development.
+    \item An ISA supporting extensive instruction set extensions with specialized functionalities and numerous variants.
+    \item Support for the IEEE 754-2008 floating-point standard.
+    \item Support for parallel, multi-core, and heterogeneous many-core implementations.
+    \item Both 32-bit and 64-bit address space variants developed for applications, operating system kernels, and hardware implementations.
 \end{itemize}
 
-\begin{figure}[htbp]
+Due to its open-source nature, RISC-V allows developers to freely use the design architecture without paying intellectual property and licensing fees. This creates development opportunities for RISC-V itself as it is adopted by the research community and educational institutions, gradually becoming popular in industry, and attracting significant attention from many large companies, corporations, and even governments of various countries. Furthermore, designers using the RISC-V ISA can utilize it without limitations in both hardware and software. This means developers are encouraged, but not required, to publicly disclose their designs and projects developed using RISC-V.
+
+Currently, the development process and rights regarding the publication, release, and maintenance of intellectual property and official documentation related to RISC-V are managed by RISC-V International, based in Switzerland. This meets the standardization requirements for designers and users for commercial purposes, who demand a system using the RISC-V ISA that can operate and exist for many years.
+
+To suit various implementers and ensure flexibility in designs with specialized characteristics, the RISC-V instruction set is divided and standardized into two main parts: the base instruction set and standard extensions. The RISC-V instruction set supports 32-bit, 64-bit, and 128-bit architectures with the respective base instruction sets RV32I, RV32E, RV64I, and RV128I. Among these, RV32I is the most important and common set for 32-bit microprocessors, featuring 40 integer manipulation instructions. The fact that RISC-V only standardizes and provides the instruction set allows hardware designers the freedom to choose how to implement their designs.
+
+\subsection{RISC-V 32-bit and the RV32I Base Instruction Set}
+
+RV32I \cite{waterman2014riscv} is the base instruction set present in almost all 32-bit RISC-V microprocessor architectures. The assembly instructions in this set use 32 32-bit registers, named \texttt{x0} - \texttt{x31}, to store integers. Each register, in addition to being numbered from 0 to 31, is also referred to by its Application Binary Interface (ABI) name, which reflects its specific function. For example, register \texttt{x0} is a read-only register containing the constant value "0", and register \texttt{x1} is used as the return address register, storing the return address when a function is executed. Table \ref{tab:rv32i_registers} lists these registers and their functions in detail.
+
+\begin{table}[h!]
     \centering
-    \includegraphics[width=0.75\linewidth]{Images/01_Chisel_flow.pdf}
-    \caption{Chisel and FIRRTL workflow.}
-    \label{fig:chisel_flow}
+    \caption{ABI names and functions of registers in RV32I. Source \cite{waterman2014riscv}}
+    \label{tab:rv32i_registers}
+    \begin{tabular}{lll}
+    \toprule
+    Register & ABI Name & Description \\
+    \midrule
+    x0 & zero & Constant "0" \\
+    x1 & ra & Return address \\
+    x2 & sp & Stack pointer \\
+    x3 & gp & Global pointer \\
+    x4 & tp & Thread pointer \\
+    x5 $\to$ x7 & t0 $\to$ t2 & Temporary \\
+    x8 & s0/fp & Memory/frame pointer \\
+    x9 & s1 & Memory \\
+    x10, x11 & a0, a1 & Function parameter/return value \\
+    x12 $\to$ x17 & a2 $\to$ a7 & Function parameter \\
+    x18 $\to$ x27 & s2 $\to$ s11 & Memory \\
+    x28 $\to$ x31 & t3 $\to$ t6 & Temporary \\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+The assembly instructions in RV32I use six different 32-bit instruction formats, depending on the function of the instruction. These include R, I, S, U formats, as well as two additional formats for immediate values: B and J. These formats are clearly shown in Figure \ref{fig:rv32i_formats}. Notably, the source registers (\texttt{rs1} and \texttt{rs2}) and the destination register (\texttt{rd}) are kept in the same position in most formats, simplifying instruction decoding. The only discernible difference lies in how \texttt{rs2}, \texttt{rd}, and immediate values are organized within the instruction.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{RISC-V_Instruction_Formats.pdf}
+    \caption{Instruction encoding formats in RV32I. Source \cite{waterman2014riscv}}
+    \label{fig:rv32i_formats}
+    \textit{Note: This figure should depict the R, I, S, U, B, and J formats as shown in the RISC-V specification.}
 \end{figure}
 
-\subsection{Chisel Implementation and Relevance to Project}
-\label{sec:chisel_implementation}
-% Role in Your Design
-In this project, Chisel is the fundamental hardware description language used for defining the core components of the SoC. Specifically, it is the underlying language for the Rocket Chip SoC generator, the Gemmini accelerator, and the overarching Chipyard framework that integrates these elements. While this project did not involve writing extensive custom Chisel code from scratch, understanding Chisel is crucial as it defines the structure and behavior of the pre-existing generators that were configured and integrated.
+Figure \ref{fig:rv32i_instructions} details all instructions in the RV32I base instruction set with their respective formats, specific opcode values, and function codes (\texttt{funct3} and \texttt{funct7}). Functionally, the RV32I set is divided into five distinct groups:
+\begin{itemize}
+    \item 21 integer computation instructions: Perform arithmetic (addition, subtraction, bit shifts), logic (AND, OR, XOR, NOT, etc.), and comparison operations on signed and unsigned numbers. Typically use R-type and I-type formats.
+    \item 8 load-store instructions: LOAD and STORE byte, half-word, word (signed and unsigned), typically using I-type and S-type formats.
+    \item 8 control-flow/branch instructions: Conditional branches, performing comparisons between two registers to decide whether to branch (BEQ/BNE, BLT, BGE), typically using I-type format.
+    \item 2 system access instructions for the execution environment - ECALL and breakpoint - EBREAK, using I-type format.
+    \item 1 memory access ordering instruction - FENCE, used by other processing cores (in multi-core scenarios) or other peripheral devices in the system. The I-type format is used for this instruction with some specific bit encoding rules and opcodes.
+\end{itemize}
 
-% Advantages Utilized
-The primary advantages of Chisel utilized in this project are its generative capabilities and parameterization. For instance, the Rocket core and Gemmini accelerator are highly parameterized Chisel generators. This allowed for the specific configuration of the CPU (e.g., RV64I, cache sizes) and the Gemmini accelerator (e.g., systolic array dimensions, scratchpad size) to meet the project's requirements without needing to modify low-level RTL. The Chipyard framework leverages these Chisel-based generators to construct the final SoC design.
-
-\section{Chipyard for SoC Design Framework}
-\label{sec:chipyard_framework}
-
-\begin{figure}[htbp]
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\linewidth]{Images/02_Chipyard_ChipyardLogo.pdf}
-    \caption{Chipyard logo.}
-    \label{fig:chipyard_logo}
+    % \includegraphics[width=\textwidth]{rv32i_instruction_list_placeholder.png}
+    \fbox{Placeholder for RV32I Instruction List Diagram}
+    \caption{Instructions in the RV32I base instruction set. Source \cite{waterman2014riscv}}
+    \label{fig:rv32i_instructions}
+    \textit{Note: This figure should list the RV32I instructions as shown in the RISC-V specification.}
 \end{figure}
 
-\subsection{Theoretical Aspects of Chipyard}
-\label{sec:chipyard_theoretical}
-Chipyard is an open-source, integrated System-on-Chip (SoC) design framework that promotes agile development methodologies for complex, custom hardware systems \cite{chipyard}. It provides a comprehensive ecosystem that brings together a vast collection of RTL generators, software toolchains, simulation environments, and VLSI implementation flows. The primary goal of Chipyard is to enable rapid architectural exploration, design, validation, and physical implementation of SoCs, particularly those incorporating RISC-V cores, specialized hardware accelerators, and heterogeneous compute elements.
+With these 40 instructions, the microprocessor can perform most basic operations on integers. Additionally, several standard pseudo-instructions are defined to add tasks for which there are no dedicated instructions in the set. For example, the MOVE instruction - "\texttt{mv rd, rs}" - performs the function of moving/copying data between two registers. In a program, this instruction might be generated in the assembly code by a RISC-V compiler but is actually converted by assemblers into a standard instruction when translating to machine code, namely ADDI - Add Immediate "\texttt{addi rd, rs, 0}", which adds the source register to the constant "0" and assigns it to the destination register, achieving a similar function. Some other pseudo-instructions and their equivalent standard instructions are shown in Table \ref{tab:pseudo_instructions}.
 
-% Core Components
-Chipyard's key constituents include:
-\begin{itemize}
-    \item \textbf{Chisel-based RTL Generators:} At its core, Chipyard relies heavily on Chisel for hardware generation. It integrates a rich library of open-source, generator-based IP blocks, including RISC-V CPU cores (like Rocket, BOOM), cache hierarchies, memory interconnects (e.g., TileLink), peripherals, and domain-specific accelerators like Gemmini. These generators allow for highly parameterized and composable hardware designs.
-    \item \textbf{Software Toolchains:} Chipyard provides a complete set of software development tools, including RISC-V cross-compilers (GCC, LLVM), linkers, debuggers (GDB), and tools for building bare-metal applications and full Linux distributions (e.g., using Buildroot or Yocto through FireMarshal). This enables software development to proceed concurrently with hardware design.
-    \item \textbf{Simulation Environments:} Chipyard supports multiple simulation methodologies for design verification and performance analysis:
-    \begin{itemize}
-        \item Software RTL Simulation: Cycle-accurate simulation using open-source tools like Verilator or commercial simulators (e.g., VCS, QuestaSim) for detailed debugging and functional verification \cite[p.~29]{chipyard}.
-        \item FPGA-Accelerated Simulation (FireSim): For faster, full-system validation with long-running, complex workloads, Chipyard integrates FireSim. FireSim enables cycle-exact, massively parallel simulation on cloud-hosted FPGAs (e.g., Amazon EC2 F1 instances), providing a scalable and accessible platform for pre-silicon performance evaluation and software testing \cite{karandikar2018firesim, chipyard}.
-    \end{itemize}
-    \item \textbf{Verification Infrastructure:} The framework incorporates infrastructure for unit testing, integration testing, and full-system verification. This includes testing harnesses, example test suites, and continuous integration (CI) methodologies.
-    \item \textbf{VLSI Implementation (Hammer):} For physical design and tapeout, Chipyard includes Hammer, an open-source VLSI flow that abstracts process-technology and EDA-tool specifics. Hammer aims to make physical design scripts more portable and reusable across different manufacturing processes and toolchains \cite{chipyard}.
-\end{itemize}
-
-% Design Flow
-The typical Chipyard design flow starts with high-level SoC configuration using Scala-based configuration files. These files specify the desired IP blocks, their parameters, and how they are interconnected. Chisel then elaborates this configuration into FIRRTL, which can undergo various transformations. The FIRRTL is then converted to Verilog RTL, which can be used for software simulation, FPGA emulation (e.g., using FireSim or direct FPGA synthesis), or ASIC implementation using Hammer. Concurrently, software workloads, including operating systems like Linux, can be built and run on the simulated or emulated hardware.
-
-\begin{figure}[htbp]
+\begin{table}[h!]
     \centering
-    \includegraphics[width=0.75\linewidth]{Images/02_Chipyard_ChipyardFlow.pdf}
-    \caption{Multiple disparate design flows supported by the Chipyard framework through generators and transformations. A series of FIRRTL transformations consumes generators with a custom configuration, and outputs appropriate Verilog and associated collateral for different design stage platforms.}
-    \label{fig:chipyard_flow}
+    \caption{Pseudo-instructions and their corresponding standard instructions. Source \cite{waterman2014riscv}}
+    \label{tab:pseudo_instructions}
+    \begin{tabular}{lll}
+    \toprule
+    \textbf{Pseudo-instruction} & \textbf{Corresponding Core Instruction} & \textbf{Meaning} \\
+    \midrule
+    nop & addi rd, x0, x0 & No operation \\
+    li rd, imm & addi rd, x0, imm & Load constant (immediate) \\
+    mv rd, rs & addi rd, rs, 0 & Copy register \\
+    not rd, rs & xori rd, rs, -1 & One's complement (invert) \\
+    neg rd, rs & sub rd, x0, rs & Two's complement (negative) \\
+    seqz rd, rs & sltiu rd, rs, 1 & Compare equal to zero \\
+    snez rd, rs & sltiu rd, x0, rs & Compare not equal to zero \\
+    sltz rd, rs & slt rd, rs, x0 & Compare less than zero \\
+    sgtz rd, rs & slt rd, x0, rs & Compare greater than zero \\
+    beqz rs, offset & beq rs, x0, offset & Branch if equal to zero \\
+    bnez rs, offset & bne rs, x0, offset & Branch if not equal to zero \\
+    blez rs, offset & bge x0, rs, offset & Branch if less than or equal to zero \\
+    bgez rs, offset & bge rs, x0, offset & Branch if greater than or equal to zero \\
+    bltz rs, offset & blt rs, x0, offset & Branch if less than zero \\
+    bgtz rs, offset & blt x0, rs, offset & Branch if greater than zero \\
+    j offset & jal x0, offset & Jump to label (offset) \\
+    jal offset & jal x1, offset & Jump and link register \\
+    ret & jalr x0, 0(x1) & Return from subroutine \\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+As mentioned, a goal of RISC-V is to support implementations requiring more features beyond the base instruction set. This is reflected in RISC-V defining extensions \cite{waterman2014riscv} for its instruction set architecture. These extensions define additional instruction encodings for various functionalities. For example, the standard M extension adds instructions for integer multiplication and division, while the standard F extension defines instructions for single-precision floating-point computation and manipulation.
+
+\begin{table}[h!]
+    \centering
+    \caption{Development status of extended RISC-V instruction sets. Source \cite{waterman2014riscv}}
+    \label{tab:extension_status}
+    \begin{tabular}{llll}
+    \toprule
+    \textbf{Instruction Set} & \textbf{Function Description} & \textbf{Version} & \textbf{Status} \\
+    \midrule
+    M & Integer multiplication and division instruction set & 2.0 & Approved \\
+    A & Atomic memory operation instruction set & 2.1 & Approved \\
+    F & Single-precision floating-point computation & 2.2 & Approved \\
+    D & Double-precision floating-point computation & 2.2 & Approved \\
+    Q & Quad-precision floating-point computation & 2.2 & Approved \\
+    C & Compressed instruction set & 2.0 & Approved \\
+    Zifence & Instruction-Fetch Fence instruction set & 2.0 & Approved \\
+    Zicsr & Control and Status Registers (CSRs) instruction set & 2.0 & Approved \\
+    Ztso & Total Store Ordering instruction set & 1.0 & Approved \\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+Table \ref{tab:extension_status} above clearly lists the standard extension sets developed and published by RISC-V International. It can be seen that many instruction sets have been ratified and can be used in designs. When implemented, architectures supporting the RV32I base instruction set (or RV64I depending on the architecture) combined with the standard extensions M, A, F, D, Zicsr, and Zifencei are often summarized and referred to as the RV32G (or RV64G) instruction set, named for its general-purpose utility.
+
+\subsection{RISC-V 64-bit and the RV64I Base Instruction Set}
+
+Similar to RV32I, RV64I is the base instruction set for 64-bit microprocessor architectures, featuring 64-bit wide registers and supporting 64-bit addressing (XLEN=64), though instructions remain 32-bits wide. Architectures compliant with RV64I are compatible with RV32 instructions and include additional instructions to support operations between 32-bit and 64-bit data. For example, the \texttt{LW} instruction loads a 32-bit value and sign-extends it into a 64-bit register, while the new \texttt{LD} instruction loads a 64-bit word. The \texttt{ADD} instruction now performs 64-bit addition, while the \texttt{ADDW} instruction handles 32-bit addition, ignoring the upper 32 bits and returning a 32-bit signed value, sign-extended to 64 bits. These instructions enabling backward compatibility typically have a "W" suffix to denote 32-bit wide operations.
+
+The compiler and calling conventions maintain the invariant that all 32-bit values are stored in sign-extended format within 64-bit registers. Even 32-bit unsigned integers will have bit 31 extended into bits 63 through 32. Consequently, converting between 32-bit signed and unsigned integers is a no-operation, as is converting from a 32-bit signed integer to a 64-bit signed integer. Existing 64-bit instructions like \texttt{SLTU} (set less than unsigned) and branch comparisons continue to operate correctly on 32-bit unsigned integers under this rule. Similarly, 64-bit logical operations on 32-bit sign-extended integers preserve the sign-extension property. A few new instructions (\texttt{ADD[I]W/SUBW/SxxW}) are necessary for addition and shifts to ensure reasonable performance for 32-bit values.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{RISCV_64bit_ADDIW.pdf}
+    \caption{Instruction encoding format for ADDIW in 64-bit architecture. \cite{waterman2014riscv}}
+    \label{fig:addiw_format}
 \end{figure}
 
-\subsection{Chipyard Implementation and Relevance to Project}
-\label{sec:chipyard_implementation}
-% How You Used Chipyard
-In this research, Chipyard served as the foundational framework for generating the custom SoC. The process involved:
-\begin{enumerate}
-    \item Setting up the Chipyard environment and its dependencies.
-    \item Defining a custom SoC configuration that specified the desired Rocket Core variant, Gemmini accelerator parameters, memory system details, and other peripheral components.
-    \item Utilizing Chipyard's build system to invoke Chisel and generate the Verilog RTL for the configured SoC.
-    \item Employing Chipyard's integrated tools (or tools compatible with its output) for simulation and further downstream processing towards FPGA implementation.
-\end{enumerate}
-This research utilizes Chipyard as the primary framework for constructing and evaluating the Rocket Chip-based SoC with the Gemmini accelerator. The specific SoC configuration developed is identified as \texttt{Rocket64b1gem16}.
+Some distinctly different instructions found only in RV64I include the \texttt{ADDIW} instruction, as shown in Figure \ref{fig:addiw_format}. \texttt{ADDIW} performs an addition between a 12-bit sign-extended immediate value and register \texttt{rs1}, producing a proper 32-bit sign-extended result in \texttt{rd}. Overflows are ignored, and the result consists of the lower 32 bits of the sum, sign-extended to 64 bits. Note, the instruction "\texttt{addiw rd, rs1, 0}" writes the sign-extension of the lower 32 bits of register \texttt{rs1} into register \texttt{rd} (pseudo-instruction \texttt{SEXT.W}).
 
-% Your SoC Configuration
-Chipyard was used to configure and integrate the specific Rocket Core chosen for this project and the Gemmini accelerator. The \texttt{Rocket64b1gem16} configuration specifies a 64-bit Rocket Core (a "big" core variant suitable for Linux) integrated with a Gemmini unit featuring a 16x16 systolic array. Chipyard's configuration system managed the parameterization of these components and their connection within the SoC fabric, including setting up the TileLink interconnect and memory system interfaces.
-
-\section{RISC-V, Rocket Core, and Rocket Chip}
-\label{sec:riscv_rocket}
-
-\subsection{Theoretical Aspects of RISC-V, Rocket Core, and Rocket Chip SoC Generator}
-\label{sec:riscv_rocket_theoretical}
-% RISC-V ISA
-\subsubsection{RISC-V Instruction Set Architecture (ISA)}
-RISC-V is an open, free, and extensible instruction set architecture, representing a significant departure from proprietary ISAs \cite{asanovic2014riscv}. Its openness fosters collaboration and innovation in processor design across academia and industry.
-
-% Key Features
-Key features of RISC-V include:
-\begin{itemize}
-    \item \textbf{Modularity:} The ISA is defined by a base integer instruction set (e.g., RV32I, RV64I) and a set of standard, optional extensions (e.g., 'M' for multiplication/division, 'A' for atomics, 'F' for single-precision floating-point, 'D' for double-precision, 'C' for compressed instructions). The combination IMAFD is often denoted by 'G' (general-purpose) \cite{asanovic2016rocketchip}.
-    \item \textbf{Extensibility:} RISC-V reserves opcode space for custom user-defined extensions, allowing for tight integration of specialized co-processors and instructions.
-    \item \textbf{Privileged Architecture:} It defines multiple privilege levels (Machine, Supervisor, User) and mechanisms for virtual memory (MMU) and interrupt handling, essential for supporting operating systems like Linux \cite{waterman2015riscvpriv}.
-\end{itemize}
-
-% Advantages
-Advantages of RISC-V include its openness, which eliminates licensing fees and restrictions, its flexibility for customization, and its suitability for a wide range of applications from embedded systems to high-performance computing. This has led to a rapidly growing ecosystem of cores, tools, and software.
-
-\subsubsection{Rocket Core}
-
-\begin{figure}[htbp]
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\linewidth]{Images/03_RocketCore_RISCV_Rocket5Pipeline.pdf}
-    \caption{The Rocket core pipeline.}
-    \label{fig:rocket_core_pipeline}
+    \includegraphics[width=0.8\textwidth]{RISCV_64bit_I_Type.pdf}
+    \caption{Encoding format for 64-bit I-type shift instructions. \cite{waterman2014riscv}}
+    \label{fig:rv64i_shift_i_format}
 \end{figure}
 
-Rocket is a 5-stage in-order scalar core generator that implements the RV32G and RV64G ISAs. It has an MMU that supports page-based virtual memory, a non-blocking data cache, and a front-end with branch prediction. Branch prediction is configurable and provided by a branch target buffer (BTB), branch history table (BHT), and a return address stack (RAS). For ﬂoating-point, Rocket makes use of Berkeley's Chisel implementations of floating-point units. Rocket also supports the RISC-V machine, supervisor, and user privilege levels. A number of parameters are exposed, including the optional support of some ISA extensions (M, A, F, D), the number of ﬂoating-point pipeline stages, and the cache and TLB sizes.
-Rocket can also be thought of as a library of processor components. Several modules originally designed for Rocket are re-used by other designs, including the functional units, caches, TLBs, the page table walker, and the privileged architecture implementation (i.e., the control and status register file).
+I-type shift operations in RV64I (Figure \ref{fig:rv64i_shift_i_format}) use the same opcode as RV32I with some modifications. Register \texttt{rs1} contains the operand, and the shift amount is encoded in the lower 6 bits of the I-immediate field. Bit 30 determines the shift type: \texttt{SLLI} (logical left shift, zeros shifted into lower bits), \texttt{SRLI} (logical right shift, zeros shifted into upper bits), and \texttt{SRAI} (arithmetic right shift, sign bit copied into vacated upper bits).
 
-The Rocket Custom Coprocessor Interface (RoCC) facilitates decoupled communication between a Rocket processor and attached coprocessors. Many such coprocessors have been implemented, including crypto units (e.g., SHA3) and vector processing units. The RoCC interface accepts coprocessor commands generated by committed instructions executed by the Rocket core. The commands include the instruction word and the values in up to two integer registers, and commands may write an integer register in response. The RoCC interface also allows the attached coprocessor to share the Rocket core's data cache and page table walker, and provides a facility for the coprocessor to interrupt the core. These mechanisms are sufficient to construct coprocessors that participate in a page-based virtual memory system. Finally, RoCC accelerators may connect to the outer memory system directly over the TileLink interconnect, providing a high-bandwidth but coherent memory port. The Hwacha vector-fetch unit makes use of all of these features and has driven the development of RoCC into a sophisticated coprocessor interface.
-
-\begin{figure}[htbp]
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.65\linewidth]{Images/03_RocketCore_RISCV_Rocket6pipeline.pdf}
-    \caption{The Rocket microarchitecture.}
-    \label{fig:rocket_core_microarchitecture}
+    \includegraphics[width=0.8\textwidth]{RISCV_64bit_I_Type_ShiftBit.pdf}
+    \caption{Encoding format for 64-bit R-type shift instructions for word operations. \cite{waterman2014riscv}}
+    \label{fig:rv64i_shift_r_format}
 \end{figure}
 
+The \texttt{ADDW} and \texttt{SUBW} instructions in RV64I, similar to \texttt{ADD} and \texttt{SUB} for 64-bit operations, operate on 32-bit data and produce a 32-bit signed result, which is then sign-extended to 64-bits before being written to the destination register. Overflows are also ignored. The \texttt{SLL}, \texttt{SRL}, and \texttt{SRA} instructions perform logical left, logical right, and arithmetic right shifts on the value in \texttt{rs1}, with the shift amount determined by the lower 6 bits of \texttt{rs2}. The \texttt{SLLW}, \texttt{SRLW}, and \texttt{SRAW} instructions (Figure \ref{fig:rv64i_shift_r_format}), unique to RV64I, operate on 32-bit values and use the lower 5 bits of \texttt{rs2} to determine the shift amount.
 
-% Rocket Chip SoC Generator
-\subsubsection{Rocket Chip SoC Generator}
-Rocket Chip is a highly configurable, open-source System-on-Chip (SoC) generator written in Chisel that produces RISC-V based SoCs \cite{asanovic2016rocketchip}. It is a cornerstone of the Chipyard framework.
+Finally, load-store instructions can be mentioned. RV64I extends the address space to 64 bits, but the number of accessible addresses may vary depending on the execution environment.
 
-% What it is
-Instead of being a fixed processor design, Rocket Chip is a generator capable of producing a wide variety of SoC configurations. It can generate systems ranging from simple microcontrollers to complex, multi-core SoCs capable of booting full operating systems.
-
-% Key Components
-Key components generated or managed by Rocket Chip include:
-\begin{itemize}
-    \item \textbf{CPU Cores (e.g., Rocket core):} Generates scalar in-order cores like the Rocket core, or more complex out-of-order cores like BOOM. These cores are highly parameterizable in terms of ISA features, pipeline depth, cache parameters, etc.
-    \item \textbf{Cache Hierarchy:} Includes configurable L1 instruction and data caches for each core, and an optional shared L2 cache. Parameters like size, associativity, and replacement policies are customizable.
-    \item \textbf{Memory Interconnect (TileLink):} Employs TileLink, an open-source, cache-coherent, chip-scale interconnect protocol designed to connect cores, caches, memory controllers, and peripherals \cite[p.~6]{asanovic2016rocketchip} \cite[p.~15]{chipyard}.
-    \item \textbf{Peripheral Interfaces and RoCC Interface:} Provides standard bus interfaces for peripherals and the Rocket Custom Coprocessor (RoCC) interface for integrating custom accelerators.
-\end{itemize}
-
-% Why use it
-The open-source nature of Rocket Chip, its high degree of configurability via Chisel parameters, and its seamless integration within the Chipyard ecosystem make it an ideal choice for academic research and custom SoC development. It allows for detailed exploration of the design space and rapid prototyping.
-
-\subsection{RISC-V and Rocket Chip Implementation and Relevance to Project}
-\label{sec:riscv_rocket_implementation}
-% Your Specific Rocket Core Configuration
-For this project, a specific configuration of the Rocket core was utilized, instantiated as part of the \texttt{Rocket64b1gem16} SoC. This is a 64-bit (RV64G) Rocket core, configured as a "big" core variant. This implies:
-\begin{itemize}
-    \item It implements the RV64IMAFD (RV64G) instruction set, including integer, multiplication/division, atomic, single-precision, and double-precision floating-point operations. The `vivado-risc-v` project also suggests the inclusion of the `Zmmul` standard extension for integer multiplication and `Zihintnt` (non-temporal hints) which might be part of the base `gc` configuration used.
-    \item It is an in-order, single-issue scalar processor, likely with a 5-stage pipeline as is typical for Rocket cores.
-    \item Crucially, it includes a Memory Management Unit (MMU) and supports Supervisor mode, which are essential for running a sophisticated operating system like Debian Linux.
-    \item It features configurable branch prediction mechanisms and non-blocking data caches.
-\end{itemize}
-This Rocket CPU acts as the main general-purpose processor in the SoC, responsible for executing the Linux operating system, managing system resources and peripherals, and dispatching tasks to the Gemmini accelerator.
-
-% Cache Hierarchy
-The SoC's memory hierarchy, centered around the Rocket core, includes:
-\begin{itemize}
-    \item \textbf{L1 Caches:} The Rocket core is equipped with private L1 instruction and data caches. The specific sizes and associativities are parameters set during the Chipyard configuration (e.g., typically 16KB or 32KB, 4-way or 8-way set associative for a "big" core configuration).
-    \item \textbf{L2 Cache:} A shared L2 cache is integrated into the system. This cache is inclusive, meaning it maintains a superset of the data stored in the CPU's private L1 caches. The L2 cache serves to reduce average memory access latency for the CPU and can also benefit Gemmini's DMA transfers. The size and associativity of the L2 cache are also configurable parameters (e.g., 512KB or 1MB).
-\end{itemize}
-
-% Memory Subsystem
-The Rocket core interacts with the rest of the SoC's memory system via the TileLink interconnect. This includes accessing the shared L2 cache and, through it, the main off-chip DDR memory. The MMU within the Rocket core handles virtual-to-physical address translation for memory accesses originating from the CPU. The memory subsystem is designed to be coherent, ensuring a consistent view of memory between the CPU caches and other bus masters like Gemmini's DMA engine.
-
-% Integration within Chipyard
-The Rocket Chip parameters for the core (ISA extensions, pipeline features, FPU presence) and the cache hierarchy (L1/L2 sizes, associativity, banking) were specified within the Chipyard SoC configuration files. Chipyard then invoked the Rocket Chip generators to produce the corresponding RTL for these components and integrated them with other parts of the SoC, such as the Gemmini accelerator and the system interconnect.
-
-\section{Gemmini Accelerator as AI Core}
-\label{sec:gemmini_ai_core}
-
-\begin{figure}[htbp]
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\linewidth]{Images/04_Gemmini_Logo.pdf}
-    \caption{Gemmini logo.}
-    \label{fig:gemmini_logo}
+    \includegraphics[width=\textwidth]{RISCV_64bit_LoadStoreWord.pdf}
+    \caption{Encoding formats for 64-bit LOAD and STORE instructions. \cite{waterman2014riscv}}
+    \label{fig:rv64i_load_store_format}
 \end{figure}
 
-\subsection{Theoretical Aspects of Gemmini}
-\label{sec:gemmini_theoretical}
-% Need for AI Accelerators
-\subsubsection{Need for AI Accelerators}
-General-purpose CPUs, while versatile, are often inefficient for the computationally intensive workloads characteristic of modern Artificial Intelligence (AI) and Deep Learning (DL) applications. Operations like matrix multiplication and convolution, which are fundamental to Deep Neural Networks (DNNs), involve massive parallelism that CPUs struggle to exploit effectively. This has driven the development of specialized hardware accelerators designed to perform these tasks with significantly higher performance and energy efficiency.
+The instruction formats are shown in Figure \ref{fig:rv64i_load_store_format}. The \texttt{LD} instruction here will load a 64-bit value, \texttt{LW} loads a 32-bit value (sign-extended to 64-bits) from memory into a register, and \texttt{LWU} zero-extends a 32-bit value from memory into register \texttt{rd}. Similarly, \texttt{LH/LHU} and \texttt{LB/LBU} handle 16-bit and 8-bit values. The \texttt{SD}, \texttt{SW}, \texttt{SH}, and \texttt{SB} instructions store 64-bit, 32-bit, 16-bit, and 8-bit values from register \texttt{rs2} to memory, respectively.
 
-% Systolic Arrays
-\subsubsection{Systolic Arrays}
-Systolic arrays are a class of parallel processing architectures particularly well-suited for AI/DL workloads, especially matrix multiplication. They consist of a regular grid of simple Processing Elements (PEs), where data flows rhythmically across the array in a pipelined fashion. Each PE performs a small computation (e.g., a multiply-accumulate operation) and passes its result to neighboring PEs. This architecture allows for high data reuse and parallelism, leading to high throughput and efficiency for structured computations like those found in DNNs \cite{kung1982systolic}.
+\subsection{RISC-V Processor Cores}
 
-% What is Gemmini?
-\subsubsection{What is Gemmini?}
-Gemmini is an open-source, highly configurable systolic array-based matrix multiplication accelerator generator, written in Chisel \cite{genc2019gemmini, chipyard}. It is designed to be integrated into SoCs, often as a Rocket Custom Coprocessor (RoCC) or a TileLink-attached peripheral, to accelerate machine learning inference and training tasks. Gemmini aims to provide a flexible and powerful hardware solution for DNN computations.
+With its open-source nature, system developers can freely implement designs based on the RISC-V architecture, supported by an increasingly robust and growing ecosystem. The RISC-V ISA ecosystem mentioned here includes a diverse range of components from hardware design tools, low-level firmware development, bootloaders, to fully functional operating system kernels. Currently, development tools such as GCC/LLVM compilers, QEMU and Verilator simulators, and even the Linux operating system have incorporated RISC-V architecture and are under active development. As of the time of writing this thesis, there are over 100 open-source hardware processor cores and more than 40 open-source SoC platforms using the RISC-V ISA that have been and continue to be developed.
 
-\begin{figure}[htbp]
+This section will provide a general overview of pipeline, in-order, and out-of-order architectures commonly implemented in microprocessors. Subsequently, a brief survey of open-source RISC-V processor cores will be conducted to select the most suitable design for implementation.
+
+\subsection{Pipeline Architecture in Microprocessors}
+
+A modern general-purpose CPU is often designed using a pipeline architecture. This technique draws inspiration from industrial assembly lines, dividing the processing of an assembly instruction into multiple stages or segments, each performed by different specialized hardware units connected sequentially throughout the process and capable of continuous operation. This architecture is commonly found in many microprocessor designs using RISC in general and RISC-V ISA in particular, due to its higher performance compared to processing instructions sequentially and waiting for results.
+
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\linewidth]{Images/04_Gemmini_ArchitectureOverview.pdf}
-    \caption{Gemmini hardware architectural template overview.}
-    \label{fig:gemmini_architecture}
+    % \includegraphics[width=0.7\textwidth]{pipeline_stages_placeholder.png}
+    \fbox{Placeholder for Pipeline Stages Diagram}
+    \caption{Process of handling instructions through pipeline stages.}
+    \label{fig:pipeline_stages}
 \end{figure}
 
-% Key Architectural Features
-\subsubsection{Key Architectural Features of Gemmini}
-Gemmini's architecture is defined by several key configurable features:
+The concept of pipelining is illustrated in Figure \ref{fig:pipeline_stages}. While one assembly instruction is being processed in later stages, another assembly instruction begins processing in earlier stages, in parallel with previous instructions. It can be seen that at the fourth clock cycle, the pipeline is processing four different instructions in parallel, each in a distinct stage. A basic microprocessor pipeline consists of five stages. However, depending on the implementation and design, a microprocessor may use more or fewer stages, but still follows the sequence of stages explained below:
 \begin{itemize}
-    \item \textbf{Systolic Array Dimensions (\texttt{DIM}):} The core of Gemmini is a 2D systolic array of PEs. The \texttt{DIM} parameter specifies the size of this array (e.g., a \texttt{DIM} of 16 means a 16x16 array of PEs). The number of PEs directly impacts the parallel processing capability and thus the peak performance of the accelerator.
-    \item \textbf{Scratchpad Memory:} Gemmini includes dedicated on-chip SRAM, known as scratchpad memory, for storing input activations (feature maps), weights (filters), and intermediate partial sums. This local memory is crucial for reducing data movement to/from off-chip main memory, thereby saving energy and bandwidth, and enabling high data reuse within the systolic array. Its size is configurable.
-    \item \textbf{Accumulator Register File/Memory:} Separate memory or register files are used within or alongside the PEs to accumulate partial sums during matrix multiplication. These accumulators are typically wider than the input data to maintain precision (e.g., 32-bit accumulators for 8-bit input data).
-    \item \textbf{Dataflow Strategy:} Gemmini can support different dataflow patterns within its systolic array, such as Output Stationary (OS) or Weight Stationary (WS). In an OS dataflow, output values remain stationary in PEs while inputs and weights are streamed through. In a WS dataflow, weights are pre-loaded and remain stationary in PEs while inputs and outputs move. The choice of dataflow can impact performance and energy efficiency depending on the layer type and dimensions in a neural network. Gemmini is often configured to support both, allowing runtime selection.
-    \item \textbf{Custom Instruction Set:} When integrated as a RoCC accelerator, Gemmini is controlled by the host CPU (e.g., Rocket core) through a set of custom RISC-V instructions. These instructions are used to configure Gemmini, load data into its scratchpad, initiate computation, and retrieve results.
-    \item \textbf{Data Types and Quantization Support:} Gemmini can be configured to support various data types, with a strong emphasis on quantized integers (e.g., 8-bit integers, INT8) which are widely used in DL inference for efficiency. It includes hardware support for handling scaling factors associated with quantization.
-    \item \textbf{DMA Engine:} A Direct Memory Access (DMA) engine is typically part of Gemmini, allowing it to autonomously transfer data between its scratchpad memories and the main system memory (e.g., DDR RAM) over the SoC interconnect (e.g., TileLink).
+    \item \textbf{Instruction Fetch (IF):} Retrieves instructions from the instruction memory, also known as program memory. Each instruction code that the CPU must execute is stored in the program memory. These instruction codes are binary sequences compiled from C/C++ code or assembly code.
+    \item \textbf{Instruction Decode (ID):} The binary of each instruction is decoded, and corresponding control signals are activated.
+    \item \textbf{Execute (EX):} Performs calculations and processing corresponding to the decoded instruction, such as addition, subtraction, multiplication, division, shifts, assignments, branches, etc.
+    \item \textbf{Memory Access (MEM):} Accesses memory and performs read/write operations of data from/to memory.
+    \item \textbf{Writeback (WB):} Saves the results after instruction execution to the location specified by the instruction, such as registers.
 \end{itemize}
 
-\subsection{Gemmini Implementation and Relevance to Project}
-\label{sec:gemmini_implementation}
-% Your Specific Gemmini Configuration
-In this project, the Gemmini accelerator integrated into the \texttt{Rocket64b1gem16} SoC has the following specific configuration:
+\subsection{Out-of-Order Architecture in Microprocessors}
+
+Alternatively, out-of-order execution architecture is a crucial paradigm in modern CPU design, delivering significant performance gains by allowing instructions to be executed as soon as their input operands are ready, rather than strictly adhering to the program order as in a pipeline. This architecture is also a core element in high-performance systems used in scientific computing and artificial intelligence research. This flexible execution model addresses performance bottlenecks caused by data dependencies, cache latencies, and pipeline stalls, ensuring more efficient utilization of computational resources.
+
+Key components of this architecture include the instruction window, which stores multiple instructions for dependency analysis, and dynamic scheduling mechanisms such as Tomasulo's algorithm or scoreboarding, which track dependencies and resource availability. Another critical feature is the Re-order Buffer (ROB), which helps maintain program order during instruction retirement, ensuring correct architectural state updates and precise exception handling. By decoupling instruction fetch and execution stages, out-of-order processors achieve higher instruction throughput and sustain the performance of execution units, optimizing efficiency across various applications.
+
+Despite its many strengths and implementation benefits, out-of-order processors also present significant design challenges. The hardware blocks required for components like the ROB and branch prediction increase complexity, chip area, and power consumption, making energy efficiency optimization an important research area. Furthermore, extending out-of-order architecture to meet the demands of heterogeneous processing and large-scale parallel computing requires innovative approaches in dynamic scheduling and resource management.
+
+\subsection{Open-Source RISC-V Processor Cores}
+
+Rocket \cite{asanovic2016rocket}, or Rocket Core, is a RISC-V instruction set architecture microprocessor core designed by the Berkeley Architecture Research group. Rocket features a 5-stage, in-order architecture and implements the RISC-V RV32G and RV64G instruction sets.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Rocket_Core_Pipeline_5stages.pdf}
+    \caption{Pipeline of Rocket core. Source \cite{asanovic2016rocket}}
+    \label{fig:rocket_pipeline}
+\end{figure}
+
+The design of this microprocessor integrates many advanced features, including a Memory Management Unit (MMU) that supports virtual memory, enabling efficient memory access and address translation. Besides its role as a general-purpose microprocessor, Rocket also serves as a library of reusable components, including functional units, caches, Translation Lookaside Buffer (TLB), Page Table Walker (PTW), and Control and Status Registers (CSRs), which are reused in many other microprocessor designs. This makes Rocket Core a foundational component in Chipyard - RocketChip, allowing for the rapid development and creation of experimental systems ranging from simple to complex.
+
+Rocket is considered the most prominent microprocessor core in the open-source RISC-V development community due to its well-updated and stably supported development documentation. It is built using Chisel, a relatively new hardware construction language based on Scala, employing an object-oriented approach similar to software development. Therefore, the flexibility of the system development process and the applicability of Rocket Core are very high, making it suitable for implementing multi-core systems.
+
+Along with Rocket Core, the Berkeley Out-of-Order Machine (BOOM) \cite{celio2015boom, celio2016boom_spec} is also a prominent open-source RISC-V core, designed for high performance and out-of-order execution. Also developed within the microprocessor architecture research group at the University of California, Berkeley, BOOM is aimed at applications in advanced academic research and industry, featuring a flexible design and high operational performance. BOOM is also written in the Chisel language as a generator, like Rocket Core, allowing for rapid deployment and customization of the core according to the RV64GC RISC-V architecture. The latest version, SonicBOOM \cite{zhao2020sonicboom} (also known as BOOMv3), achieves a performance of 6.2 CoreMarks/MHz, capable of competing directly with high-performance commercial processor cores, setting a high standard for open-source processor design.
+
+\begin{figure}[h!]
+    \centering
+    % \includegraphics[width=0.9\textwidth]{boom_architecture_placeholder.png}
+    \fbox{Placeholder for BOOM Architecture Diagram}
+    \caption{Berkeley Out-of-Order Machine Processor Architecture. Source \cite{celio2015boom}}
+    \label{fig:boom_architecture}
+\end{figure}
+
+Structurally, BOOM features a 10-stage pipeline architecture including Fetch, Decode, Register Rename, Dispatch, Issue, Register Read, Execute, Memory, Writeback, and Commit. These stages allow for detailed control and optimization of the instruction flow, maintaining the "out-of-order" functionality at the high speeds necessary for modern processors. Specifically, each stage performs as follows:
 \begin{itemize}
-    \item \textbf{Systolic Array Dimensions (\texttt{DIM}):} A $16 \times 16$ array of Processing Elements (PEs). This means Gemmini can perform $16 \times 16 = 256$ multiply-accumulate (MAC) operations per clock cycle.
-    \item \textbf{Scratchpad Memory:} A 256KB SRAM-based scratchpad memory is provisioned within Gemmini. This memory is used for buffering input activations and model weights. It is typically banked (e.g., 4 banks) to allow for concurrent memory accesses to sustain the data rate required by the PEs.
-    \item \textbf{Accumulator Memory:} A separate 64KB memory is dedicated to storing the partial sums and final accumulated values. This memory supports wider data paths for the 32-bit accumulated values and is also banked (e.g., 2 banks).
-    \item \textbf{Data Precision:} The accelerator is configured to process 8-bit signed integer input data (INT8) and utilizes 32-bit signed integers for its internal accumulators. This directly supports 8-bit quantized integer arithmetic for DNN inference. Gemmini includes hardware logic for applying quantization scaling factors.
-    \item \textbf{Dataflow Versatility:} The Gemmini instance supports both Weight Stationary (WS) and Output Stationary (OS) dataflows, allowing the runtime software or compiler to choose the most efficient strategy for different neural network layers.
-    \item \textbf{Ancillary DNN Operations:} The Gemmini unit is configured with hardware support for common DNN operations beyond MACs, such as max pooling and various non-linear activation functions (e.g., ReLU).
-    \item \textbf{Local TLB:} Gemmini includes its own 4-entry Translation Lookaside Buffer (TLB) to cache virtual-to-physical address translations for its DMA operations, improving performance in a virtual memory environment.
+    \item \textbf{Fetch:} Instructions are fetched from instruction memory and stored in a fetch buffer to prepare for processing.
+    \item \textbf{Decode:} Instructions are converted into simpler micro-ops to optimize execution within the pipeline.
+    \item \textbf{Register Rename:} Logical registers in the ISA are renamed to independent physical registers, reducing data conflicts and increasing processing efficiency.
+    \item \textbf{Dispatch:} Micro-ops from the decode stage are sent to the Issue window, awaiting necessary operands.
+    \item \textbf{Issue:} Instructions in the Issue window are checked for operand readiness, and when conditions are met, micro-ops are sent to an execution unit.
+    \item \textbf{Register File (RF) Read:} Micro-ops read operands from the physical register file or bypass network, preparing data for the next stage.
+    \item \textbf{Execute:} Micro-ops are processed by functional units, performing computational tasks and memory address calculations.
+    \item \textbf{Memory:} Manages memory operations via Load Address Queue (LAQ), Store Address Queue (SAQ), and Store Data Queue (SDQ), performing loads when addresses are ready and stores when both address and data are available.
+    \item \textbf{Writeback:} Results from operations are written back to the physical register file, ensuring updated values are stored for future instructions.
+    \item \textbf{Commit:} The Reorder Buffer tracks the status of instructions in the pipeline and commits results when instructions complete, including storing data to memory.
 \end{itemize}
 
-% Integration Method
-Gemmini is integrated into the SoC as a Rocket Custom Coprocessor (RoCC) accelerator. This allows the Rocket CPU to issue custom RISC-V instructions to Gemmini for configuration, data movement (via DMA), and computation. The RoCC interface enables Gemmini to interact with the memory system, potentially sharing the CPU's L1 data cache and Page Table Walker (PTW) or connecting directly to the TileLink fabric for higher bandwidth access.
+Similar to Rocket Core, this is also considered one of the most prominent open-source microprocessor cores. However, BOOM's design is more geared towards ASIC implementation, and its numerous features along with the use of Chisel for implementation might pose difficulties in creating a multi-core design in Verilog and deploying it on FPGAs.
 
-% Data Path
-Data is moved between the Rocket core's caches/main memory and Gemmini's scratchpad primarily through Gemmini's dedicated DMA engine. The DMA communicates with the main system memory over a 64-bit wide data bus via the TileLink interconnect. The instructions dispatched by the CPU to Gemmini (e.g., \texttt{mvin} for loading inputs/weights, \texttt{mvout} for storing results) trigger these DMA transfers. These DMA operations are coherent with the CPU caches.
+\subsection{Chipyard - Rocket Chip}
 
-% Rationale for Your Configuration
-The $16 \times 16$ systolic array dimensions, 256KB scratchpad, and 8-bit integer support were chosen to provide a balance between significant acceleration for DNN-based time-series anomaly detection models and the available resources on the target FPGA (Xilinx VC707). This configuration is capable of delivering substantial parallel processing for matrix operations common in LSTMs, Transformers, or specialized CNNs used for sequential data. The on-chip memory sizes are intended to hold substantial portions of time-series data segments and model parameters locally, minimizing off-chip memory access. The 8-bit quantization support is crucial for deploying efficient models with reduced memory footprint and bandwidth requirements, aiming for high throughput in anomaly detection tasks while preserving accuracy.
+The Rocket Chip project, also developed by the Berkeley Architecture Research (BAR) group at the University of California, Berkeley, marked a significant advancement in open-source processor design. This project provides a flexible, scalable, and configurable platform, enabling the creation of custom RISC-V microprocessors tailored to diverse performance and application requirements. Rocket Chip is essentially a library of hardware generators that can be configured and interconnected in various ways, producing diverse SoC designs. This library can generate an in-order core (Rocket) or an out-of-order core (BOOM), and these cores can be connected to co-processors via an interface named RoCC (Rocket Custom Coprocessor) \cite{asanovic2016rocket}.
 
-\section{Linux on RISC-V SoCs}
-\label{sec:linux_on_riscv}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.7\textwidth]{Chipyard_ChipyardLogo.pdf} 
+    \caption{Chipyard, developed by UC Berkeley. Source: \cite{zhao2021chipyard}}
+    \label{fig:chipyard_ucb}
+\end{figure}
 
-\subsection{Theoretical Aspects of Linux on RISC-V}
-\label{sec:linux_riscv_theoretical}
-% Importance of Operating Systems
-\subsubsection{Importance of Operating Systems}
-Running a full-featured operating system like Linux on custom SoCs, even in embedded contexts, offers significant advantages. These include robust resource management (memory, peripherals), multitasking capabilities, networking stacks, familiar development environments, and access to a vast ecosystem of existing software, libraries, and tools. For complex applications like those involving AI model deployment and data processing, an OS like Linux provides an indispensable foundation.
+Subsequently, to develop and expand the capabilities of Rocket Chip, Chipyard was created. Chipyard is an open-source framework that integrates system design, simulation, and implementation for SoC development, and it has become one of the most actively embraced and developed frameworks by the community. Chipyard, also originating from UC Berkeley, is the result of continuous development and integration of Chisel, Rocket Chip, and the Rocket Core.
 
-% Linux Porting for RISC-V
-\subsubsection{Linux Porting for RISC-V}
-The RISC-V ISA's open nature has spurred significant effort in porting Linux to the architecture. This involves developing a RISC-V architecture-specific port of the Linux kernel, including support for the RISC-V privileged architecture, interrupt handling, and memory management. While the base port is mature, porting Linux to a *new* custom SoC requires ensuring that the SoC hardware (CPU, memory controllers, peripherals) is compatible and that necessary drivers are available or can be developed.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{Chipyard_Toolchain.pdf} % Replace placeholder.png with your actual image file
+    \caption{Component structure of Chipyard. Source: \cite{zhao2021chipyard}}
+    \label{fig:chipyard_structure}
+\end{figure}
 
-% Boot Process Components
-\subsubsection{Boot Process Components}
-A typical Linux boot process on an embedded RISC-V SoC involves several key software components:
-\begin{itemize}
-    \item \textbf{Boot ROM:} The very first code executed on power-on or reset. It performs minimal hardware initialization and typically loads the next stage bootloader from a non-volatile memory source (e.g., SPI flash, SD card).
-    \item \textbf{OpenSBI (RISC-V Supervisor Binary Interface):} OpenSBI is an open-source reference implementation of the RISC-V SBI specification. It runs in Machine mode (M-mode) and provides a standardized interface for Supervisor mode (S-mode) software, such as U-Boot or the Linux kernel, to access M-mode functionalities (e.g., console I/O, timer programming, inter-processor interrupts). This abstraction simplifies the porting of S-mode software to different RISC-V platforms \cite{opensbi_project}.
-    \item \textbf{U-Boot (Universal Bootloader):} A widely used open-source bootloader for embedded systems. U-Boot performs more extensive hardware initialization (e.g., DDR memory controller, network interfaces), loads the Linux kernel image and Device Tree Blob (DTB) into RAM, sets kernel boot arguments, and then transfers execution to the kernel.
-    \item \textbf{Linux Kernel:} The core of the operating system. The RISC-V Linux kernel, once loaded, initializes its own subsystems, probes for hardware devices described in the DTB, mounts the root filesystem, and starts the initial user-space process (e.g., \texttt{init}).
-    \item \textbf{Root Filesystem (RFS):} Contains the user-space applications, libraries, configuration files, and system utilities that form the complete Linux distribution (e.g., Debian, Ubuntu, Buildroot, Yocto). It is typically stored on an SD card, eMMC, or network file system.
-    \item \textbf{Device Tree Blob (DTB):} A data structure, usually passed by U-Boot to the kernel, that describes the hardware components of the specific SoC and board (e.g., CPU type and count, memory map, peripherals, interrupt controllers). It allows a single kernel binary to boot on different hardware configurations by abstracting hardware details.
-\end{itemize}
+By utilizing Chisel, the FIRRTL compiler, the Rocket Chip generator, and other tools, Chipyard facilitates the development of highly customizable RISC-V SoCs. Chipyard includes a diverse set of processor cores (Rocket Core, BOOM, Ariane), accelerators (Hwacha, Gemmini, SHA3), along with comprehensive memory systems, peripheral devices, and tools to support the construction of a full-featured SoC. Chipyard supports multiple development flows, allowing for flexible hardware extension and experimentation. These development flows include software-based Register Transfer Level (RTL) simulation, FPGA-accelerated simulation using FireSim, automated VLSI flows with Hammer, and FireMarshal, which enables the creation and loading of software on both bare-metal systems (similar to microcontrollers) and Linux-based systems.
 
-\subsection{Linux on RISC-V Implementation and Relevance to Project}
-\label{sec:linux_riscv_implementation}
-% Your Software Stack
-The software stack enabling Linux on the custom \texttt{Rocket64b1gem16} SoC, primarily facilitated by the \texttt{vivado-risc-v} project infrastructure, consists of:
-\begin{itemize}
-    \item \textbf{OpenSBI:} A version compiled as part of the \texttt{vivado-risc-v} build process, specific to its platform definition, often incorporating patches. It acts as the M-mode firmware.
-    \item \textbf{U-Boot:} A U-Boot version tailored for the RISC-V SoC environment, using a specific defconfig (e.g., \texttt{vivado\_riscv64\_defconfig}) and patches provided by \texttt{vivado-risc-v}. It is responsible for loading the Linux kernel.
-    \item \textbf{Linux Kernel:} A stable Linux kernel version (e.g., from \texttt{linux-stable}), patched and configured by \texttt{vivado-risc-v} to include drivers for FPGA-specific AXI peripherals (like SD card and Ethernet controllers) and other necessary configurations for the custom SoC.
-    \item \textbf{Root Filesystem:} A Debian-based RISC-V root filesystem (e.g., \texttt{rootfs.tar.gz} provided or built by \texttt{vivado-risc-v}), deployed on an SD card.
-\end{itemize}
+Rocket Chip supports deployment on FPGAs, with operational frequencies reaching 25-100 MHz depending on the configuration and the type of FPGA used. Currently, Rocket Chip is being utilized by SiFive \cite{sifive2024portfolio}, a company founded by some of the authors of RISC-V. SiFive produces RISC-V processors on silicon based on Rocket and provides tools for developing, testing, and evaluating their designs.
 
-% Boot Sequence on Your SoC
-The boot sequence on the target FPGA (Xilinx VC707) programmed with the \texttt{Rocket64b1gem16} SoC is as follows:
-\begin{enumerate}
-    \item \textbf{FPGA Boot ROM:} On power-up, the Rocket core begins execution from a small Boot ROM synthesized into the FPGA. This Boot ROM (contents derived from \texttt{bootrom.img} generated by \texttt{vivado-risc-v} using device tree sources) locates and loads the first stage of the main bootloader (OpenSBI + U-Boot payload, as \texttt{boot.elf}) from the SD card.
-    \item \textbf{OpenSBI Initialization:} The loaded \texttt{boot.elf} starts with OpenSBI, which initializes the M-mode environment and prepares for S-mode execution.
-    \item \textbf{U-Boot Execution:} OpenSBI transfers control to its payload, U-Boot. U-Boot initializes DDR memory, the SD card controller, and other peripherals. It then loads the Linux kernel image (e.g., \texttt{Image}) and the flattened device tree blob (DTB) from the SD card into DDR memory.
-    \item \textbf{Linux Kernel Boot:} U-Boot passes control to the Linux kernel. The kernel initializes itself, uses the DTB to discover and initialize hardware (including the Gemmini accelerator as a RoCC device if described), mounts the Debian root filesystem from the SD card, and starts the user-space environment, eventually providing a Linux login prompt (typically via UART/serial console).
-\end{enumerate}
-
-% FPGA Realization
-The \texttt{Rocket64b1gem16} SoC RTL, generated by Chipyard, is synthesized and implemented on a Xilinx VC707 FPGA board. This process involves:
-\begin{itemize}
-    \item \textbf{Synthesis and Place \& Route:} Using the Xilinx Vivado Design Suite (e.g., version 2024.2 as indicated by project context). The \texttt{vivado-risc-v} project provides scripts to automate the creation of a Vivado project, synthesis of the Verilog RTL, implementation (place and route), and generation of the FPGA bitstream (\texttt{.bit} file).
-    \item \textbf{Peripheral Integration:} The \texttt{vivado-risc-v} project also supplies Verilog-based peripheral controllers (e.g., for DDR memory via Vivado IP, open-source UART, SD card, and Ethernet controllers) that are integrated with the Chipyard-generated SoC within the Vivado project.
-    \item \textbf{Bitstream Loading:} The generated bitstream is loaded onto the VC707 FPGA (e.g., via JTAG using Vivado Hardware Manager or from an on-board flash memory), configuring the FPGA to embody the custom SoC.
-\end{itemize}
-Successfully booting Debian Linux on the FPGA demonstrates that the custom SoC, including the Rocket core, memory system, Gemmini accelerator interface, and peripherals, are functioning correctly.
-
-% Software Development Environment
-Software development for applications running on the Linux environment of the SoC involves:
-\begin{itemize}
-    \item \textbf{Cross-Compilation Toolchain:} A RISC-V cross-compiler (e.g., GCC provided by Chipyard or \texttt{vivado-risc-v}) running on a host development machine (e.g., x86 Linux PC) is used to compile C/C++ applications for the RISC-V target.
-    \item \textbf{Application Deployment:} Compiled applications are transferred to the target system (e.g., via SD card, or over network using SSH/SCP if Ethernet is functional).
-    \item \textbf{Execution and Debugging:} Applications are run from the Linux command line on the FPGA. Debugging can be done using GDB with remote debugging capabilities (gdbserver on target, GDB on host), or through serial console print statements. The JTAG interface, supported by \texttt{vivado-risc-v}, can also be used for lower-level hardware debugging.
-\end{itemize}
-This complete hardware and software environment transforms the FPGA into a functional RISC-V Linux platform, suitable for developing, deploying, and testing the Gemmini-accelerated time-series anomaly detection application.
+Using Chipyard (or Rocket Chip) as a foundation for system construction can pose several challenges due to its complexity in terms of the number of components and the design language used—Chisel. However, overcoming this barrier yields numerous benefits due to Rocket Chip's high flexibility and system customization capabilities. Its components are developed independently, have detailed development documentation, and are easily extensible. Furthermore, the Rocket Chip support community is very active, with more frequent updates and improvements compared to other frameworks.
