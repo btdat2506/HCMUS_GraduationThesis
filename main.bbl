@@ -169,6 +169,279 @@
     \field{year}{2015}
   \endentry
 
+  \entry{genc2019gemmini}{misc}{}{}
+    \name{author}{17}{}{%
+      {{hash=GH}{%
+         family={Genc},
+         familyi={G\bibinitperiod},
+         given={Hasan},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=HAA}{%
+         family={Haj-Ali},
+         familyi={H\bibinithyphendelim A\bibinitperiod},
+         given={Ameer},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=IV}{%
+         family={Iyer},
+         familyi={I\bibinitperiod},
+         given={Vighnesh},
+         giveni={V\bibinitperiod},
+      }}%
+      {{hash=MH}{%
+         family={Mao},
+         familyi={M\bibinitperiod},
+         given={Howard},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=SC}{%
+         family={Schmidt},
+         familyi={S\bibinitperiod},
+         given={Colin},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=AA}{%
+         family={Amid},
+         familyi={A\bibinitperiod},
+         given={Alon},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=ZJ}{%
+         family={Zhao},
+         familyi={Z\bibinitperiod},
+         given={Jerry},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=GD}{%
+         family={Grubb},
+         familyi={G\bibinitperiod},
+         given={Daniel},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=LH}{%
+         family={Liew},
+         familyi={L\bibinitperiod},
+         given={Harrison},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=OA}{%
+         family={Ou},
+         familyi={O\bibinitperiod},
+         given={Albert},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=SS}{%
+         family={Steffl},
+         familyi={S\bibinitperiod},
+         given={Samuel},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=WJ}{%
+         family={Wright},
+         familyi={W\bibinitperiod},
+         given={John},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=SI}{%
+         family={Stoica},
+         familyi={S\bibinitperiod},
+         given={Ion},
+         giveni={I\bibinitperiod},
+      }}%
+      {{hash=RKJ}{%
+         family={Ragan-Kelley},
+         familyi={R\bibinithyphendelim K\bibinitperiod},
+         given={Jonathan},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=AK}{%
+         family={Asanovi{'c}},
+         familyi={A\bibinitperiod},
+         given={Krste},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=NB}{%
+         family={Nikoli{'c}},
+         familyi={N\bibinitperiod},
+         given={Borivoje},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=SYS}{%
+         family={Shao},
+         familyi={S\bibinitperiod},
+         given={Yakun\bibnamedelima Sophia},
+         giveni={Y\bibinitperiod\bibinitdelim S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{GH+1}
+    \strng{fullhash}{GHHAAIVMHSCAAZJGDLHOASSWJSIRKJAKNBSYS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{G}
+    \field{sortinithash}{G}
+    \verb{eprint}
+    \verb 1911.09925
+    \endverb
+    \field{title}{Gemmini: An agile systolic array generator enabling
+  systematic evaluations of deep-learning architectures}
+    \field{eprinttype}{arXiv}
+    \field{eprintclass}{cs.AR}
+    \field{year}{2019}
+  \endentry
+
+  \entry{gemini-dac}{inbook}{}{}
+    \name{author}{19}{}{%
+      {{hash=GH}{%
+         family={Genc},
+         familyi={G\bibinitperiod},
+         given={Hasan},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=KS}{%
+         family={Kim},
+         familyi={K\bibinitperiod},
+         given={Seah},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=AA}{%
+         family={Amid},
+         familyi={A\bibinitperiod},
+         given={Alon},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=HAA}{%
+         family={Haj-Ali},
+         familyi={H\bibinithyphendelim A\bibinitperiod},
+         given={Ameer},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=IV}{%
+         family={Iyer},
+         familyi={I\bibinitperiod},
+         given={Vighnesh},
+         giveni={V\bibinitperiod},
+      }}%
+      {{hash=PP}{%
+         family={Prakash},
+         familyi={P\bibinitperiod},
+         given={Pranav},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=ZJ}{%
+         family={Zhao},
+         familyi={Z\bibinitperiod},
+         given={Jerry},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=GD}{%
+         family={Grubb},
+         familyi={G\bibinitperiod},
+         given={Daniel},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=LH}{%
+         family={Liew},
+         familyi={L\bibinitperiod},
+         given={Harrison},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=MH}{%
+         family={Mao},
+         familyi={M\bibinitperiod},
+         given={Howard},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=OA}{%
+         family={Ou},
+         familyi={O\bibinitperiod},
+         given={Albert},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=SC}{%
+         family={Schmidt},
+         familyi={S\bibinitperiod},
+         given={Colin},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=SS}{%
+         family={Steffl},
+         familyi={S\bibinitperiod},
+         given={Samuel},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=WJ}{%
+         family={Wright},
+         familyi={W\bibinitperiod},
+         given={John},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=SI}{%
+         family={Stoica},
+         familyi={S\bibinitperiod},
+         given={Ion},
+         giveni={I\bibinitperiod},
+      }}%
+      {{hash=RKJ}{%
+         family={Ragan-Kelley},
+         familyi={R\bibinithyphendelim K\bibinitperiod},
+         given={Jonathan},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=AK}{%
+         family={Asanovic},
+         familyi={A\bibinitperiod},
+         given={Krste},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=NB}{%
+         family={Nikolic},
+         familyi={N\bibinitperiod},
+         given={Borivoje},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=SYS}{%
+         family={Shao},
+         familyi={S\bibinitperiod},
+         given={Yakun\bibnamedelima Sophia},
+         giveni={Y\bibinitperiod\bibinitdelim S\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {IEEE Press}%
+    }
+    \strng{namehash}{GH+1}
+    \strng{fullhash}{GHKSAAHAAIVPPZJGDLHMHOASCSSWJSIRKJAKNBSYS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{G}
+    \field{sortinithash}{G}
+    \field{abstract}{%
+    DNN accelerators are often developed and evaluated in isolation without
+  considering the cross-stack, system-level effects in real-world environments.
+  This makes it difficult to appreciate the impact of System-on-Chip (SoC)
+  resource contention, OS overheads, and programming-stack inefficiencies on
+  overall performance/energy-efficiency. To address this challenge, we present
+  Gemmini, an open-source1, full-stack DNN accelerator generator. Gemmini
+  generates a wide design-space of efficient ASIC accelerators from a flexible
+  architectural template, together with flexible programming stacks and full
+  SoCs with shared resources that capture system-level effects.
+  Gemmini-generated accelerators have also been fabricated, delivering up to
+  three orders-of-magnitude speedups over high-performance CPUs on various DNN
+  benchmarks.%
+    }
+    \field{booktitle}{Proceedings of the 58th Annual ACM/IEEE Design Automation
+  Conference}
+    \field{isbn}{9781665432740}
+    \field{pages}{769–774}
+    \field{title}{Gemmini: Enabling Systematic Deep-Learning Architecture
+  Evaluation via Full-Stack Integration}
+    \verb{url}
+    \verb https://doi.org/10.1109/DAC18074.2021.9586216
+    \endverb
+    \field{year}{2022}
+  \endentry
+
   \entry{riscv2024members}{online}{}{}
     \name{author}{1}{}{%
       {{hash=R}{%

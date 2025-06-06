@@ -5,12 +5,12 @@
 \contentsline {chapter}{\numberline {2}RISC-V Microprocessor Instruction Set Architecture}{3}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Overview of RISC-V}{3}{section.2.1}%
 \contentsline {subsection}{\numberline {2.1.1}RISC-V 32-bit and the RV32I Base Instruction Set}{5}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2}RISC-V 64-bit and the RV64I Base Instruction Set}{9}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.2}RISC-V 64-bit and the RV64I Base Instruction Set}{8}{subsection.2.1.2}%
 \contentsline {subsection}{\numberline {2.1.3}RISC-V Processor Cores}{11}{subsection.2.1.3}%
-\contentsline {subsection}{\numberline {2.1.4}Pipeline Architecture in Microprocessors}{12}{subsection.2.1.4}%
-\contentsline {subsection}{\numberline {2.1.5}Out-of-Order Architecture in Microprocessors}{13}{subsection.2.1.5}%
+\contentsline {subsection}{\numberline {2.1.4}Pipeline Architecture in Microprocessors}{11}{subsection.2.1.4}%
+\contentsline {subsection}{\numberline {2.1.5}Out-of-Order Architecture in Microprocessors}{12}{subsection.2.1.5}%
 \contentsline {subsection}{\numberline {2.1.6}Open-Source RISC-V Processor Cores}{13}{subsection.2.1.6}%
-\contentsline {subsection}{\numberline {2.1.7}Chipyard - Rocket Chip}{16}{subsection.2.1.7}%
+\contentsline {subsection}{\numberline {2.1.7}Chipyard - Rocket Chip}{15}{subsection.2.1.7}%
 \contentsline {chapter}{\numberline {3}A Multi-Core RISC-V Processor System}{19}{chapter.3}%
 \contentsline {section}{\numberline {3.1}System Design Methodology with \texttt {Chisel}}{19}{section.3.1}%
 \contentsline {subsection}{\numberline {3.1.1}\texttt {Chisel} and \texttt {Scala}}{19}{subsection.3.1.1}%
@@ -25,16 +25,16 @@
 \contentsline {section}{\numberline {4.1}Introduction to Gemmini}{33}{section.4.1}%
 \contentsline {section}{\numberline {4.2}Gemmini Architecture}{33}{section.4.2}%
 \contentsline {subsection}{\numberline {4.2.1}Systolic Array (Spatial Array)}{34}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Local Scratchpad Memory}{35}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.2}Local Scratchpad Memory}{34}{subsection.4.2.2}%
 \contentsline {subsection}{\numberline {4.2.3}Accumulator Memory}{35}{subsection.4.2.3}%
-\contentsline {subsection}{\numberline {4.2.4}Controller and DMA Engine}{36}{subsection.4.2.4}%
-\contentsline {subsection}{\numberline {4.2.5}Optional Functional Units}{36}{subsection.4.2.5}%
+\contentsline {subsection}{\numberline {4.2.4}Controller and DMA Engine}{35}{subsection.4.2.4}%
+\contentsline {subsection}{\numberline {4.2.5}Optional Functional Units}{35}{subsection.4.2.5}%
 \contentsline {subsection}{\numberline {4.2.6}Virtual Address Translation Support}{36}{subsection.4.2.6}%
-\contentsline {section}{\numberline {4.3}Gemmini Integration as a RoCC Accelerator}{37}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Gemmini Programming Model}{38}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Low-Level: Gemmini ISA (RoCC Instructions)}{38}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}Mid-Level: Hand-Tuned C Library}{40}{subsection.4.4.2}%
-\contentsline {subsection}{\numberline {4.4.3}High-Level: Compiler Support (Conceptual)}{40}{subsection.4.4.3}%
-\contentsline {section}{\numberline {4.5}Gemmini Configuration in This Thesis}{40}{section.4.5}%
-\contentsline {section}{\numberline {4.6}Summary}{41}{section.4.6}%
-\contentsline {chapter}{TÀI LIỆU THAM KHẢO}{43}{section*.36}%
+\contentsline {section}{\numberline {4.3}Gemmini Integration as a RoCC Accelerator}{36}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Gemmini Programming Model}{37}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Low-Level: Gemmini ISA (RoCC Instructions)}{37}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Mid-Level: Hand-Tuned C Library}{38}{subsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.4.3}High-Level: Compiler Support (Conceptual)}{39}{subsection.4.4.3}%
+\contentsline {section}{\numberline {4.5}Gemmini Configuration in This Thesis}{39}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Summary}{39}{section.4.6}%
+\contentsline {chapter}{TÀI LIỆU THAM KHẢO}{41}{section*.36}%

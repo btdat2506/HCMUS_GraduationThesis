@@ -1,14 +1,14 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {2.1}{\ignorespaces RISC-V is managed by RISC-V International. Source \blx@tocontentsinit {0}\cite {riscv2024members}}}{3}{figure.caption.7}%
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Instruction encoding formats in RV32I. Source \blx@tocontentsinit {0}\cite {waterman2014riscv}}}{7}{figure.caption.9}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Instruction encoding formats in RV32I. Source \blx@tocontentsinit {0}\cite {waterman2014riscv}}}{6}{figure.caption.9}%
 \contentsline {figure}{\numberline {2.3}{\ignorespaces Instructions in the RV32I base instruction set. Source \blx@tocontentsinit {0}\cite {waterman2014riscv}}}{7}{figure.caption.10}%
-\contentsline {figure}{\numberline {2.4}{\ignorespaces Instruction encoding format for ADDIW in 64-bit architecture. \blx@tocontentsinit {0}\cite {waterman2014riscv}}}{10}{figure.caption.13}%
-\contentsline {figure}{\numberline {2.5}{\ignorespaces Encoding format for 64-bit I-type shift instructions. \blx@tocontentsinit {0}\cite {waterman2014riscv}}}{10}{figure.caption.14}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Instruction encoding format for ADDIW in 64-bit architecture. \blx@tocontentsinit {0}\cite {waterman2014riscv}}}{9}{figure.caption.13}%
+\contentsline {figure}{\numberline {2.5}{\ignorespaces Encoding format for 64-bit I-type shift instructions. \blx@tocontentsinit {0}\cite {waterman2014riscv}}}{9}{figure.caption.14}%
 \contentsline {figure}{\numberline {2.6}{\ignorespaces Encoding format for 64-bit R-type shift instructions for word operations. \blx@tocontentsinit {0}\cite {waterman2014riscv}}}{10}{figure.caption.15}%
-\contentsline {figure}{\numberline {2.7}{\ignorespaces Encoding formats for 64-bit LOAD and STORE instructions. \blx@tocontentsinit {0}\cite {waterman2014riscv}}}{11}{figure.caption.16}%
-\contentsline {figure}{\numberline {2.8}{\ignorespaces Process of handling instructions through pipeline stages.}}{12}{figure.caption.17}%
-\contentsline {figure}{\numberline {2.9}{\ignorespaces Pipeline of Rocket core. Source \blx@tocontentsinit {0}\cite {asanovic2016rocket}}}{14}{figure.caption.18}%
+\contentsline {figure}{\numberline {2.7}{\ignorespaces Encoding formats for 64-bit LOAD and STORE instructions. \blx@tocontentsinit {0}\cite {waterman2014riscv}}}{10}{figure.caption.16}%
+\contentsline {figure}{\numberline {2.8}{\ignorespaces Process of handling instructions through pipeline stages.}}{11}{figure.caption.17}%
+\contentsline {figure}{\numberline {2.9}{\ignorespaces Pipeline of Rocket core. Source \blx@tocontentsinit {0}\cite {asanovic2016rocket}}}{13}{figure.caption.18}%
 \contentsline {figure}{\numberline {2.10}{\ignorespaces Berkeley Out-of-Order Machine Processor Architecture. Source \blx@tocontentsinit {0}\cite {celio2015boom}}}{14}{figure.caption.19}%
 \contentsline {figure}{\numberline {2.11}{\ignorespaces Chipyard, developed by UC Berkeley. Source: \blx@tocontentsinit {0}\cite {zhao2021chipyard}}}{16}{figure.caption.20}%
 \contentsline {figure}{\numberline {2.12}{\ignorespaces Component structure of Chipyard. Source: \blx@tocontentsinit {0}\cite {zhao2021chipyard}}}{16}{figure.caption.21}%
@@ -23,6 +23,6 @@
 \contentsline {figure}{\numberline {3.8}{\ignorespaces Peripherals in the Rocket Chip base system.}}{29}{figure.caption.30}%
 \contentsline {figure}{\numberline {3.9}{\ignorespaces \texttt {RoCC} co-processor core and MMIO peripheral core in \texttt {Rocket Chip}.}}{30}{figure.caption.31}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces High-level overview of the \texttt {Gemmini} accelerator integrated with a host CPU (\texttt {Rocket Core}) and system memory hierarchy.}}{34}{figure.caption.32}%
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Conceptual diagram of the \texttt {Gemmini} RoCC interface with the host CPU (\texttt {RISC-V CPU}), PTW, and L2 Cache/System Memory.}}{37}{figure.caption.33}%
-\contentsline {figure}{\numberline {4.3}{\ignorespaces Layered programming model for \texttt {Gemmini}.}}{39}{figure.caption.34}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces High-level overview of the \texttt {Gemmini} accelerator integrated with a host CPU (\texttt {Rocket Core}) and system memory hierarchy.}}{33}{figure.caption.32}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Conceptual diagram of the \texttt {Gemmini} RoCC interface with the host CPU (\texttt {RISC-V CPU}), PTW, and L2 Cache/System Memory.}}{36}{figure.caption.33}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Layered programming model for \texttt {Gemmini}.}}{37}{figure.caption.34}%

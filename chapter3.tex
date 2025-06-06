@@ -86,12 +86,12 @@ This system generator includes multiple components, not just the processor core 
 
 In the design of Systems-on-Chip (SoCs), bus architecture plays a backbone role, connecting and coordinating the operation of all components within the system. Particularly for modern multi-core processor systems, development trends focus on using crossbar-type bus architectures instead of Time Shared Buses. A crossbar, specifically a fully-connected crossbar structure, is considered a form of hardware switching fabric, allowing any input port to connect directly to any output port simultaneously. The outstanding advantage of this architecture lies in its ability to provide high bandwidth and low latency, effectively meeting performance requirements in applications such as networking equipment, multi-core processors, and high-performance storage systems. The optimization in data transmission offered by this architecture is a key factor in improving the overall performance of modern SoC systems.
 
-For \texttt{Rocket Chip}, the \texttt{TileLink} \cite{sifive2017tilelink} system communication bus was developed concurrently with the project and the RISC-V instruction set, and is widely used in open-source system research at present.
+For \texttt{Rocket Chip}, the \texttt{TileLink} \cite{sifive2018tilelink} system communication bus was developed concurrently with the project and the RISC-V instruction set, and is widely used in open-source system research at present.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\textwidth]{TileLink_Topology.pdf}
-    \caption{Connection model in \texttt{TileLink} and its interfaces. Source: \cite{sifive2017tilelink}}
+    \caption{Connection model in \texttt{TileLink} and its interfaces. Source: \cite{sifive2018tilelink}}
     \label{fig:tilelink_connection_model}
 \end{figure}
 
@@ -101,7 +101,7 @@ A \texttt{TileLink} bus system can support a combination of multiple communicati
 
 \begin{table}[h!]
 \centering
-\caption{\texttt{TileLink} operational configurations. Source: \cite{sifive2017tilelink}}
+\caption{\texttt{TileLink} operational configurations. Source: \cite{sifive2018tilelink}}
 \label{tab:tilelink_configs}
 \begin{tabular}{|l|c|c|c|}
 \hline
@@ -124,7 +124,7 @@ For integrating peripheral hardware, all three bus configuration levels can be u
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\textwidth]{TileLink_FiveChannel.pdf}
-    \caption{Channels in a \texttt{TileLink} connection between two agents. Source: \cite{sifive2017tilelink}}
+    \caption{Channels in a \texttt{TileLink} connection between two agents. Source: \cite{sifive2018tilelink}}
     \label{fig:tilelink_channels}
 \end{figure}
 
@@ -147,7 +147,7 @@ The choice of \texttt{TileLink} bus configuration is relevant for connecting var
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.7\textwidth]{TileLink_Overview.pdf} % Replace placeholder.png with your actual image file
-    \caption{\texttt{TileLink} \texttt{TL-UL} connection structure. Source: \cite{sifive2017tilelink}}
+    \caption{\texttt{TileLink} \texttt{TL-UL} connection structure. Source: \cite{sifive2018tilelink}}
     \label{fig:tilelink_tl_ul_structure}
 \end{figure}
 
