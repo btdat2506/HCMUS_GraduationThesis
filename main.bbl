@@ -169,127 +169,6 @@
     \field{year}{2015}
   \endentry
 
-  \entry{genc2019gemmini}{misc}{}{}
-    \name{author}{17}{}{%
-      {{hash=GH}{%
-         family={Genc},
-         familyi={G\bibinitperiod},
-         given={Hasan},
-         giveni={H\bibinitperiod},
-      }}%
-      {{hash=HAA}{%
-         family={Haj-Ali},
-         familyi={H\bibinithyphendelim A\bibinitperiod},
-         given={Ameer},
-         giveni={A\bibinitperiod},
-      }}%
-      {{hash=IV}{%
-         family={Iyer},
-         familyi={I\bibinitperiod},
-         given={Vighnesh},
-         giveni={V\bibinitperiod},
-      }}%
-      {{hash=MH}{%
-         family={Mao},
-         familyi={M\bibinitperiod},
-         given={Howard},
-         giveni={H\bibinitperiod},
-      }}%
-      {{hash=SC}{%
-         family={Schmidt},
-         familyi={S\bibinitperiod},
-         given={Colin},
-         giveni={C\bibinitperiod},
-      }}%
-      {{hash=AA}{%
-         family={Amid},
-         familyi={A\bibinitperiod},
-         given={Alon},
-         giveni={A\bibinitperiod},
-      }}%
-      {{hash=ZJ}{%
-         family={Zhao},
-         familyi={Z\bibinitperiod},
-         given={Jerry},
-         giveni={J\bibinitperiod},
-      }}%
-      {{hash=GD}{%
-         family={Grubb},
-         familyi={G\bibinitperiod},
-         given={Daniel},
-         giveni={D\bibinitperiod},
-      }}%
-      {{hash=LH}{%
-         family={Liew},
-         familyi={L\bibinitperiod},
-         given={Harrison},
-         giveni={H\bibinitperiod},
-      }}%
-      {{hash=OA}{%
-         family={Ou},
-         familyi={O\bibinitperiod},
-         given={Albert},
-         giveni={A\bibinitperiod},
-      }}%
-      {{hash=SS}{%
-         family={Steffl},
-         familyi={S\bibinitperiod},
-         given={Samuel},
-         giveni={S\bibinitperiod},
-      }}%
-      {{hash=WJ}{%
-         family={Wright},
-         familyi={W\bibinitperiod},
-         given={John},
-         giveni={J\bibinitperiod},
-      }}%
-      {{hash=SI}{%
-         family={Stoica},
-         familyi={S\bibinitperiod},
-         given={Ion},
-         giveni={I\bibinitperiod},
-      }}%
-      {{hash=RKJ}{%
-         family={Ragan-Kelley},
-         familyi={R\bibinithyphendelim K\bibinitperiod},
-         given={Jonathan},
-         giveni={J\bibinitperiod},
-      }}%
-      {{hash=AK}{%
-         family={Asanovi{'c}},
-         familyi={A\bibinitperiod},
-         given={Krste},
-         giveni={K\bibinitperiod},
-      }}%
-      {{hash=NB}{%
-         family={Nikoli{'c}},
-         familyi={N\bibinitperiod},
-         given={Borivoje},
-         giveni={B\bibinitperiod},
-      }}%
-      {{hash=SYS}{%
-         family={Shao},
-         familyi={S\bibinitperiod},
-         given={Yakun\bibnamedelima Sophia},
-         giveni={Y\bibinitperiod\bibinitdelim S\bibinitperiod},
-      }}%
-    }
-    \strng{namehash}{GH+1}
-    \strng{fullhash}{GHHAAIVMHSCAAZJGDLHOASSWJSIRKJAKNBSYS1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \field{sortinit}{G}
-    \field{sortinithash}{G}
-    \verb{eprint}
-    \verb 1911.09925
-    \endverb
-    \field{title}{Gemmini: An agile systolic array generator enabling
-  systematic evaluations of deep-learning architectures}
-    \field{eprinttype}{arXiv}
-    \field{eprintclass}{cs.AR}
-    \field{year}{2019}
-  \endentry
-
   \entry{gemini-dac}{inbook}{}{}
     \name{author}{19}{}{%
       {{hash=GH}{%
@@ -442,6 +321,81 @@
     \field{year}{2022}
   \endentry
 
+  \entry{gookyi2023gemmini_case_study}{article}{}{}
+    \name{author}{5}{}{%
+      {{hash=GDAN}{%
+         family={Gookyi},
+         familyi={G\bibinitperiod},
+         given={Dennis Agyemanh\bibnamedelima Nana},
+         giveni={D\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim
+  N\bibinitperiod},
+      }}%
+      {{hash=LE}{%
+         family={Lee},
+         familyi={L\bibinitperiod},
+         given={Eunchong},
+         giveni={E\bibinitperiod},
+      }}%
+      {{hash=KK}{%
+         family={Kim},
+         familyi={K\bibinitperiod},
+         given={Kyungho},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=JSJ}{%
+         family={Jang},
+         familyi={J\bibinitperiod},
+         given={Sung-Joon},
+         giveni={S\bibinithyphendelim J\bibinitperiod},
+      }}%
+      {{hash=LSS}{%
+         family={Lee},
+         familyi={L\bibinitperiod},
+         given={Sang-Seol},
+         giveni={S\bibinithyphendelim S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{GDAN+1}
+    \strng{fullhash}{GDANLEKKJSJLSS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{G}
+    \field{sortinithash}{G}
+    \field{abstract}{%
+    Though custom deep learning (DL) hardware accelerators are attractive for
+  making inferences in edge computing devices, their design and implementation
+  remain a challenge. Open-source frameworks exist for exploring DL hardware
+  accelerators. Gemmini is an open-source systolic array generator for agile DL
+  accelerator exploration. This paper details the hardware/software components
+  generated using Gemmini. The general matrix-to-matrix multiplication (GEMM)
+  of different dataflow options, including output/weight stationary (OS/WS),
+  was explored in Gemmini to estimate the performance relative to a CPU
+  implementation. The Gemmini hardware was implemented on an FPGA device to
+  explore the effect of several accelerator parameters, including array size,
+  memory capacity, and the CPU/hardware image-to-column (im2col) module, on
+  metrics such as the area, frequency, and power. This work revealed that
+  regarding the performance, the WS dataflow offered a speedup of 3× relative
+  to the OS dataflow, and the hardware im2col operation offered a speedup of
+  1.1× relative to the operation on the CPU. For hardware resources, an
+  increase in the array size by a factor of 2 led to an increase in both the
+  area and power by a factor of 3.3, and the im2col module led to an increase
+  in area and power by factors of 1.01 and 1.06, respectively.%
+    }
+    \verb{doi}
+    \verb 10.3390/s23052380
+    \endverb
+    \field{issn}{1424-8220}
+    \field{number}{5}
+    \field{title}{Deep Learning Accelerators’ Configuration Space Exploration
+  Effect on Performance and Resource Utilization: A Gemmini Case Study}
+    \verb{url}
+    \verb https://www.mdpi.com/1424-8220/23/5/2380
+    \endverb
+    \field{volume}{23}
+    \field{journaltitle}{Sensors}
+    \field{year}{2023}
+  \endentry
+
   \entry{riscv2024members}{online}{}{}
     \name{author}{1}{}{%
       {{hash=R}{%
@@ -484,7 +438,7 @@
     \field{year}{2024}
   \endentry
 
-  \entry{sifive2017tilelink}{manual}{}{}
+  \entry{sifive2018tilelink}{manual}{}{}
     \name{author}{1}{}{%
       {{hash=S}{%
          family={{SiFive Inc.}},
@@ -497,14 +451,14 @@
     \field{labeltitlesource}{title}
     \field{sortinit}{S}
     \field{sortinithash}{S}
-    \field{note}{Accessed: Dec. 30, 2024}
+    \field{note}{Accessed: Jun. 6, 2025}
     \field{title}{{SiFive TileLink Specification}}
     \verb{url}
-    \verb https://static.dev.sifive.com/docs/tilelink/tilelink-spec-1.7-draft
-    \verb .pdf
+    \verb https://sifive.cdn.prismic.io/sifive%2F57f93ecf-2c42-46f7-9818-bcdd
+    \verb 7d39400a_tilelink-spec-1.7.1.pdf
     \endverb
-    \field{version}{1.7-draft}
-    \field{year}{2017}
+    \field{version}{1.7.1}
+    \field{year}{2018}
     \warn{\item Invalid format of field 'month'}
   \endentry
 
@@ -617,7 +571,7 @@
     \field{sortinit}{Z}
     \field{sortinithash}{Z}
     \field{howpublished}{Presentation Slides, ISCA 2021 Tutorial}
-    \field{note}{Accessed: Dec. 30, 2024}
+    \field{note}{Accessed: Jun. 6, 2025}
     \field{title}{Chipyard Intro and Fundamentals}
     \verb{url}
     \verb https://fires.im/isca21-slides-pdf/02_chipyard_basics.pdf

@@ -23,6 +23,12 @@
 \contentsline {figure}{\numberline {3.8}{\ignorespaces Peripherals in the Rocket Chip base system.}}{29}{figure.caption.30}%
 \contentsline {figure}{\numberline {3.9}{\ignorespaces \texttt {RoCC} co-processor core and MMIO peripheral core in \texttt {Rocket Chip}.}}{30}{figure.caption.31}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces High-level overview of the \texttt {Gemmini} accelerator integrated with a host CPU (\texttt {Rocket Core}) and system memory hierarchy.}}{34}{figure.caption.32}%
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Conceptual diagram of the \texttt {Gemmini} RoCC interface with the host CPU (\texttt {RISC-V CPU}), PTW, and L2 Cache/System Memory.}}{37}{figure.caption.33}%
-\contentsline {figure}{\numberline {4.3}{\ignorespaces Layered programming model for \texttt {Gemmini}.}}{38}{figure.caption.34}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Gemmini Logo. Source: \blx@tocontentsinit {0}\cite {gemini-dac}.}}{33}{figure.caption.32}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces High-level overview of the Gemmini accelerator template integrated with a host CPU and system memory hierarchy. Source: \blx@tocontentsinit {0}\cite {gemini-dac}.}}{34}{figure.caption.33}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Conceptual view of Gemmini's decoupled access-execute pipelines, managed by separate hardware command queues for Load, Execute, and Store operations. Source: \blx@tocontentsinit {0}\cite {gemini-dac}.}}{36}{figure.caption.34}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Overview of the internal modules in the generated Gemmini hardware architecture, showing the flow of commands from the RoCC interface through various queues and controllers. Source: \blx@tocontentsinit {0}\cite {gookyi2023gemmini_case_study}.}}{37}{figure.caption.35}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Gemmini's command unrolling modules (\texttt {LoopConv} and \texttt {LoopMatmul}), which translate high-level commands into a series of primitive operations. Source: \blx@tocontentsinit {0}\cite {gookyi2023gemmini_case_study}.}}{38}{figure.caption.36}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces The \texttt {ExecuteController} module and its associated SRAM control interfaces. Source: \blx@tocontentsinit {0}\cite {gookyi2023gemmini_case_study}.}}{39}{figure.caption.37}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces The \texttt {Mesh} module, which implements the systolic array of PEs and supports different dataflows (Output Stationary and Weight Stationary). Source: \blx@tocontentsinit {0}\cite {gookyi2023gemmini_case_study}.}}{40}{figure.caption.38}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces The internal structure of the \texttt {Scratchpad} module, showing the various interfaces to the TLB, DMA, and internal memory banks. Source: \blx@tocontentsinit {0}\cite {gookyi2023gemmini_case_study}.}}{41}{figure.caption.39}%
