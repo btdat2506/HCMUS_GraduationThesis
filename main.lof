@@ -16,13 +16,13 @@
 \contentsline {figure}{\numberline {3.1}{\ignorespaces \texttt {Chisel} as a library within \texttt {Scala}. Source: CHIPS Alliance.}}{19}{figure.caption.22}%
 \contentsline {figure}{\numberline {3.2}{\ignorespaces Structure of a \texttt {Rocket} Tile.}}{22}{figure.caption.23}%
 \contentsline {figure}{\numberline {3.3}{\ignorespaces Proposed structure of a single-core RISC-V processor system with a \texttt {Gemmini} \texttt {RoCC} accelerator.}}{23}{figure.caption.24}%
-\contentsline {figure}{\numberline {3.4}{\ignorespaces Connection model in \texttt {TileLink} and its interfaces. Source: \blx@tocontentsinit {0}\cite {sifive2017tilelink}}}{24}{figure.caption.25}%
-\contentsline {figure}{\numberline {3.5}{\ignorespaces Channels in a \texttt {TileLink} connection between two agents. Source: \blx@tocontentsinit {0}\cite {sifive2017tilelink}}}{25}{figure.caption.27}%
-\contentsline {figure}{\numberline {3.6}{\ignorespaces \texttt {TileLink} \texttt {TL-UL} connection structure. Source: \blx@tocontentsinit {0}\cite {sifive2017tilelink}}}{27}{figure.caption.28}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Connection model in \texttt {TileLink} and its interfaces. Source: \blx@tocontentsinit {0}\cite {sifive2018tilelink}}}{24}{figure.caption.25}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Channels in a \texttt {TileLink} connection between two agents. Source: \blx@tocontentsinit {0}\cite {sifive2018tilelink}}}{25}{figure.caption.27}%
+\contentsline {figure}{\numberline {3.6}{\ignorespaces \texttt {TileLink} \texttt {TL-UL} connection structure. Source: \blx@tocontentsinit {0}\cite {sifive2018tilelink}}}{27}{figure.caption.28}%
 \contentsline {figure}{\numberline {3.7}{\ignorespaces Implementation structure of a heterogeneous multi-core processor system.}}{28}{figure.caption.29}%
 \contentsline {figure}{\numberline {3.8}{\ignorespaces Peripherals in the Rocket Chip base system.}}{29}{figure.caption.30}%
 \contentsline {figure}{\numberline {3.9}{\ignorespaces \texttt {RoCC} co-processor core and MMIO peripheral core in \texttt {Rocket Chip}.}}{30}{figure.caption.31}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces High-level overview of the \texttt {Gemmini} accelerator integrated with a host CPU (\texttt {Rocket Core}) and system memory hierarchy.}}{33}{figure.caption.32}%
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Conceptual diagram of the \texttt {Gemmini} RoCC interface with the host CPU (\texttt {RISC-V CPU}), PTW, and L2 Cache/System Memory.}}{36}{figure.caption.33}%
-\contentsline {figure}{\numberline {4.3}{\ignorespaces Layered programming model for \texttt {Gemmini}.}}{37}{figure.caption.34}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces High-level overview of the \texttt {Gemmini} accelerator integrated with a host CPU (\texttt {Rocket Core}) and system memory hierarchy.}}{34}{figure.caption.32}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Conceptual diagram of the \texttt {Gemmini} RoCC interface with the host CPU (\texttt {RISC-V CPU}), PTW, and L2 Cache/System Memory.}}{37}{figure.caption.33}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Layered programming model for \texttt {Gemmini}.}}{38}{figure.caption.34}%

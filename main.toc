@@ -25,16 +25,16 @@
 \contentsline {section}{\numberline {4.1}Introduction to Gemmini}{33}{section.4.1}%
 \contentsline {section}{\numberline {4.2}Gemmini Architecture}{33}{section.4.2}%
 \contentsline {subsection}{\numberline {4.2.1}Systolic Array (Spatial Array)}{34}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Local Scratchpad Memory}{34}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.2}Local Scratchpad Memory}{35}{subsection.4.2.2}%
 \contentsline {subsection}{\numberline {4.2.3}Accumulator Memory}{35}{subsection.4.2.3}%
 \contentsline {subsection}{\numberline {4.2.4}Controller and DMA Engine}{35}{subsection.4.2.4}%
-\contentsline {subsection}{\numberline {4.2.5}Optional Functional Units}{35}{subsection.4.2.5}%
+\contentsline {subsection}{\numberline {4.2.5}Optional Functional Units}{36}{subsection.4.2.5}%
 \contentsline {subsection}{\numberline {4.2.6}Virtual Address Translation Support}{36}{subsection.4.2.6}%
-\contentsline {section}{\numberline {4.3}Gemmini Integration as a RoCC Accelerator}{36}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Gemmini Programming Model}{37}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Low-Level: Gemmini ISA (RoCC Instructions)}{37}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}Mid-Level: Hand-Tuned C Library}{38}{subsection.4.4.2}%
+\contentsline {section}{\numberline {4.3}Gemmini Integration as a RoCC Accelerator}{37}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Gemmini Programming Model}{38}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Low-Level: Gemmini ISA (RoCC Instructions)}{38}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Mid-Level: Hand-Tuned C Library}{39}{subsection.4.4.2}%
 \contentsline {subsection}{\numberline {4.4.3}High-Level: Compiler Support (Conceptual)}{39}{subsection.4.4.3}%
 \contentsline {section}{\numberline {4.5}Gemmini Configuration in This Thesis}{39}{section.4.5}%
-\contentsline {section}{\numberline {4.6}Summary}{39}{section.4.6}%
+\contentsline {section}{\numberline {4.6}Summary}{40}{section.4.6}%
 \contentsline {chapter}{TÀI LIỆU THAM KHẢO}{41}{section*.36}%

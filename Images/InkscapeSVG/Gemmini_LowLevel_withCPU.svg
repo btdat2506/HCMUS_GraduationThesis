@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="155.28262mm"
+   height="77.505554mm"
+   viewBox="0 0 155.28262 77.505554"
+   version="1.1"
+   id="svg1"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm">
+    <inkscape:page
+       x="0"
+       y="0"
+       width="155.28262"
+       height="77.505554"
+       id="page2"
+       margin="0"
+       bleed="0" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-44.979165,-120.38541)">
+    <path
+       id="path11"
+       d="m 45.33194,121.5814 h 40.156163 v 14.71538 H 45.33194 Z"
+       style="fill:#002f4a;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.352778" />
+    <path
+       id="path12"
+       d="M 45.331943,121.5814 H 85.48811 v 14.71539 H 45.331943 Z"
+       style="fill:none;stroke:#002034;stroke-width:0.705556;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" />
+    <text
+       id="text12"
+       xml:space="preserve"
+       x="49.138168"
+       y="131.17773"
+       style="font-size:1.016px;stroke-width:0.0846667"><tspan
+         id="tspan12"
+         style="font-variant:normal;font-weight:normal;font-size:5.64445px;font-family:Arial;writing-mode:lr-tb;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.0846667"
+         x="49.138168"
+         dx="0 0 0.039511107"
+         y="131.17773">RISC</tspan></text>
+    <text
+       id="text13"
+       xml:space="preserve"
+       x="62.587818"
+       y="131.17773"
+       style="font-size:1.016px;stroke-width:0.0846667"><tspan
+         id="tspan13"
+         style="font-variant:normal;font-weight:normal;font-size:5.64445px;font-family:Arial;writing-mode:lr-tb;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.0846667"
+         x="62.587818"
+         y="131.17773">-</tspan></text>
+    <text
+       id="text14"
+       xml:space="preserve"
+       x="64.484001"
+       y="131.17773"
+       style="font-size:1.016px;stroke-width:0.0846667"><tspan
+         id="tspan14"
+         style="font-variant:normal;font-weight:normal;font-size:5.64445px;font-family:Arial;writing-mode:lr-tb;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.0846667"
+         x="64.484001"
+         dx="0 0 0.033866663"
+         y="131.17773">V CPU</tspan></text>
+    <path
+       id="path14"
+       d="m 149.47186,121.58136 h 50.43717 v 75.95683 h -50.43717 z"
+       style="fill:#002f4a;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.352778" />
+    <path
+       id="path15"
+       d="m 149.47187,121.58136 h 50.43714 v 75.95683 h -50.43714 z"
+       style="fill:none;stroke:#002034;stroke-width:0.705556;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" />
+    <text
+       id="text15"
+       xml:space="preserve"
+       x="157.73505"
+       y="162.58907"
+       style="font-size:1.016px;stroke-width:0.0846667"><tspan
+         id="tspan15"
+         style="font-variant:normal;font-weight:normal;font-size:8.46667px;font-family:Arial;writing-mode:lr-tb;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.0846667"
+         x="157.73505"
+         y="162.58907">Gemmini</tspan></text>
+    <path
+       id="path16"
+       d="m 45.33194,181.08864 h 40.156163 v 14.71539 H 45.33194 Z"
+       style="fill:#002f4a;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.352778" />
+    <path
+       id="path17"
+       d="M 45.331943,181.08864 H 85.48811 v 14.71539 H 45.331943 Z"
+       style="fill:none;stroke:#002034;stroke-width:0.705556;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" />
+    <text
+       id="text17"
+       xml:space="preserve"
+       x="62.27914"
+       y="190.69839"
+       style="font-size:1.016px;stroke-width:0.0846667"><tspan
+         id="tspan17"
+         style="font-variant:normal;font-weight:normal;font-size:5.64445px;font-family:Arial;writing-mode:lr-tb;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.0846667"
+         x="62.27914"
+         y="190.69839">L2</tspan></text>
+    <path
+       id="path18"
+       d="m 45.33194,152.25144 h 40.156163 v 14.71538 H 45.33194 Z"
+       style="fill:#002f4a;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.352778" />
+    <path
+       id="path19"
+       d="M 45.331943,152.25144 H 85.48811 v 14.71539 H 45.331943 Z"
+       style="fill:none;stroke:#002034;stroke-width:0.705556;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:10;stroke-dasharray:none;stroke-opacity:1" />
+    <text
+       id="text19"
+       xml:space="preserve"
+       x="59.148201"
+       y="161.82706"
+       style="font-size:1.016px;stroke-width:0.0846667"><tspan
+         id="tspan19"
+         style="font-variant:normal;font-weight:normal;font-size:5.64445px;font-family:Arial;writing-mode:lr-tb;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.0846667"
+         x="59.148201"
+         y="161.82706">PTW</tspan></text>
+    <path
+       id="path20"
+       d="m 85.48835,126.2315 60.80876,0.13307 -7e-4,0.26458 -60.808766,-0.13307 z m 60.45958,-1.4993 3.52393,1.77161 -3.53165,1.75616 z"
+       style="fill:#002e4a;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.352778" />
+    <text
+       id="text20"
+       xml:space="preserve"
+       x="93.954102"
+       y="123.98106"
+       style="font-size:1.016px;stroke-width:0.0846667"><tspan
+         id="tspan20"
+         style="font-variant:normal;font-weight:normal;font-size:4.93889px;font-family:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.0846667"
+         x="93.954102"
+         y="123.98106">cmds</tspan></text>
+    <text
+       id="text21"
+       xml:space="preserve"
+       x="105.72806"
+       y="123.98106"
+       style="font-size:1.016px;stroke-width:0.0846667"><tspan
+         id="tspan21"
+         style="font-variant:normal;font-weight:normal;font-size:4.93889px;font-family:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.0846667"
+         x="105.72806"
+         y="123.98106">, rs1/rs2, </tspan></text>
+    <text
+       id="text22"
+       xml:space="preserve"
+       x="126.23327"
+       y="123.98106"
+       style="font-size:1.016px;stroke-width:0.0846667"><tspan
+         id="tspan22"
+         style="font-variant:normal;font-weight:normal;font-size:4.93889px;font-family:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.0846667"
+         x="126.23327"
+         y="123.98106">vaddrs</tspan></text>
+    <path
+       id="path22"
+       d="m 149.47176,157.10739 -60.808869,0.0469 2.12e-4,0.26458 60.808827,-0.0469 z m -60.457255,-1.58496 -3.526437,1.7666 3.529153,1.76117 -0.0028,-3.52777 z"
+       style="fill:#002e4a;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.352778" />
+    <text
+       id="text23"
+       xml:space="preserve"
+       x="109.97275"
+       y="154.88438"
+       style="font-size:1.016px;stroke-width:0.0846667"><tspan
+         id="tspan23"
+         style="font-variant:normal;font-weight:normal;font-size:4.93889px;font-family:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.0846667"
+         x="109.97275"
+         y="154.88438">vaddrs</tspan></text>
+    <text
+       id="text24"
+       xml:space="preserve"
+       x="109.84046"
+       y="169.44707"
+       style="font-size:1.016px;stroke-width:0.0846667"><tspan
+         id="tspan24"
+         style="font-variant:normal;font-weight:normal;font-size:4.93889px;font-family:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.0846667"
+         x="109.84046"
+         y="169.44707">paddrs</tspan></text>
+    <path
+       id="path24"
+       d="m 88.663385,132.38634 60.808765,0.13307 -7.1e-4,0.26459 -60.808761,-0.13307 z m 0.348615,1.89693 -3.523932,-1.77158 3.531623,-1.75617 z"
+       style="fill:#002e4a;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.352778" />
+    <text
+       id="text25"
+       xml:space="preserve"
+       x="112.27646"
+       y="139.22105"
+       style="font-size:1.016px;stroke-width:0.0846667"><tspan
+         id="tspan25"
+         style="font-variant:normal;font-weight:normal;font-size:4.93889px;font-family:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.0846667"
+         x="112.27646"
+         y="139.22105">busy</tspan></text>
+    <path
+       id="path25"
+       d="m 85.851111,162.39524 60.808759,0.13307 -7e-4,0.26458 -60.808764,-0.13306 z m 60.459579,-1.4993 3.5239,1.77161 -3.53162,1.75617 z"
+       style="fill:#002e4a;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.352778" />
+    <path
+       id="path26"
+       d="m 149.35083,184.97123 -60.808836,0.0469 2.12e-4,0.26458 60.808834,-0.0469 z m -60.457257,-1.58498 -3.526402,1.76661 3.529118,1.76117 -0.0028,-3.52778 z"
+       style="fill:#002e4a;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.352778" />
+    <text
+       id="text26"
+       xml:space="preserve"
+       x="109.84046"
+       y="182.40106"
+       style="font-size:1.016px;stroke-width:0.0846667"><tspan
+         id="tspan26"
+         style="font-variant:normal;font-weight:normal;font-size:4.93889px;font-family:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.0846667"
+         x="109.84046"
+         y="182.40106">paddrs</tspan></text>
+    <path
+       id="path27"
+       d="m 89.026111,190.34135 57.633759,0.12613 -7e-4,0.26458 -57.633764,-0.12613 z m 0.348615,1.89695 -3.523897,-1.77161 3.531623,-1.75616 z m 56.935964,-3.40319 3.5239,1.77161 -3.53162,1.75616 z"
+       style="fill:#002e4a;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.352778" />
+    <text
+       id="text27"
+       xml:space="preserve"
+       x="112.57449"
+       y="197.30238"
+       style="font-size:1.016px;stroke-width:0.0846667"><tspan
+         id="tspan27"
+         style="font-variant:normal;font-weight:normal;font-size:4.93889px;font-family:Arial;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.0846667"
+         x="112.57449"
+         y="197.30238">data</tspan></text>
+  </g>
+</svg>
