@@ -42,15 +42,15 @@ While the systolic principle is four decades old, it has become the dominant par
 \subsection{Google's TPUv1: A Datacenter-Scale Design}
 Google's Tensor Processing Unit (TPU) was one of the first large-scale custom ASICs designed specifically for accelerating DNN inference in datacenters \cite{jouppi2017tpu}. As shown in Figure \ref{fig:tpu_diagram}, its architecture is a direct embodiment of the systolic principle. The heart of the TPU is a massive 256x256 Matrix Multiply Unit, which is a two-dimensional systolic array of 65,536 8-bit multiply-accumulate (MAC) units. To feed this vast computational engine, the TPU relies on a large, software-controlled on-chip memory called the Unified Buffer (a 24 MiB scratchpad), which stores input activations and intermediate partial sums. The design philosophy of the TPU prioritizes deterministic, high-throughput performance for inference tasks where low latency is critical.
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{TPU_v1_Overview.pdf} 
+    \includegraphics[width=0.9\textwidth]{TPU_v1_Overview.pdf} 
     \caption[The Google TPUv1 Block Diagram]{A high-level block diagram of the Google TPUv1. The design is dominated by the systolic Matrix Multiply Unit and its large on-chip Unified Buffer. Adapted from Jouppi et al. \cite{jouppi2017tpu, mittal2021survey}.}
     \label{fig:tpu_diagram}
 \end{figure}
 
 \subsection{NVIDIA NVDLA: An Open-Source Accelerator IP}
-In contrast to the monolithic, datacenter-focused TPU, the NVIDIA Deep Learning Accelerator (NVDLA) is an open-source, configurable IP core designed for integration into a wide range of Systems-on-Chip (SoCs), particularly for embedded systems \cite{farshchi2019nvdla}. As shown in Figure \ref{fig:nvdla_diagram}, the NVDLA has a more modular design, with a dedicated Convolutional Core (which contains the MAC units), a Post-Processing unit for activation functions and pooling, and a Convolutional Buffer for storing weights and inputs. Unlike the TPU's custom interface, the NVDLA uses industry-standard bus protocols (AXI and APB) for memory access and control, simplifying its integration into third-party SoC designs. Its configurability (e.g., `nv\_small`, `nv\_large`) allows a system designer to trade off area and performance, making it a flexible solution for the embedded space.
+In contrast to the monolithic, datacenter-focused TPU, the NVIDIA Deep Learning Accelerator (NVDLA) is an open-source, configurable IP core designed for integration into a wide range of Systems-on-Chip (SoCs), particularly for embedded systems \cite{farshchi2019nvdla}. As shown in Figure \ref{fig:nvdla_diagram}, the NVDLA has a more modular design, with a dedicated Convolutional Core (which contains the MAC units), a Post-Processing unit for activation functions and pooling, and a Convolutional Buffer for storing weights and inputs. Unlike the TPU's custom interface, the NVDLA uses industry-standard bus protocols (AXI and APB) for memory access and control, simplifying its integration into third-party SoC designs. Its configurability (e.g., \texttt{nv\_small}, \texttt{nv\_large}) allows a system designer to trade off area and performance, making it a flexible solution for the embedded space.
 
 \begin{figure}[htbp]
     \centering
@@ -102,4 +102,4 @@ These strategies, visually contrasted in Figure \ref{fig:dataflow_taxonomy} and 
 \end{figure}
 
 \section{Chapter Summary}
-This chapter has built a foundational argument for the necessity of specialized hardware for DNN acceleration. We began with the core architectural challenge---the Memory Wall---and introduced the systolic array as a classic and enduring solution that minimizes costly data movement by maximizing data reuse. By examining modern industrial accelerators like the Google TPU and NVDLA, we have seen this principle in action. Finally, we formalized these strategies with the concept of dataflows, such as Weight Stationary and Output Stationary. These foundational concepts provide the necessary framework to understand the design and operation of the Gemmini accelerator, which will be the focus of the subsequent chapters.
+This chapter has built a foundational argument for the necessity of specialized hardware for DNN acceleration. We began with the core architectural challenge, the Memory Wall, and introduced the systolic array as a classic and enduring solution that minimizes costly data movement by maximizing data reuse. By examining modern industrial accelerators like the Google TPU and NVDLA, we have seen this principle in action. Finally, we formalized these strategies with the concept of dataflows, such as Weight Stationary and Output Stationary. These foundational concepts provide the necessary framework to understand the design and operation of the Gemmini accelerator, which will be the focus of the subsequent chapters.

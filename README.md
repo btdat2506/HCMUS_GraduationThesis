@@ -1,5 +1,7 @@
 # HCMUS FETEL Graduation Thesis Report
 
+Work in progress!
+
 ## Mục tiêu
 - Hiểu cấu trúc Chipyard
 - Dùng chipyard, xây dựng RocketChip kết hợp Gemmini 

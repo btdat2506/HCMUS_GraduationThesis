@@ -1,0 +1,1442 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\datalist[entry]{nty/global//global/global/global}
+  \entry{asanovic2016rocket}{report}{}{}
+    \true{moreauthor}
+    \true{morelabelname}
+    \name{author}{10}{}{%
+      {{hash=AK}{%
+         family={Asanovic},
+         familyi={A\bibinitperiod},
+         given={K.},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=AR}{%
+         family={Avizienis},
+         familyi={A\bibinitperiod},
+         given={R.},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=BJ}{%
+         family={Bachrach},
+         familyi={B\bibinitperiod},
+         given={J.},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=BS}{%
+         family={Beamer},
+         familyi={B\bibinitperiod},
+         given={S.},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=BD}{%
+         family={Biancolin},
+         familyi={B\bibinitperiod},
+         given={D.},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=CC}{%
+         family={Celio},
+         familyi={C\bibinitperiod},
+         given={C.},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=CH}{%
+         family={Cook},
+         familyi={C\bibinitperiod},
+         given={H.},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=DD}{%
+         family={Dabbelt},
+         familyi={D\bibinitperiod},
+         given={D.},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=HJ}{%
+         family={Hauser},
+         familyi={H\bibinitperiod},
+         given={J.},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=IA}{%
+         family={Izraelevitz},
+         familyi={I\bibinitperiod},
+         given={A.},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{AK+1}
+    \strng{fullhash}{AKARBJBSBDCCCHDDHJIA+1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{A}
+    \field{sortinithash}{A}
+    \field{number}{UCB/EECS-2016-17}
+    \field{title}{The Rocket Chip Generator}
+    \list{institution}{1}{%
+      {EECS Department, University of California, Berkeley}%
+    }
+    \field{type}{Tech. Rep.}
+    \field{year}{2016}
+  \endentry
+
+  \entry{celio2016boom_spec}{manual}{}{}
+    \name{author}{3}{}{%
+      {{hash=CC}{%
+         family={Celio},
+         familyi={C\bibinitperiod},
+         given={C.},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=PD}{%
+         family={Patterson},
+         familyi={P\bibinitperiod},
+         given={D.},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=AK}{%
+         family={Asanovic},
+         familyi={A\bibinitperiod},
+         given={K.},
+         giveni={K\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {University of California, Berkeley}%
+    }
+    \strng{namehash}{CCPDAK1}
+    \strng{fullhash}{CCPDAK1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{C}
+    \field{sortinithash}{C}
+    \field{title}{The {Berkeley} Out-of-Order Machine ({BOOM}) Design
+  Specification}
+    \verb{url}
+    \verb https://github.com/ccelio/riscv-boom-doc/raw/gh-pages/boom-spec.pdf
+    \endverb
+    \field{year}{2016}
+  \endentry
+
+  \entry{celio2015boom}{report}{}{}
+    \name{author}{3}{}{%
+      {{hash=CC}{%
+         family={Celio},
+         familyi={C\bibinitperiod},
+         given={C.},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=PDA}{%
+         family={Patterson},
+         familyi={P\bibinitperiod},
+         given={D.\bibnamedelima A.},
+         giveni={D\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+      {{hash=AK}{%
+         family={Asanovic},
+         familyi={A\bibinitperiod},
+         given={K.},
+         giveni={K\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{CCPDAAK1}
+    \strng{fullhash}{CCPDAAK1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{C}
+    \field{sortinithash}{C}
+    \field{number}{UCB/EECS-2015-167}
+    \field{title}{The {Berkeley} out-of-order machine ({BOOM}): An
+  industry-competitive, synthesizable, parameterized {RISC-V} processor}
+    \verb{url}
+    \verb https://www.eecs.berkeley.edu/Pubs/TechRpts/2015/EECS-2015-167.html
+    \endverb
+    \list{institution}{1}{%
+      {EECS Department, University of California, Berkeley}%
+    }
+    \field{type}{Tech. Rep.}
+    \field{year}{2015}
+  \endentry
+
+  \entry{celio_phdthesis_2018boom}{report}{}{}
+    \name{author}{1}{}{%
+      {{hash=CC}{%
+         family={Celio},
+         familyi={C\bibinitperiod},
+         given={Christopher},
+         giveni={C\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{CC1}
+    \strng{fullhash}{CC1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{C}
+    \field{sortinithash}{C}
+    \field{number}{UCB/EECS-2018-151}
+    \field{title}{A Highly Productive Implementation of an Out-of-Order
+  Processor Generator}
+    \verb{url}
+    \verb http://www2.eecs.berkeley.edu/Pubs/TechRpts/2018/EECS-2018-151.html
+    \endverb
+    \list{institution}{2}{%
+      {Electrical Engineering}%
+      {Computer Sciences, University of California at Berkeley}%
+    }
+    \field{type}{techreport}
+    \field{year}{2018}
+  \endentry
+
+  \entry{farshchi2019nvdla}{inproceedings}{}{}
+    \name{author}{3}{}{%
+      {{hash=FF}{%
+         family={Farshchi},
+         familyi={F\bibinitperiod},
+         given={Farzad},
+         giveni={F\bibinitperiod},
+      }}%
+      {{hash=HQ}{%
+         family={Huang},
+         familyi={H\bibinitperiod},
+         given={Qijing},
+         giveni={Q\bibinitperiod},
+      }}%
+      {{hash=YH}{%
+         family={Yun},
+         familyi={Y\bibinitperiod},
+         given={Heechul},
+         giveni={H\bibinitperiod},
+      }}%
+    }
+    \keyw{Field programmable gate arrays;Open source software;Random access
+  memory;Rockets;Clocks;Protocols;Hardware;NVDLA;FireSim;RISC-V;FPGA;Cloud;DNN;Embedded
+  Systems}
+    \strng{namehash}{FFHQYH1}
+    \strng{fullhash}{FFHQYH1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{F}
+    \field{sortinithash}{F}
+    \field{booktitle}{2019 2nd Workshop on Energy Efficient Machine Learning
+  and Cognitive Computing for Embedded Applications (EMC2)}
+    \verb{doi}
+    \verb 10.1109/EMC249363.2019.00012
+    \endverb
+    \field{pages}{21\bibrangedash 25}
+    \field{title}{Integrating NVIDIA Deep Learning Accelerator (NVDLA) with
+  RISC-V SoC on FireSim}
+    \field{year}{2019}
+  \endentry
+
+  \entry{Genc2022GemminiMLSys}{misc}{}{}
+    \name{author}{4}{}{%
+      {{hash=GH}{%
+         family={Genc},
+         familyi={G\bibinitperiod},
+         given={Hasan},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=GS}{%
+         family={Guo},
+         familyi={G\bibinitperiod},
+         given={Simon},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=KS}{%
+         family={Kim},
+         familyi={K\bibinitperiod},
+         given={Seah},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=NVD}{%
+         family={Nikiforov},
+         familyi={N\bibinitperiod},
+         given={Vadim\bibnamedelima (Dima)},
+         giveni={V\bibinitperiod\bibinitdelim D\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{GH+1}
+    \strng{fullhash}{GHGSKSNVD1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{G}
+    \field{sortinithash}{G}
+    \field{howpublished}{Presentation Slides, MLSys 2022 Tutorial}
+    \field{note}{Accessed: [Your Access Date]}
+    \field{title}{{Gemmini @ MLSys 2022}}
+    \verb{url}
+    \verb https://mlsys.org/virtual/2022/tutorial/18433
+    \endverb
+    \field{year}{2022}
+  \endentry
+
+  \entry{gemini-dac}{inbook}{}{}
+    \name{author}{19}{}{%
+      {{hash=GH}{%
+         family={Genc},
+         familyi={G\bibinitperiod},
+         given={Hasan},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=KS}{%
+         family={Kim},
+         familyi={K\bibinitperiod},
+         given={Seah},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=AA}{%
+         family={Amid},
+         familyi={A\bibinitperiod},
+         given={Alon},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=HAA}{%
+         family={Haj-Ali},
+         familyi={H\bibinithyphendelim A\bibinitperiod},
+         given={Ameer},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=IV}{%
+         family={Iyer},
+         familyi={I\bibinitperiod},
+         given={Vighnesh},
+         giveni={V\bibinitperiod},
+      }}%
+      {{hash=PP}{%
+         family={Prakash},
+         familyi={P\bibinitperiod},
+         given={Pranav},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=ZJ}{%
+         family={Zhao},
+         familyi={Z\bibinitperiod},
+         given={Jerry},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=GD}{%
+         family={Grubb},
+         familyi={G\bibinitperiod},
+         given={Daniel},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=LH}{%
+         family={Liew},
+         familyi={L\bibinitperiod},
+         given={Harrison},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=MH}{%
+         family={Mao},
+         familyi={M\bibinitperiod},
+         given={Howard},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=OA}{%
+         family={Ou},
+         familyi={O\bibinitperiod},
+         given={Albert},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=SC}{%
+         family={Schmidt},
+         familyi={S\bibinitperiod},
+         given={Colin},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=SS}{%
+         family={Steffl},
+         familyi={S\bibinitperiod},
+         given={Samuel},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=WJ}{%
+         family={Wright},
+         familyi={W\bibinitperiod},
+         given={John},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=SI}{%
+         family={Stoica},
+         familyi={S\bibinitperiod},
+         given={Ion},
+         giveni={I\bibinitperiod},
+      }}%
+      {{hash=RKJ}{%
+         family={Ragan-Kelley},
+         familyi={R\bibinithyphendelim K\bibinitperiod},
+         given={Jonathan},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=AK}{%
+         family={Asanovic},
+         familyi={A\bibinitperiod},
+         given={Krste},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=NB}{%
+         family={Nikolic},
+         familyi={N\bibinitperiod},
+         given={Borivoje},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=SYS}{%
+         family={Shao},
+         familyi={S\bibinitperiod},
+         given={Yakun\bibnamedelima Sophia},
+         giveni={Y\bibinitperiod\bibinitdelim S\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {IEEE Press}%
+    }
+    \strng{namehash}{GH+1}
+    \strng{fullhash}{GHKSAAHAAIVPPZJGDLHMHOASCSSWJSIRKJAKNBSYS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{G}
+    \field{sortinithash}{G}
+    \field{abstract}{%
+    DNN accelerators are often developed and evaluated in isolation without
+  considering the cross-stack, system-level effects in real-world environments.
+  This makes it difficult to appreciate the impact of System-on-Chip (SoC)
+  resource contention, OS overheads, and programming-stack inefficiencies on
+  overall performance/energy-efficiency. To address this challenge, we present
+  Gemmini, an open-source1, full-stack DNN accelerator generator. Gemmini
+  generates a wide design-space of efficient ASIC accelerators from a flexible
+  architectural template, together with flexible programming stacks and full
+  SoCs with shared resources that capture system-level effects.
+  Gemmini-generated accelerators have also been fabricated, delivering up to
+  three orders-of-magnitude speedups over high-performance CPUs on various DNN
+  benchmarks.%
+    }
+    \field{booktitle}{Proceedings of the 58th Annual ACM/IEEE Design Automation
+  Conference}
+    \field{isbn}{9781665432740}
+    \field{pages}{769–774}
+    \field{title}{Gemmini: Enabling Systematic Deep-Learning Architecture
+  Evaluation via Full-Stack Integration}
+    \verb{url}
+    \verb https://doi.org/10.1109/DAC18074.2021.9586216
+    \endverb
+    \field{year}{2022}
+  \endentry
+
+  \entry{gookyi2023gemmini_case_study}{article}{}{}
+    \name{author}{5}{}{%
+      {{hash=GDAN}{%
+         family={Gookyi},
+         familyi={G\bibinitperiod},
+         given={Dennis Agyemanh\bibnamedelima Nana},
+         giveni={D\bibinitperiod\bibinitdelim A\bibinitperiod\bibinitdelim
+  N\bibinitperiod},
+      }}%
+      {{hash=LE}{%
+         family={Lee},
+         familyi={L\bibinitperiod},
+         given={Eunchong},
+         giveni={E\bibinitperiod},
+      }}%
+      {{hash=KK}{%
+         family={Kim},
+         familyi={K\bibinitperiod},
+         given={Kyungho},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=JSJ}{%
+         family={Jang},
+         familyi={J\bibinitperiod},
+         given={Sung-Joon},
+         giveni={S\bibinithyphendelim J\bibinitperiod},
+      }}%
+      {{hash=LSS}{%
+         family={Lee},
+         familyi={L\bibinitperiod},
+         given={Sang-Seol},
+         giveni={S\bibinithyphendelim S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{GDAN+1}
+    \strng{fullhash}{GDANLEKKJSJLSS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{G}
+    \field{sortinithash}{G}
+    \field{abstract}{%
+    Though custom deep learning (DL) hardware accelerators are attractive for
+  making inferences in edge computing devices, their design and implementation
+  remain a challenge. Open-source frameworks exist for exploring DL hardware
+  accelerators. Gemmini is an open-source systolic array generator for agile DL
+  accelerator exploration. This paper details the hardware/software components
+  generated using Gemmini. The general matrix-to-matrix multiplication (GEMM)
+  of different dataflow options, including output/weight stationary (OS/WS),
+  was explored in Gemmini to estimate the performance relative to a CPU
+  implementation. The Gemmini hardware was implemented on an FPGA device to
+  explore the effect of several accelerator parameters, including array size,
+  memory capacity, and the CPU/hardware image-to-column (im2col) module, on
+  metrics such as the area, frequency, and power. This work revealed that
+  regarding the performance, the WS dataflow offered a speedup of 3× relative
+  to the OS dataflow, and the hardware im2col operation offered a speedup of
+  1.1× relative to the operation on the CPU. For hardware resources, an
+  increase in the array size by a factor of 2 led to an increase in both the
+  area and power by a factor of 3.3, and the im2col module led to an increase
+  in area and power by factors of 1.01 and 1.06, respectively.%
+    }
+    \verb{doi}
+    \verb 10.3390/s23052380
+    \endverb
+    \field{issn}{1424-8220}
+    \field{number}{5}
+    \field{title}{Deep Learning Accelerators’ Configuration Space Exploration
+  Effect on Performance and Resource Utilization: A Gemmini Case Study}
+    \verb{url}
+    \verb https://www.mdpi.com/1424-8220/23/5/2380
+    \endverb
+    \field{volume}{23}
+    \field{journaltitle}{Sensors}
+    \field{year}{2023}
+  \endentry
+
+  \entry{horowitz2014energy}{inproceedings}{}{}
+    \name{author}{1}{}{%
+      {{hash=HM}{%
+         family={Horowitz},
+         familyi={H\bibinitperiod},
+         given={Mark},
+         giveni={M\bibinitperiod},
+      }}%
+    }
+    \keyw{CMOS integrated circuits;Hardware;Transistors;Voltage control;CMOS
+  technology;Energy efficiency;Logic gates}
+    \strng{namehash}{HM1}
+    \strng{fullhash}{HM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{H}
+    \field{sortinithash}{H}
+    \field{booktitle}{2014 IEEE International Solid-State Circuits Conference
+  Digest of Technical Papers (ISSCC)}
+    \verb{doi}
+    \verb 10.1109/ISSCC.2014.6757323
+    \endverb
+    \field{pages}{10\bibrangedash 14}
+    \field{title}{1.1 Computing's energy problem (and what we can do about it)}
+    \field{year}{2014}
+  \endentry
+
+  \entry{jouppi2017tpu}{article}{}{}
+    \name{author}{76}{}{%
+      {{hash=JNP}{%
+         family={Jouppi},
+         familyi={J\bibinitperiod},
+         given={Norman\bibnamedelima P.},
+         giveni={N\bibinitperiod\bibinitdelim P\bibinitperiod},
+      }}%
+      {{hash=YC}{%
+         family={Young},
+         familyi={Y\bibinitperiod},
+         given={Cliff},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=PN}{%
+         family={Patil},
+         familyi={P\bibinitperiod},
+         given={Nishant},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=PD}{%
+         family={Patterson},
+         familyi={P\bibinitperiod},
+         given={David},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=AG}{%
+         family={Agrawal},
+         familyi={A\bibinitperiod},
+         given={Gaurav},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=BR}{%
+         family={Bajwa},
+         familyi={B\bibinitperiod},
+         given={Raminder},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=BS}{%
+         family={Bates},
+         familyi={B\bibinitperiod},
+         given={Sarah},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=BS}{%
+         family={Bhatia},
+         familyi={B\bibinitperiod},
+         given={Suresh},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=BN}{%
+         family={Boden},
+         familyi={B\bibinitperiod},
+         given={Nan},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=BA}{%
+         family={Borchers},
+         familyi={B\bibinitperiod},
+         given={Al},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=BR}{%
+         family={Boyle},
+         familyi={B\bibinitperiod},
+         given={Rick},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=CPl}{%
+         family={Cantin},
+         familyi={C\bibinitperiod},
+         given={Pierre-luc},
+         giveni={P\bibinithyphendelim l\bibinitperiod},
+      }}%
+      {{hash=CC}{%
+         family={Chao},
+         familyi={C\bibinitperiod},
+         given={Clifford},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=CC}{%
+         family={Clark},
+         familyi={C\bibinitperiod},
+         given={Chris},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=CJ}{%
+         family={Coriell},
+         familyi={C\bibinitperiod},
+         given={Jeremy},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=DM}{%
+         family={Daley},
+         familyi={D\bibinitperiod},
+         given={Mike},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=DM}{%
+         family={Dau},
+         familyi={D\bibinitperiod},
+         given={Matt},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=DJ}{%
+         family={Dean},
+         familyi={D\bibinitperiod},
+         given={Jeffrey},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=GB}{%
+         family={Gelb},
+         familyi={G\bibinitperiod},
+         given={Ben},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=GTV}{%
+         family={Ghaemmaghami},
+         familyi={G\bibinitperiod},
+         given={Tara\bibnamedelima Vazir},
+         giveni={T\bibinitperiod\bibinitdelim V\bibinitperiod},
+      }}%
+      {{hash=GR}{%
+         family={Gottipati},
+         familyi={G\bibinitperiod},
+         given={Rajendra},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=GW}{%
+         family={Gulland},
+         familyi={G\bibinitperiod},
+         given={William},
+         giveni={W\bibinitperiod},
+      }}%
+      {{hash=HR}{%
+         family={Hagmann},
+         familyi={H\bibinitperiod},
+         given={Robert},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=HCR}{%
+         family={Ho},
+         familyi={H\bibinitperiod},
+         given={C.\bibnamedelima Richard},
+         giveni={C\bibinitperiod\bibinitdelim R\bibinitperiod},
+      }}%
+      {{hash=HD}{%
+         family={Hogberg},
+         familyi={H\bibinitperiod},
+         given={Doug},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=HJ}{%
+         family={Hu},
+         familyi={H\bibinitperiod},
+         given={John},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=HR}{%
+         family={Hundt},
+         familyi={H\bibinitperiod},
+         given={Robert},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=HD}{%
+         family={Hurt},
+         familyi={H\bibinitperiod},
+         given={Dan},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=IJ}{%
+         family={Ibarz},
+         familyi={I\bibinitperiod},
+         given={Julian},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=JA}{%
+         family={Jaffey},
+         familyi={J\bibinitperiod},
+         given={Aaron},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=JA}{%
+         family={Jaworski},
+         familyi={J\bibinitperiod},
+         given={Alek},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=KA}{%
+         family={Kaplan},
+         familyi={K\bibinitperiod},
+         given={Alexander},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=KH}{%
+         family={Khaitan},
+         familyi={K\bibinitperiod},
+         given={Harshit},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=KD}{%
+         family={Killebrew},
+         familyi={K\bibinitperiod},
+         given={Daniel},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=KA}{%
+         family={Koch},
+         familyi={K\bibinitperiod},
+         given={Andy},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=KN}{%
+         family={Kumar},
+         familyi={K\bibinitperiod},
+         given={Naveen},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=LS}{%
+         family={Lacy},
+         familyi={L\bibinitperiod},
+         given={Steve},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=LJ}{%
+         family={Laudon},
+         familyi={L\bibinitperiod},
+         given={James},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=LJ}{%
+         family={Law},
+         familyi={L\bibinitperiod},
+         given={James},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=LD}{%
+         family={Le},
+         familyi={L\bibinitperiod},
+         given={Diemthu},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=LC}{%
+         family={Leary},
+         familyi={L\bibinitperiod},
+         given={Chris},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=LZ}{%
+         family={Liu},
+         familyi={L\bibinitperiod},
+         given={Zhuyuan},
+         giveni={Z\bibinitperiod},
+      }}%
+      {{hash=LK}{%
+         family={Lucke},
+         familyi={L\bibinitperiod},
+         given={Kyle},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=LA}{%
+         family={Lundin},
+         familyi={L\bibinitperiod},
+         given={Alan},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=MG}{%
+         family={MacKean},
+         familyi={M\bibinitperiod},
+         given={Gordon},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=MA}{%
+         family={Maggiore},
+         familyi={M\bibinitperiod},
+         given={Adriana},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=MM}{%
+         family={Mahony},
+         familyi={M\bibinitperiod},
+         given={Maire},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=MK}{%
+         family={Miller},
+         familyi={M\bibinitperiod},
+         given={Kieran},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=NR}{%
+         family={Nagarajan},
+         familyi={N\bibinitperiod},
+         given={Rahul},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=NR}{%
+         family={Narayanaswami},
+         familyi={N\bibinitperiod},
+         given={Ravi},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=NR}{%
+         family={Ni},
+         familyi={N\bibinitperiod},
+         given={Ray},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=NK}{%
+         family={Nix},
+         familyi={N\bibinitperiod},
+         given={Kathy},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=NT}{%
+         family={Norrie},
+         familyi={N\bibinitperiod},
+         given={Thomas},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=OM}{%
+         family={Omernick},
+         familyi={O\bibinitperiod},
+         given={Mark},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=PN}{%
+         family={Penukonda},
+         familyi={P\bibinitperiod},
+         given={Narayana},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=PA}{%
+         family={Phelps},
+         familyi={P\bibinitperiod},
+         given={Andy},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=RJ}{%
+         family={Ross},
+         familyi={R\bibinitperiod},
+         given={Jonathan},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=RM}{%
+         family={Ross},
+         familyi={R\bibinitperiod},
+         given={Matt},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=SA}{%
+         family={Salek},
+         familyi={S\bibinitperiod},
+         given={Amir},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=SE}{%
+         family={Samadiani},
+         familyi={S\bibinitperiod},
+         given={Emad},
+         giveni={E\bibinitperiod},
+      }}%
+      {{hash=SC}{%
+         family={Severn},
+         familyi={S\bibinitperiod},
+         given={Chris},
+         giveni={C\bibinitperiod},
+      }}%
+      {{hash=SG}{%
+         family={Sizikov},
+         familyi={S\bibinitperiod},
+         given={Gregory},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=SM}{%
+         family={Snelham},
+         familyi={S\bibinitperiod},
+         given={Matthew},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=SJ}{%
+         family={Souter},
+         familyi={S\bibinitperiod},
+         given={Jed},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=SD}{%
+         family={Steinberg},
+         familyi={S\bibinitperiod},
+         given={Dan},
+         giveni={D\bibinitperiod},
+      }}%
+      {{hash=SA}{%
+         family={Swing},
+         familyi={S\bibinitperiod},
+         given={Andy},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=TM}{%
+         family={Tan},
+         familyi={T\bibinitperiod},
+         given={Mercedes},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=TG}{%
+         family={Thorson},
+         familyi={T\bibinitperiod},
+         given={Gregory},
+         giveni={G\bibinitperiod},
+      }}%
+      {{hash=TB}{%
+         family={Tian},
+         familyi={T\bibinitperiod},
+         given={Bo},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=TH}{%
+         family={Toma},
+         familyi={T\bibinitperiod},
+         given={Horia},
+         giveni={H\bibinitperiod},
+      }}%
+      {{hash=TE}{%
+         family={Tuttle},
+         familyi={T\bibinitperiod},
+         given={Erick},
+         giveni={E\bibinitperiod},
+      }}%
+      {{hash=VV}{%
+         family={Vasudevan},
+         familyi={V\bibinitperiod},
+         given={Vijay},
+         giveni={V\bibinitperiod},
+      }}%
+      {{hash=WR}{%
+         family={Walter},
+         familyi={W\bibinitperiod},
+         given={Richard},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=WW}{%
+         family={Wang},
+         familyi={W\bibinitperiod},
+         given={Walter},
+         giveni={W\bibinitperiod},
+      }}%
+      {{hash=WE}{%
+         family={Wilcox},
+         familyi={W\bibinitperiod},
+         given={Eric},
+         giveni={E\bibinitperiod},
+      }}%
+      {{hash=YDH}{%
+         family={Yoon},
+         familyi={Y\bibinitperiod},
+         given={Doe\bibnamedelima Hyun},
+         giveni={D\bibinitperiod\bibinitdelim H\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Association for Computing Machinery}%
+    }
+    \keyw{CNN, DNN, GPU, LSTM, MLP, RNN, TPU, TensorFlow, accelerator, deep
+  learning, domain-specific architecture, neural network}
+    \strng{namehash}{JNP+1}
+  \strng{fullhash}{JNPYCPNPDAGBRBSBSBNBABRCPlCCCCCJDMDMDJGBGTVGRGWHRHCRHDHJHRHDIJJAJAKAKHKDKAKNLSLJLJLDLCLZLKLAMGMAMMMKNRNRNRNKNTOMPNPARJRMSASESCSGSMSJSDSATMTGTBTHTEVVWRWWWEYDH1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{J}
+    \field{sortinithash}{J}
+    \field{abstract}{%
+    Many architects believe that major improvements in cost-energy-performance
+  must now come from domain-specific hardware. This paper evaluates a custom
+  ASIC---called a Tensor Processing Unit (TPU) --- deployed in datacenters
+  since 2015 that accelerates the inference phase of neural networks (NN). The
+  heart of the TPU is a 65,536 8-bit MAC matrix multiply unit that offers a
+  peak throughput of 92 TeraOps/second (TOPS) and a large (28 MiB)
+  software-managed on-chip memory. The TPU's deterministic execution model is a
+  better match to the 99th-percentile response-time requirement of our NN
+  applications than are the time-varying optimizations of CPUs and GPUs that
+  help average throughput more than guaranteed latency. The lack of such
+  features helps explain why, despite having myriad MACs and a big memory, the
+  TPU is relatively small and low power. We compare the TPU to a server-class
+  Intel Haswell CPU and an Nvidia K80 GPU, which are contemporaries deployed in
+  the same datacenters. Our workload, written in the high-level TensorFlow
+  framework, uses production NN applications (MLPs, CNNs, and LSTMs) that
+  represent 95\% of our datacenters' NN inference demand. Despite low
+  utilization for some applications, the TPU is on average about 15X -- 30X
+  faster than its contemporary GPU or CPU, with TOPS/Watt about 30X -- 80X
+  higher. Moreover, using the CPU's GDDR5 memory in the TPU would triple
+  achieved TOPS and raise TOPS/Watt to nearly 70X the GPU and 200X the CPU.%
+    }
+    \verb{doi}
+    \verb 10.1145/3140659.3080246
+    \endverb
+    \field{issn}{0163-5964}
+    \field{number}{2}
+    \field{pages}{1–12}
+    \field{title}{In-Datacenter Performance Analysis of a Tensor Processing
+  Unit}
+    \verb{url}
+    \verb https://doi.org/10.1145/3140659.3080246
+    \endverb
+    \field{volume}{45}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{journaltitle}{SIGARCH Comput. Archit. News}
+    \field{month}{06}
+    \field{year}{2017}
+  \endentry
+
+  \entry{kung1982systolic}{article}{}{}
+    \name{author}{1}{}{%
+      {{hash=K}{%
+         family={Kung},
+         familyi={K\bibinitperiod},
+      }}%
+    }
+    \keyw{Costs;Hardware;Assembly systems;Computer architecture;Data flow
+  computing;Concurrent computing;Application software;Signal processing;Image
+  processing;Computer interfaces}
+    \strng{namehash}{K1}
+    \strng{fullhash}{K1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{K}
+    \field{sortinithash}{K}
+    \verb{doi}
+    \verb 10.1109/MC.1982.1653825
+    \endverb
+    \field{number}{1}
+    \field{pages}{37\bibrangedash 46}
+    \field{title}{Why systolic architectures?}
+    \field{volume}{15}
+    \field{journaltitle}{Computer}
+    \field{year}{1982}
+  \endentry
+
+  \entry{mittal2021survey}{article}{}{}
+    \name{author}{2}{}{%
+      {{hash=MS}{%
+         family={Mittal},
+         familyi={M\bibinitperiod},
+         given={Sparsh},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=US}{%
+         family={Umesh},
+         familyi={U\bibinitperiod},
+         given={Sumanth},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \keyw{Recurrent neural networks, Deep learning, GPU, FPGA, ASIC, Pruning,
+  Parallelization, Low-precision}
+    \strng{namehash}{MSUS1}
+    \strng{fullhash}{MSUS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{M}
+    \field{sortinithash}{M}
+    \field{abstract}{%
+    “Recurrent neural networks” (RNNs) are powerful artificial intelligence
+  models that have shown remarkable effectiveness in several tasks such as
+  music generation, speech recognition and machine translation. RNN
+  computations involve both intra-timestep and inter-timestep dependencies. Due
+  to these features, hardware acceleration of RNNs is more challenging than
+  that of CNNs. Recently, several researchers have proposed hardware
+  architectures for RNNs. In this paper, we present a survey of
+  GPU/FPGA/ASIC-based accelerators and optimization techniques for RNNs. We
+  highlight the key ideas of different techniques to bring out their
+  similarities and differences. Improvements in deep-learning algorithms have
+  inevitably gone hand-in-hand with the improvements in the
+  hardware-accelerators. Nevertheless, there is a need and scope of even
+  greater synergy between these two fields. This survey seeks to synergize the
+  efforts of researchers in the area of deep learning, computer architecture,
+  and chip-design.%
+    }
+    \verb{doi}
+    \verb https://doi.org/10.1016/j.sysarc.2020.101839
+    \endverb
+    \field{issn}{1383-7621}
+    \field{pages}{101839}
+    \field{title}{A survey On hardware accelerators and optimization techniques
+  for RNNs}
+    \verb{url}
+    \verb https://www.sciencedirect.com/science/article/pii/S1383762120301314
+    \endverb
+    \field{volume}{112}
+    \field{journaltitle}{Journal of Systems Architecture}
+    \field{year}{2021}
+  \endentry
+
+  \entry{riscv2024members}{online}{}{}
+    \name{author}{1}{}{%
+      {{hash=R}{%
+         family={{RISC-V International}},
+         familyi={R\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{R1}
+    \strng{fullhash}{R1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{R}
+    \field{sortinithash}{R}
+    \field{note}{Accessed: Dec. 30, 2024}
+    \field{title}{Members}
+    \verb{url}
+    \verb https://riscv.org/members/
+    \endverb
+    \field{year}{2024}
+  \endentry
+
+  \entry{sifive2024portfolio}{online}{}{}
+    \name{author}{1}{}{%
+      {{hash=S}{%
+         family={{SiFive}},
+         familyi={S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{S1}
+    \strng{fullhash}{S1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{S}
+    \field{sortinithash}{S}
+    \field{note}{Accessed: Dec. 30, 2024}
+    \field{title}{A Winning Processor Portfolio}
+    \verb{url}
+    \verb https://www.sifive.com/risc-v-core-ip
+    \endverb
+    \field{year}{2024}
+  \endentry
+
+  \entry{sifive2018tilelink}{manual}{}{}
+    \name{author}{1}{}{%
+      {{hash=S}{%
+         family={{SiFive Inc.}},
+         familyi={S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{S2}
+    \strng{fullhash}{S2}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{S}
+    \field{sortinithash}{S}
+    \field{note}{Accessed: Jun. 6, 2025}
+    \field{title}{{SiFive TileLink Specification}}
+    \verb{url}
+    \verb https://sifive.cdn.prismic.io/sifive%2F57f93ecf-2c42-46f7-9818-bcdd
+    \verb 7d39400a_tilelink-spec-1.7.1.pdf
+    \endverb
+    \field{version}{1.7.1}
+    \field{year}{2018}
+    \warn{\item Invalid format of field 'month'}
+  \endentry
+
+  \entry{sze2020efficient}{book}{}{}
+    \name{author}{4}{}{%
+      {{hash=SV}{%
+         family={Sze},
+         familyi={S\bibinitperiod},
+         given={Vivienne},
+         giveni={V\bibinitperiod},
+      }}%
+      {{hash=CYH}{%
+         family={Chen},
+         familyi={C\bibinitperiod},
+         given={Yu-Hsin},
+         giveni={Y\bibinithyphendelim H\bibinitperiod},
+      }}%
+      {{hash=YTJ}{%
+         family={Yang},
+         familyi={Y\bibinitperiod},
+         given={Tien-Ju},
+         giveni={T\bibinithyphendelim J\bibinitperiod},
+      }}%
+      {{hash=EJS}{%
+         family={Emer},
+         familyi={E\bibinitperiod},
+         given={Joel\bibnamedelima S.},
+         giveni={J\bibinitperiod\bibinitdelim S\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{SV+1}
+    \strng{fullhash}{SVCYHYTJEJS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{S}
+    \field{sortinithash}{S}
+    \verb{doi}
+    \verb 10.1007/978-3-031-01766-7
+    \endverb
+    \field{title}{Efficient processing of deep neural networks}
+    \verb{url}
+    \verb https://doi.org/10.1007/978-3-031-01766-7
+    \endverb
+    \field{journaltitle}{Synthesis lectures on computer architecture}
+    \field{month}{01}
+    \field{year}{2020}
+  \endentry
+
+  \entry{waterman2015riscvprivileged}{report}{}{}
+    \name{author}{5}{}{%
+      {{hash=WA}{%
+         family={Waterman},
+         familyi={W\bibinitperiod},
+         given={A.},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=LY}{%
+         family={Lee},
+         familyi={L\bibinitperiod},
+         given={Y.},
+         giveni={Y\bibinitperiod},
+      }}%
+      {{hash=AR}{%
+         family={Avizienis},
+         familyi={A\bibinitperiod},
+         given={R.},
+         giveni={R\bibinitperiod},
+      }}%
+      {{hash=PDA}{%
+         family={Patterson},
+         familyi={P\bibinitperiod},
+         given={D.\bibnamedelima A.},
+         giveni={D\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+      {{hash=AK}{%
+         family={Asanovic},
+         familyi={A\bibinitperiod},
+         given={K.},
+         giveni={K\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{WA+1}
+    \strng{fullhash}{WALYARPDAAK1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{W}
+    \field{sortinithash}{W}
+    \field{number}{UCB/EECS-2015-49}
+    \field{title}{The {RISC-V} instruction set manual volume {II}: Privileged
+  architecture version 1.7}
+    \list{institution}{1}{%
+      {EECS Department, University of California, Berkeley}%
+    }
+    \field{type}{Tech. Rep.}
+    \field{year}{2015}
+  \endentry
+
+  \entry{riscv:manual:user:2024}{manual}{}{}
+    \name{editor}{2}{}{%
+      {{hash=WA}{%
+         family={Waterman},
+         familyi={W\bibinitperiod},
+         given={Andrew},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=AK}{%
+         family={Asanovi{\'c}},
+         familyi={A\bibinitperiod},
+         given={Krste},
+         giveni={K\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {{RISC-V Foundation}}%
+    }
+    \strng{namehash}{WAAK1}
+    \strng{fullhash}{WAAK1}
+    \field{labelnamesource}{editor}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{W}
+    \field{sortinithash}{W}
+    \field{note}{Document Version 20240411}
+    \field{title}{{The RISC-V Instruction Set Manual, Volume I: User-Level
+  ISA}}
+    \verb{url}
+    \verb https://github.com/riscv/riscv-isa-manual/releases/download/2024041
+    \verb 1/unpriv-isa-asciidoc.pdf
+    \endverb
+    \field{year}{2024}
+    \warn{\item Invalid format of field 'month'}
+  \endentry
+
+  \entry{wulf1995hitting}{article}{}{}
+    \name{author}{2}{}{%
+      {{hash=WWA}{%
+         family={Wulf},
+         familyi={W\bibinitperiod},
+         given={Wm.\bibnamedelima A.},
+         giveni={W\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+      {{hash=MSA}{%
+         family={McKee},
+         familyi={M\bibinitperiod},
+         given={Sally\bibnamedelima A.},
+         giveni={S\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Association for Computing Machinery}%
+    }
+    \strng{namehash}{WWAMSA1}
+    \strng{fullhash}{WWAMSA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{W}
+    \field{sortinithash}{W}
+    \verb{doi}
+    \verb 10.1145/216585.216588
+    \endverb
+    \field{issn}{0163-5964}
+    \field{number}{1}
+    \field{pages}{20–24}
+    \field{title}{Hitting the memory wall: implications of the obvious}
+    \verb{url}
+    \verb https://doi.org/10.1145/216585.216588
+    \endverb
+    \field{volume}{23}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{journaltitle}{SIGARCH Comput. Archit. News}
+    \field{month}{03}
+    \field{year}{1995}
+  \endentry
+
+  \entry{zhao2021chipyard}{misc}{}{}
+    \name{author}{1}{}{%
+      {{hash=ZJ}{%
+         family={Zhao},
+         familyi={Z\bibinitperiod},
+         given={J.},
+         giveni={J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{ZJ1}
+    \strng{fullhash}{ZJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{Z}
+    \field{sortinithash}{Z}
+    \field{howpublished}{Presentation Slides, ISCA 2021 Tutorial}
+    \field{note}{Accessed: Jun. 6, 2025}
+    \field{title}{Chipyard Intro and Fundamentals}
+    \verb{url}
+    \verb https://fires.im/isca21-slides-pdf/02_chipyard_basics.pdf
+    \endverb
+    \field{year}{2021}
+  \endentry
+
+  \entry{zhao2020sonicboom}{inproceedings}{}{}
+    \name{author}{4}{}{%
+      {{hash=ZJ}{%
+         family={Zhao},
+         familyi={Z\bibinitperiod},
+         given={J.},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=KB}{%
+         family={Korpan},
+         familyi={K\bibinitperiod},
+         given={B.},
+         giveni={B\bibinitperiod},
+      }}%
+      {{hash=GA}{%
+         family={Gonzalez},
+         familyi={G\bibinitperiod},
+         given={A.},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=AK}{%
+         family={Asanovic},
+         familyi={A\bibinitperiod},
+         given={K.},
+         giveni={K\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{ZJ+1}
+    \strng{fullhash}{ZJKBGAAK1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{Z}
+    \field{sortinithash}{Z}
+    \field{booktitle}{Fourth Workshop on Computer Architecture Research with
+  {RISC-V} (CARRV)}
+    \field{pages}{1\bibrangedash 7}
+    \field{title}{Sonicboom: The 3rd generation {Berkeley} out-of-order
+  machine}
+    \field{year}{2020}
+    \warn{\item Invalid format of field 'month'}
+  \endentry
+\enddatalist
+\endinput

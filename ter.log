@@ -1,0 +1,655 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.3 Portable) (preloaded format=pdflatex.fmt)
+ restricted \write18 enabled.
+entering extended mode
+(main.tex
+LaTeX2e <2024-11-01> patch level 2
+L3 programming layer <2025-01-18>
+(D:\Program Files\MikTex\texmfs\install\tex/latex/extsizes\extreport.cls
+Document Class: extreport 1996/10/08 v1.0 Non Standard LaTeX document class
+(D:\Program Files\MikTex\texmfs\install\tex/latex/extsizes\size14.clo)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/base\exscale.sty))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/koma-script\scrextend.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/koma-script\scrkbase.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/koma-script\scrbase.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/koma-script\scrlfile.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/koma-script\scrlfile-hook.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/koma-script\scrlogo.sty)))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/graphics\keyval.sty))))
+
+LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <13> not available
+(Font)              size <12> substituted on input line 9.
+
+(D:\Program Files\MikTex\texmfs\install\tex/latex/base\fontenc.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/vntex\t5enc.def
+(D:\Program Files\MikTex\texmfs\install\tex/latex/vntex\t5enc.dfu))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/vntex\t5cmr.fd))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/base\inputenc.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/placeins\placeins.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex\biblatex.sty
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pdftexcmds\pdftexcmds.sty
+(D:\Program Files\MikTex\texmfs\install\tex/generic/infwarerr\infwarerr.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/iftex\iftex.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/ltxcmds\ltxcmds.sty))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/etoolbox\etoolbox.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/kvoptions\kvoptions.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/kvsetkeys\kvsetkeys.sty))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/logreq\logreq.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/logreq\logreq.def))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/base\ifthen.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/url\url.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex\blx-dm.def)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex\blx-compat.def)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex\blx-bibtex.def
+
+Package biblatex Warning: Using fall-back bibtex backend:
+(biblatex)                functionality may be reduced/unavailable.
+
+) (D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex\biblatex.def)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex/bbx\numeric.bbx
+(D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex/bbx\standard.bbx))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex/cbx\numeric.cbx)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex\biblatex.cfg)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/l3kernel\expl3.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/l3backend\l3backend-pdftex.de
+f))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex\blx-case-expl3.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/l3packages/xparse\xparse.sty)
+)) (D:\Program Files\MikTex\texmfs\install\tex/latex/hyperref\hyperref.sty
+(D:\Program Files\MikTex\texmfs\install\tex/generic/kvdefinekeys\kvdefinekeys.s
+ty) (D:\Program Files\MikTex\texmfs\install\tex/generic/pdfescape\pdfescape.sty
+) (D:\Program Files\MikTex\texmfs\install\tex/latex/hycolor\hycolor.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/hyperref\nameref.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/refcount\refcount.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/gettitlestring\gettitlestri
+ng.sty))
+(D:\Program Files\MikTex\texmfs\install\tex/generic/stringenc\stringenc.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/hyperref\pd1enc.def)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/intcalc\intcalc.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/hyperref\puenc.def)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/bitset\bitset.sty
+(D:\Program Files\MikTex\texmfs\install\tex/generic/bigintcalc\bigintcalc.sty))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/base\atbegshi-ltx.sty))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/hyperref\hpdftex.def
+(D:\Program Files\MikTex\texmfs\install\tex/latex/base\atveryend-ltx.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/rerunfilecheck\rerunfilecheck
+.sty
+(D:\Program Files\MikTex\texmfs\install\tex/generic/uniquecounter\uniquecounter
+.sty))) (D:\Program Files\MikTex\texmfs\install\tex/latex/graphics\graphicx.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/graphics\graphics.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/graphics\trig.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/graphics-cfg\graphics.cfg)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/graphics-def\pdftex.def)))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/caption\caption.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/caption\caption3.sty))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/adjustbox\adjustbox.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/xkeyval\xkeyval.sty
+(D:\Program Files\MikTex\texmfs\install\tex/generic/xkeyval\xkeyval.tex
+(D:\Program Files\MikTex\texmfs\install\tex/generic/xkeyval\xkvutils.tex)))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/adjustbox\adjcalc.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/adjustbox\trimclip.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/collectbox\collectbox.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/adjustbox\tc-pdftex.def))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/ifoddpage\ifoddpage.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/varwidth\varwidth.sty))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/listings\listings.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/listings\lstpatch.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/listings\lstmisc.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/listings\listings.cfg))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/graphics\color.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/graphics-cfg\color.cfg)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/graphics\mathcolor.ltx))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/xcolor\xcolor.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/graphics-cfg\color.cfg)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/graphics\mathcolor.ltx))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/amsmath\amsmath.sty
+For additional information on amsmath, use the `?' option.
+(D:\Program Files\MikTex\texmfs\install\tex/latex/amsmath\amstext.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/amsmath\amsgen.sty))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/amsmath\amsbsy.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/amsmath\amsopn.sty))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/algorithms\algorithm.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/float\float.sty))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/algorithmicx\algpseudocode.st
+y
+(D:\Program Files\MikTex\texmfs\install\tex/latex/algorithmicx\algorithmicx.sty
+Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
+)
+Document Style - pseudocode environments for use with the `algorithmicx' style
+) (D:\Program Files\MikTex\texmfs\install\tex/latex/multirow\multirow.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/tools\array.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/titlesec\titlesec.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/setspace\setspace.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/tools\indentfirst.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/fancyhdr\fancyhdr.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/geometry\geometry.sty
+(D:\Program Files\MikTex\texmfs\install\tex/generic/iftex\ifvtex.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/geometry\geometry.cfg))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/pgf/frontendlayer\tikz.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/pgf/basiclayer\pgf.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/pgf/utilities\pgfrcs.sty
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/utilities\pgfutil-commo
+n.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/utilities\pgfutil-latex
+.def)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/utilities\pgfrcs.code.t
+ex (D:\Program Files\MikTex\texmfs\install\tex/generic/pgf\pgf.revision.tex)))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/pgf/basiclayer\pgfcore.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/pgf/systemlayer\pgfsys.sty
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/systemlayer\pgfsys.code
+.tex
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/utilities\pgfkeys.code.
+tex
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/utilities\pgfkeyslibrar
+yfiltered.code.tex))
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/systemlayer\pgf.cfg)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/systemlayer\pgfsys-pdft
+ex.def
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/systemlayer\pgfsys-comm
+on-pdf.def)))
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/systemlayer\pgfsyssoftp
+ath.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/systemlayer\pgfsysproto
+col.code.tex))
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/basiclayer\pgfcore.code
+.tex
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/math\pgfmath.code.tex
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/math\pgfmathutil.code.t
+ex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/math\pgfmathparser.code
+.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/math\pgfmathfunctions.c
+ode.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/math\pgfmathfunctions.b
+asic.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/math\pgfmathfunctions.t
+rigonometric.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/math\pgfmathfunctions.r
+andom.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/math\pgfmathfunctions.c
+omparison.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/math\pgfmathfunctions.b
+ase.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/math\pgfmathfunctions.r
+ound.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/math\pgfmathfunctions.m
+isc.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/math\pgfmathfunctions.i
+ntegerarithmetics.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/math\pgfmathcalc.code.t
+ex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/math\pgfmathfloat.code.
+tex))
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/math\pgfint.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/basiclayer\pgfcorepoint
+s.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/basiclayer\pgfcorepathc
+onstruct.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/basiclayer\pgfcorepathu
+sage.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/basiclayer\pgfcorescope
+s.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/basiclayer\pgfcoregraph
+icstate.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/basiclayer\pgfcoretrans
+formations.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/basiclayer\pgfcorequick
+.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/basiclayer\pgfcoreobjec
+ts.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/basiclayer\pgfcorepathp
+rocessing.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/basiclayer\pgfcorearrow
+s.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/basiclayer\pgfcoreshade
+.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/basiclayer\pgfcoreimage
+.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/basiclayer\pgfcoreexter
+nal.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/basiclayer\pgfcorelayer
+s.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/basiclayer\pgfcoretrans
+parency.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/basiclayer\pgfcorepatte
+rns.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/basiclayer\pgfcorerdf.c
+ode.tex)))
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/modules\pgfmoduleshapes
+.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/modules\pgfmoduleplot.c
+ode.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/pgf/compatibility\pgfcomp-ver
+sion-0-65.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/pgf/compatibility\pgfcomp-ver
+sion-1-18.sty))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/pgf/utilities\pgffor.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/pgf/utilities\pgfkeys.sty
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/utilities\pgfkeys.code.
+tex)) (D:\Program Files\MikTex\texmfs\install\tex/latex/pgf/math\pgfmath.sty
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/math\pgfmath.code.tex))
+
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/utilities\pgffor.code.t
+ex))
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/frontendlayer/tikz\tikz
+.code.tex
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/libraries\pgflibraryplo
+thandlers.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/modules\pgfmodulematrix
+.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/frontendlayer/tikz/libr
+aries\tikzlibrarytopaths.code.tex)))
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/frontendlayer/tikz/libr
+aries\tikzlibrarycalc.code.tex) (myacronyms.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/glossaries/base\glossaries.st
+y (D:\Program Files\MikTex\texmfs\install\tex/latex/mfirstuc\mfirstuc.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/xfor\xfor.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/datatool\datatool-base.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/tracklang\tracklang.sty
+(D:\Program Files\MikTex\texmfs\install\tex/generic/tracklang\tracklang.tex))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/datatool\datatool-l3fp.def)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/datatool\datatool-utf8.ldf))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/glossaries/styles\glossary-hy
+pernav.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/glossaries/styles\glossary-li
+st.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/glossaries/styles\glossary-lo
+ng.sty (D:\Program Files\MikTex\texmfs\install\tex/latex/tools\longtable.sty))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/glossaries/styles\glossary-su
+per.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/supertabular\supertabular.sty
+))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/glossaries/styles\glossary-tr
+ee.sty))) (D:\Program Files\MikTex\texmfs\install\tex/latex/svg\svg.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/trimspaces\trimspaces.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/tools\shellesc.sty))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/transparent\transparent.sty
+(D:\Program Files\MikTex\texmfs\install\tex/latex/transparent\transparent-nomet
+adata.sty (D:\Program Files\MikTex\texmfs\install\tex/latex/auxhook\auxhook.sty
+)))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/tikz-timing\tikz-timing.sty
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/frontendlayer/tikz/libr
+aries\tikzlibrarybackgrounds.code.tex)
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/frontendlayer/tikz/libr
+aries\tikzlibrarydecorations.pathmorphing.code.tex
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/frontendlayer/tikz/libr
+aries\tikzlibrarydecorations.code.tex
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/modules\pgfmoduledecora
+tions.code.tex))
+(D:\Program Files\MikTex\texmfs\install\tex/generic/pgf/libraries/decorations\p
+gflibrarydecorations.pathmorphing.code.tex)))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/booktabs\booktabs.sty)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/caption\subcaption.sty)
+(main.aux (chapter1.aux) (chapter2.aux) (chapter3.aux) (chapter4.aux)
+(chapter5.aux) (chapter6.aux))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex/lbx\english.lbx)
+(main.bbl
+
+Package biblatex Warning: BibTeX reported the following issues
+(biblatex)                with 'sifive2018tilelink':
+(biblatex)                - Invalid format of field 'month'.
+
+
+Package biblatex Warning: BibTeX reported the following issues
+(biblatex)                with 'riscv:manual:user:2024':
+(biblatex)                - Invalid format of field 'month'.
+
+
+Package biblatex Warning: BibTeX reported the following issues
+(biblatex)                with 'zhao2020sonicboom':
+(biblatex)                - Invalid format of field 'month'.
+
+) (main.out) (main.out)
+(D:\Program Files\MikTex\texmfs\install\tex/context/base/mkii\supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/epstopdf-pkg\epstopdf-base.st
+y (D:\Program Files\MikTex\texmfs\install\tex/latex/00miktex\epstopdf-sys.cfg))
+(D:\Program Files\MikTex\texmfs\install\tex/latex/caption\ltcaption.sty)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+(Title/title.tex
+[1{D:/Program Files/MikTex/texmfs/data/fonts/map/pdftex/pdftex.map}]
+[2]
+[3]
+[4]) (main.toc
+
+LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <6.5> not available
+(Font)              size <6> substituted on input line 6.
+
+
+LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <13> not available
+(Font)              size <12> substituted on input line 6.
+
+
+LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <6.5> not available
+(Font)              size <6> substituted on input line 6.
+
+
+LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <13> not available
+(Font)              size <12> substituted on input line 6.
+
+
+LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <6.5> not available
+(Font)              size <6> substituted on input line 6.
+
+
+LaTeX Font Warning: Font shape `OMX/cmex/m/n' in size <13> not available
+(Font)              size <12> substituted on input line 6.
+
+
+[1]) (main.acr)
+[2] (main.lof (D:\Program Files\MikTex\texmfs\install\tex/latex/vntex\t5cmtt.fd
+)
+[3]
+Overfull \hbox (3.67242pt too wide) in paragraph at lines 39--39
+ [][] [][]\T5/cmr/m/n/13 Conceptual view of Gem-mini's de-cou-pled access-execu
+te pipelines, man- 
+)
+[4] (main.lot
+Overfull \hbox (18.41805pt too wide) in paragraph at lines 4--4
+ [][] [][]\T5/cmr/m/n/13 Pseudo-instructions and their cor-re-spond-ing stan-da
+rd in-struc-tions. Source 
+)
+[5]
+[6] (chapter1.tex
+CHƯƠNG 1.
+)
+[1] (chapter2.tex
+[2]
+CHƯƠNG 2.
+
+[3 <./Images/RISCV_Logo.pdf>]
+
+LaTeX Font Warning: Font shape `TS1/cmr/m/n' in size <13> not available
+(Font)              size <12> substituted on input line 19.
+
+
+[4]
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+[5]
+[6 <./Images/RISCV_BaseInstructionFormats.pdf>]
+[7 <./Images/RV32I_BaseInstructionSet.pdf>]
+Overfull \hbox (107.50258pt too wide) in paragraph at lines 95--119
+ [][] 
+
+Overfull \hbox (66.4276pt too wide) in paragraph at lines 127--142
+ [][] 
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+[8]
+Overfull \hbox (0.31924pt too wide) in paragraph at lines 148--149
+\T5/cmr/m/n/13 tec-tures, fea-tur-ing 64-bit wide reg-is-ters and sup-port-ing 
+64-bit ad-dress-ing (XLEN=64),
+
+[9]
+[10 <./Images/RISCV_64bit_ADDIW.pdf> <./Images/RISCV_64bit_I_Type.pdf
+
+pdfTeX warning: pdflatex.exe (file ./Images/RISCV_64bit_I_Type.pdf): PDF inclus
+ion: multiple pdfs with page group included in a single page
+> <./Images/RISCV_64bit_I_Type_ShiftBit.pdf
+
+pdfTeX warning: pdflatex.exe (file ./Images/RISCV_64bit_I_Type_ShiftBit.pdf): P
+DF inclusion: multiple pdfs with page group included in a single page
+>]
+[11 <./Images/RISCV_64bit_LoadStoreWord.pdf>]
+
+pdfTeX warning: pdflatex.exe (file ./Images/RISC_Pipeline.pdf): PDF inclusion: 
+found PDF version <1.7>, but at most version <1.5> allowed
+
+[12 <./Images/RISC_Pipeline.pdf>]
+[13]
+[14 <./Images/Rocket_Core_Pipeline_5stages.pdf>]
+[15 <./Images/BOOM_Pipeline.pdf>]
+[16]
+[17 <./Images/Chipyard_ChipyardLogo.pdf> <./Images/Chipyard_Toolchain.pdf
+
+pdfTeX warning: pdflatex.exe (file ./Images/Chipyard_Toolchain.pdf): PDF inclus
+ion: multiple pdfs with page group included in a single page
+>])
+[18] (chapter3.tex
+CHƯƠNG 3.
+
+[19 <./Images/Chisel_logo.pdf> <./Images/Chisel_Scala_Logo.pdf
+
+pdfTeX warning: pdflatex.exe (file ./Images/Chisel_Scala_Logo.pdf): PDF inclusi
+on: multiple pdfs with page group included in a single page
+> <./Images/Chisel_FIRRTL.pdf
+
+pdfTeX warning: pdflatex.exe (file ./Images/Chisel_FIRRTL.pdf): PDF inclusion: 
+multiple pdfs with page group included in a single page
+> <./Images/Chisel_ChipsAlliance.pdf
+
+pdfTeX warning: pdflatex.exe (file ./Images/Chisel_ChipsAlliance.pdf): PDF incl
+usion: multiple pdfs with page group included in a single page
+>]
+[20]
+
+pdfTeX warning: pdflatex.exe (file ./Images/RocketTile_Basic.pdf): PDF inclusio
+n: found PDF version <1.7>, but at most version <1.5> allowed
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+Overfull \hbox (67.6544pt too wide) in paragraph at lines 71--72
+\T5/cmr/m/n/13 cord-ing to im-ple-men-ta-tion needs, such as \T5/cmtt/m/n/13 Wi
+thNBigCore()\T5/cmr/m/n/13 , \T5/cmtt/m/n/13 WithNMedCore()\T5/cmr/m/n/13 , \T5
+/cmtt/m/n/13 WithNSmallCore()\T5/cmr/m/n/13 ,
+
+[21]
+
+pdfTeX warning: pdflatex.exe (file ./Images/RocketChip_Gemmini_Diagram.pdf): PD
+F inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+[22 <./Images/RocketTile_Basic.pdf>]
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+[23 <./Images/RocketChip_Gemmini_Diagram.pdf>]
+[24 <./Images/TileLink_Topology.pdf>]
+[25 <./Images/TileLink_FiveChannel.pdf>]
+Overfull \hbox (3.48706pt too wide) in paragraph at lines 146--147
+[]\T5/cmr/m/n/13 The choice of TileLink bus con-fig-u-ra-tion is rel-e-vant for
+ con-nect-ing var-i-ous memory-
+
+[26 <./Images/TileLink_Overview.pdf>]
+[27]
+
+pdfTeX warning: pdflatex.exe (file ./Images/RocketBOOM_CoreComplex.pdf): PDF in
+clusion: found PDF version <1.7>, but at most version <1.5> allowed
+
+
+pdfTeX warning: pdflatex.exe (file ./Images/RocketChip_Peripherals.pdf): PDF in
+clusion: found PDF version <1.7>, but at most version <1.5> allowed
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+[28 <./Images/RocketBOOM_CoreComplex.pdf>]
+
+pdfTeX warning: pdflatex.exe (file ./Images/RocketChip_WithMMIO.pdf): PDF inclu
+sion: found PDF version <1.7>, but at most version <1.5> allowed
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+[29 <./Images/RocketChip_Peripherals.pdf>]
+Underfull \vbox (badness 1342) has occurred while \output is active
+[30 <./Images/RocketChip_WithMMIO.pdf>])
+[31] (chapter4.tex
+[32]
+CHƯƠNG 4.
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+[33]
+
+pdfTeX warning: pdflatex.exe (file ./Images/SystolicArray_Kung1982.pdf): PDF in
+clusion: found PDF version <1.7>, but at most version <1.5> allowed
+
+Underfull \vbox (badness 10000) has occurred while \output is active
+[34 <./Images/EfficientDNN_EnergyConsumption.pdf>]
+[35 <./Images/SystolicArray_Kung1982.pdf>]
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+[36]
+[37 <./Images/TPU_v1_Overview.pdf>])
+[38 <./Images/NVDLA_ArchitectureOverview.pdf> <./Images/EfficientDNN_DataReuse.
+pdf
+
+pdfTeX warning: pdflatex.exe (file ./Images/EfficientDNN_DataReuse.pdf): PDF in
+clusion: multiple pdfs with page group included in a single page
+>]
+[39 <./Images/EfficientDNN_ModernDataflow.pdf>]
+[40 <./Images/Gemmini_compute_os.pdf> <./Images/Gemmini_compute_ws.pdf
+
+pdfTeX warning: pdflatex.exe (file ./Images/Gemmini_compute_ws.pdf): PDF inclus
+ion: multiple pdfs with page group included in a single page
+>]
+[41] (chapter5.tex
+[42]
+CHƯƠNG 5.
+
+[43 <./Images/Gemmini_Logo.pdf>]
+[44 <./Images/Gemmini_SystolicNVDLA.pdf>]
+Overfull \hbox (5.3755pt too wide) in paragraph at lines 61--62
+\T5/cmr/m/n/13 main sta-tion-ary, max-i-miz-ing weight reuse as in-put ac-ti-va
+-tions are streamed
+
+[45 <./Images/Gemmini_ArchitectureOverview.pdf>]
+Overfull \hbox (9.65782pt too wide) in paragraph at lines 70--71
+\T5/cmr/m/n/13 Matrix Mul-ti-pli-ca-tion (GEMM), they are adept at ac-cel-er-at
+-ing 2D con-vo-lu-tions through
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+Underfull \vbox (badness 1484) has occurred while \output is active
+[46 <./Images/Gemmini_MicroArchitecture.png>]
+Overfull \vbox (14.9475pt too high) has occurred while \output is active
+[47 <./Images/Gemmini_Im2Col.png>]
+[48])
+[49 <./Images/Gemmini_DecoupledAccessExecutePipeline.pdf>] (chapter6.tex
+[50]
+CHƯƠNG 6.
+
+
+pdfTeX warning: pdflatex.exe (file ./Images/Gemmini_InternalOverview.pdf): PDF 
+inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+
+[51 <./Images/Gemmini_InternalOverview.pdf>]
+
+LaTeX Warning: File `_YOUR_IMAGE_PATH_/Sensors_Fig4.png' not found on input lin
+e 24.
+
+
+! Package pdftex.def Error: File `_YOUR_IMAGE_PATH_/Sensors_Fig4.png' not found
+: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.24 ...width]{_YOUR_IMAGE_PATH_/Sensors_Fig4.png}
+                                                  
+
+Underfull \vbox (badness 10000) has occurred while \output is active
+[52]
+
+LaTeX Warning: File `_YOUR_IMAGE_PATH_/Sensors_Fig6.png' not found on input lin
+e 34.
+
+
+! Package pdftex.def Error: File `_YOUR_IMAGE_PATH_/Sensors_Fig6.png' not found
+: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.34 ...width]{_YOUR_IMAGE_PATH_/Sensors_Fig6.png}
+                                                  
+
+[53]
+
+LaTeX Warning: File `_YOUR_IMAGE_PATH_/Sensors_Fig8.png' not found on input lin
+e 44.
+
+
+! Package pdftex.def Error: File `_YOUR_IMAGE_PATH_/Sensors_Fig8.png' not found
+: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.44 ...width]{_YOUR_IMAGE_PATH_/Sensors_Fig8.png}
+                                                  
+
+LaTeX Warning: File `_YOUR_IMAGE_PATH_/Sensors_Fig9.png' not found on input lin
+e 51.
+
+
+! Package pdftex.def Error: File `_YOUR_IMAGE_PATH_/Sensors_Fig9.png' not found
+: using draft setting.
+
+See the pdftex.def package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.51 ...width]{_YOUR_IMAGE_PATH_/Sensors_Fig9.png}
+                                                  
+
+Underfull \vbox (badness 1490) has occurred while \output is active
+[54]
+[55]
+! Undefined control sequence.
+l.74 \todo
+          [inline]{Specify the key parameters for your Gemmini instance here...
+
+
+[56])
+[57]
+[58]
+[59]
+[60]
+Overfull \hbox (9.73006pt too wide) in paragraph at lines 249--249
+\T5/cmr/m/n/13 In: \T5/cmr/m/it/13 Fourth Work-shop on Com-puter Ar-chi-tec-tur
+e Re-search with RISC-V (CARRV)\T5/cmr/m/n/13 .
+
+[61] (main.aux (chapter1.aux) (chapter2.aux) (chapter3.aux) (chapter4.aux)
+(chapter5.aux) (chapter6.aux))
+
+LaTeX Font Warning: Size substitutions with differences
+(Font)              up to 1.0pt have occurred.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ )
+(see the transcript file for additional information) <D:\Program Files\MikTex\t
+exmfs/data\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1200.pk><D:/Program Files/Mik
+Tex/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy10.pfb><D:/Program Files/
+MikTex/texmfs/install/fonts/type1/vntex/vnr/vnbx12.pfb><D:/Program Files/MikTex
+/texmfs/install/fonts/type1/vntex/vnr/vncsc10.pfb><D:/Program Files/MikTex/texm
+fs/install/fonts/type1/vntex/vnr/vnr12.pfb><D:/Program Files/MikTex/texmfs/inst
+all/fonts/type1/vntex/vnr/vnr17.pfb><D:/Program Files/MikTex/texmfs/install/fon
+ts/type1/vntex/vnr/vnti12.pfb><D:/Program Files/MikTex/texmfs/install/fonts/typ
+e1/vntex/vnr/vntt12.pfb>
+Output written on main.pdf (71 pages, 4211552 bytes).
+SyncTeX written on main.synctex.gz.
+Transcript written on main.log.

@@ -1,0 +1,45 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces RISC-V is managed by RISC-V International. Source \blx@tocontentsinit {0}\cite {riscv2024members}}}{3}{figure.caption.7}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Instruction encoding formats in RV32I. Source \blx@tocontentsinit {0}\cite {riscv:manual:user:2024}}}{6}{figure.caption.9}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Instructions in the RV32I base instruction set. Source \blx@tocontentsinit {0}\cite {riscv:manual:user:2024}}}{7}{figure.caption.10}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Instruction encoding format for ADDIW in 64-bit architecture. \blx@tocontentsinit {0}\cite {riscv:manual:user:2024}}}{10}{figure.caption.13}%
+\contentsline {figure}{\numberline {2.5}{\ignorespaces Encoding format for 64-bit I-type shift instructions. \blx@tocontentsinit {0}\cite {riscv:manual:user:2024}}}{10}{figure.caption.14}%
+\contentsline {figure}{\numberline {2.6}{\ignorespaces Encoding format for 64-bit R-type shift instructions for word operations. \blx@tocontentsinit {0}\cite {riscv:manual:user:2024}}}{10}{figure.caption.15}%
+\contentsline {figure}{\numberline {2.7}{\ignorespaces Encoding formats for 64-bit LOAD and STORE instructions. \blx@tocontentsinit {0}\cite {riscv:manual:user:2024}}}{11}{figure.caption.16}%
+\contentsline {figure}{\numberline {2.8}{\ignorespaces Basic five-stage pipeline in a RISC machine. The vertical axis is successive instructions; the horizontal axis is time. So in the green column, the earliest instruction is in WB stage, and the latest instruction is undergoing instruction fetch.}}{12}{figure.caption.17}%
+\contentsline {figure}{\numberline {2.9}{\ignorespaces Pipeline of Rocket core. Source \blx@tocontentsinit {0}\cite {asanovic2016rocket}}}{14}{figure.caption.18}%
+\contentsline {figure}{\numberline {2.10}{\ignorespaces Berkeley Out-of-Order Machine Processor Pipeline Architecture. \blx@tocontentsinit {0}\cite {celio_phdthesis_2018boom}}}{15}{figure.caption.19}%
+\contentsline {figure}{\numberline {2.11}{\ignorespaces Chipyard, developed by UC Berkeley. Source: \blx@tocontentsinit {0}\cite {zhao2021chipyard}}}{17}{figure.caption.20}%
+\contentsline {figure}{\numberline {2.12}{\ignorespaces Component structure of Chipyard. Source: \blx@tocontentsinit {0}\cite {zhao2021chipyard}}}{17}{figure.caption.21}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Chisel as a library within Scala. Source: CHIPS Alliance.}}{19}{figure.caption.22}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Structure of a Rocket Tile.}}{22}{figure.caption.23}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Proposed structure of a single-core RISC-V processor system with a Gemmini RoCC accelerator.}}{23}{figure.caption.24}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Connection model in TileLink and its interfaces. Source: \blx@tocontentsinit {0}\cite {sifive2018tilelink}}}{24}{figure.caption.25}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Channels in a TileLink connection between two agents. Source: \blx@tocontentsinit {0}\cite {sifive2018tilelink}}}{25}{figure.caption.27}%
+\contentsline {figure}{\numberline {3.6}{\ignorespaces TileLink TL-UL connection structure. Source: \blx@tocontentsinit {0}\cite {sifive2018tilelink}}}{26}{figure.caption.28}%
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Implementation structure of a heterogeneous multi-core processor system.}}{28}{figure.caption.29}%
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Peripherals in the Rocket Chip base system.}}{29}{figure.caption.30}%
+\contentsline {figure}{\numberline {3.9}{\ignorespaces \texttt {RoCC} co-processor core and MMIO peripheral core in Rocket Chip.}}{30}{figure.caption.31}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces The Relative Energy Cost of Computation vs. Memory Access}}{34}{figure.caption.32}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Conventional vs. Systolic Processing}}{35}{figure.caption.33}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces The Google TPUv1 Block Diagram}}{37}{figure.caption.34}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces The NVDLA High-Level Architecture}}{38}{figure.caption.35}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Data Reuse Opportunities in DNNs}}{38}{figure.caption.36}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Taxonomy of Common DNN Dataflows}}{39}{figure.caption.37}%
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Comparison of OS and WS Dataflows}}{40}{figure.caption.38}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Gemmini Logo. Source: \blx@tocontentsinit {0}\cite {gemini-dac}.}}{43}{figure.caption.39}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Architectural Flexibility of the Gemmini Generator}}{44}{figure.caption.40}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces High-level overview of the Gemmini accelerator template integrated with a host CPU and system memory hierarchy. Source: \blx@tocontentsinit {0}\cite {gemini-dac}.}}{45}{figure.caption.41}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Microarchitecture of Gemmini's Spatial Array}}{46}{figure.caption.42}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces The im2col Transformation}}{47}{figure.caption.43}%
+\contentsline {figure}{\numberline {5.6}{\ignorespaces Conceptual view of Gemmini's decoupled access-execute pipelines, managed by separate hardware command queues for Load, Execute, and Store operations. Source: \blx@tocontentsinit {0}\cite {gemini-dac}.}}{49}{figure.caption.44}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Overview of the internal modules in the generated Gemmini hardware architecture, showing the flow of commands from the RoCC interface through various queues and controllers. Source: \blx@tocontentsinit {0}\cite {gookyi2023gemmini_case_study}.}}{51}{figure.caption.45}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Gemmini's command unrolling modules (\texttt {LoopConv} and \texttt {LoopMatmul}), which translate high-level commands into a series of primitive operations. Source: \blx@tocontentsinit {0}\cite {gookyi2023gemmini_case_study}.}}{52}{figure.caption.46}%
+\contentsline {figure}{\numberline {6.3}{\ignorespaces The \texttt {ExecuteController} module and its associated SRAM control interfaces. Source: \blx@tocontentsinit {0}\cite {gookyi2023gemmini_case_study}.}}{53}{figure.caption.47}%
+\contentsline {figure}{\numberline {6.4}{\ignorespaces The \texttt {Mesh} module, which implements the systolic array of PEs and supports different dataflows (Output Stationary and Weight Stationary). Source: \blx@tocontentsinit {0}\cite {gookyi2023gemmini_case_study}.}}{54}{figure.caption.48}%
+\contentsline {figure}{\numberline {6.5}{\ignorespaces The internal structure of the \texttt {Scratchpad} module, showing the various interfaces to the TLB, DMA, and internal memory banks. Source: \blx@tocontentsinit {0}\cite {gookyi2023gemmini_case_study}.}}{55}{figure.caption.49}%
