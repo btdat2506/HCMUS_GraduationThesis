@@ -45,6 +45,29 @@ Chisel's design aims to address the lack of object-oriented programming and pre-
 
 In the context of hardware design based on Chisel and Scala, \texttt{sbt} (Simple Build Tool) plays a crucial role, optimizing the design management and development process. Built specifically for Scala and Java projects, \texttt{sbt} is the build tool used by the majority of Scala developers. Essentially, \texttt{sbt} acts as the compiler when working with Chisel and Scala. Using \texttt{sbt} simplifies the process of structuring projects for hardware design with Chisel in Chipyard, as well as enabling integration with many other open-source projects.
 
+\subsection{The Chipyard Compilation and Elaboration Flow}
+\label{subsec:chipyard_flow}
+
+A key advantage of the Chipyard framework is its unified compilation and elaboration flow, which provides a structured path from high-level hardware design to various low-level simulation and implementation targets \cite{chipyard}. This flow, illustrated in Figure \ref{fig:chipyard_elaboration_flow}, is centered around the FIRRTL Intermediate Representation.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{Images/Chipyard_organization.png}
+    \caption[The Chipyard Development and Compilation Flow]{The overall development flow within Chipyard. Design begins with high-level configuration and Chisel generators, which produce FIRRTL. The FIRRTL IR acts as a pivot point, enabling different transformation paths for software simulation, FPGA-accelerated simulation, or VLSI layout. Source: \cite{chipyard}.}
+    \label{fig:chipyard_elaboration_flow}
+\end{figure}
+
+The process begins with a \texttt{Custom SoC Configuration}, a set of Scala classes that define the parameters for the entire system, including the type and number of cores, memory sizes, and peripheral selection. These high-level parameters are consumed by the \texttt{RTL Generators}—hardware libraries written in Chisel—which programmatically construct the SoC design. Rather than directly emitting Verilog, the Chisel compiler generates a high-level, technology-agnostic description of the circuit in the \texttt{FIRRTL IR}.
+
+FIRRTL is the crucial pivot point of the entire framework. This intermediate representation can be consumed by a variety of backend "transforms" tailored for specific goals. For instance, the \texttt{FireSim Transforms} apply modifications necessary for mapping the design onto cloud FPGAs for fast, cycle-exact simulation. The \texttt{VLSI Transforms} prepare the design for an ASIC implementation flow by replacing logical memories with technology-specific macros and preparing the hierarchy for place-and-route tools.
+
+For the purposes of this thesis, this flow is primarily used to generate synthesizable Verilog for two key targets: 
+\begin{enumerate}
+    \item \textbf{Software RTL Simulation:} The FIRRTL is compiled into C++ code for cycle-accurate simulation using Verilator, enabling functional verification and initial performance analysis.
+    \item \textbf{FPGA Implementation:} The generated Verilog is consumed by the Xilinx Vivado toolchain to be synthesized, placed, and routed for deployment on the target VC707 FPGA board.
+\end{enumerate}
+This structured flow demonstrates the power of a generator-based approach, allowing a single, high-level design description to target multiple platforms while maintaining design consistency.
+
 \subsection{Verilator Simulation Tool}
 \label{subsec:verilator}
 

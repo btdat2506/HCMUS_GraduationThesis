@@ -2,7 +2,7 @@
 \chapter{The Gemmini DNN Accelerator: An Architectural Overview}
 \label{chap:gemmini_overview}
 
-As established in the previous chapter, the System-on-Chip (SoC) developed in this thesis utilizes a single \texttt{Rocket} Core augmented with a specialized accelerator for deep learning workloads. This chapter delves into the architecture of this accelerator: \texttt{Gemmini}, a sophisticated component designed to overcome the fundamental limitations of general-purpose processors for Deep Neural Network (DNN) tasks.
+As established in the previous chapter, the System-on-Chip (SoC) developed in this thesis utilizes a single Rocket Core augmented with a specialized accelerator for deep learning workloads. This chapter delves into the architecture of this accelerator: Gemmini, a sophisticated component designed to overcome the fundamental limitations of general-purpose processors for Deep Neural Network (DNN) tasks.
 
 \begin{figure}[htbp]
     \centering
@@ -14,11 +14,11 @@ As established in the previous chapter, the System-on-Chip (SoC) developed in th
 \section{Introduction: The Full-Stack Accelerator Philosophy}
 \label{sec:gemmini_intro}
 
-\texttt{Gemmini} is an open-source, full-stack DNN accelerator \textit{generator} developed at the University of California, Berkeley \cite{gemini-dac}. It is designed not merely as a standalone hardware component, but as a complete ecosystem for exploring and evaluating domain-specific hardware acceleration. 
+Gemmini is an open-source, full-stack DNN accelerator \textit{generator} developed at the University of California, Berkeley \cite{gemini-dac}. It is designed not merely as a standalone hardware component, but as a complete ecosystem for exploring and evaluating domain-specific hardware acceleration. 
 
-Its design is rooted in the philosophy of "full-stack" evaluation. Many accelerators are designed and tested in isolation, which fails to account for critical system-level effects such as memory bus contention, cache coherency overhead, and operating system interactions (e.g., page faults and context switches) \cite{gemini-dac}. By generating not only the accelerator RTL but also a complete, Linux-capable SoC using the \texttt{Chipyard} framework, \texttt{Gemmini} enables a comprehensive analysis of these cross-stack interactions. This allows for a more realistic assessment of real-world performance and energy efficiency \cite{gemini-dac}.
+Its design is rooted in the philosophy of "full-stack" evaluation. Many accelerators are designed and tested in isolation, which fails to account for critical system-level effects such as memory bus contention, cache coherency overhead, and operating system interactions (e.g., page faults and context switches) \cite{gemini-dac}. By generating not only the accelerator RTL but also a complete, Linux-capable SoC using the Chipyard framework, Gemmini enables a comprehensive analysis of these cross-stack interactions. This allows for a more realistic assessment of real-world performance and energy efficiency \cite{gemini-dac}.
 
-Crucially, as a generator written in Chisel, \texttt{Gemmini} is not a single, fixed hardware design. As illustrated in Figure \ref{fig:gemmini_flexibility}, its flexible template can be configured to produce a wide spectrum of systolic architectures, from highly pipelined designs to parallel-vector engines. This makes it an exceptionally powerful platform for the academic exploration of accelerator architectures.
+Crucially, as a generator written in Chisel, Gemmini is not a single, fixed hardware design. As illustrated in Figure \ref{fig:gemmini_flexibility}, its flexible template can be configured to produce a wide spectrum of systolic architectures, from highly pipelined designs to parallel-vector engines. This makes it an exceptionally powerful platform for the academic exploration of accelerator architectures.
 
 For this thesis, leveraging Gemmini provides the opportunity to explore a powerful DNN accelerator within a realistic SoC environment.
 
@@ -31,7 +31,7 @@ For this thesis, leveraging Gemmini provides the opportunity to explore a powerf
 
 \section{Top-Level Architectural Blueprint}
 \label{sec:gemmini_blueprint}
-The Gemmini generator can produce a wide range of accelerator instances based on a flexible architectural template. To understand the Gemmini architecture, we first examine the high-level template shown in Figure \ref{fig:gemmini_template}. This blueprint illustrates the three primary components of the accelerator---the Controller, the on-chip memory (Scratchpad and Accumulator), and the compute core (Spatial Array)---and their interface with the host CPU and system DRAM. The following sections provide a detailed analysis of each of these blocks.
+The Gemmini generator can produce a wide range of accelerator instances based on a flexible architectural template. To understand the Gemmini architecture, we first examine the high-level template shown in Figure \ref{fig:gemmini_template}. This blueprint illustrates the three primary components of the accelerator: the Controller, the on-chip memory (Scratchpad and Accumulator), and the compute core (Spatial Array), and their interface with the host CPU and system DRAM. The following sections provide a detailed analysis of each of these blocks.
 
 \begin{figure}[htbp]
     \centering
@@ -91,8 +91,6 @@ To feed its high-throughput systolic array, Gemmini includes a specialized on-ch
 
 \subsection{The RoCC Coprocessor Interface}
 Gemmini integrates into the Chipyard SoC via the \textbf{Rocket Custom Coprocessor (RoCC)} interface. As a tightly-coupled coprocessor, it receives custom RISC-V instructions dispatched directly by the host Rocket Core's pipeline. This allows for low-latency command and control.
-
-
 
 This integration uses a decoupled access-execute model, as illustrated conceptually in Figure~\ref{fig:decoupled_pipelines}. The host CPU issues three main types of commands to Gemmini: load (from main memory to scratchpad), execute (perform computation on data within the scratchpad), and store (from scratchpad to main memory). These commands are placed into separate hardware queues, allowing Gemmini's internal controller then processes these commands asynchronously, and Gemmini's DMA engine to handle data movement in parallel with the systolic array's computations. This overlapping of communication and computation is crucial for hiding memory latency and maximizing the utilization of the systolic array.
 

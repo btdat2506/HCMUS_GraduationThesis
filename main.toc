@@ -14,40 +14,41 @@
 \contentsline {chapter}{\numberline {3}A Single-Core with Gemmini RoCC Accelerator RISC-V Processor System}{19}{chapter.3}%
 \contentsline {section}{\numberline {3.1}System Design Methodology with Chisel}{19}{section.3.1}%
 \contentsline {subsection}{\numberline {3.1.1}Chisel and Scala}{19}{subsection.3.1.1}%
-\contentsline {subsection}{\numberline {3.1.2}Verilator Simulation Tool}{20}{subsection.3.1.2}%
-\contentsline {section}{\numberline {3.2}The Rocket Processor Core}{21}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Rocket Chip SoC Structure}{22}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Bus and Interconnect}{22}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Memory and Cache}{27}{subsection.3.3.2}%
-\contentsline {subsection}{\numberline {3.3.3}Core-Complex}{27}{subsection.3.3.3}%
-\contentsline {subsection}{\numberline {3.3.4}Peripheral Components}{28}{subsection.3.3.4}%
-\contentsline {chapter}{\numberline {4}Architectural Foundations of DNN Acceleration}{33}{chapter.4}%
-\contentsline {section}{\numberline {4.1}The Data-Compute Divide: The Memory Wall}{33}{section.4.1}%
-\contentsline {section}{\numberline {4.2}A Classic Solution: The Systolic Principle}{34}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Case Studies in Modern Systolic Design}{36}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Google's TPUv1: A Datacenter-Scale Design}{36}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}NVIDIA NVDLA: An Open-Source Accelerator IP}{36}{subsection.4.3.2}%
-\contentsline {section}{\numberline {4.4}A Formal Framework: Dataflows}{36}{section.4.4}%
-\contentsline {section}{\numberline {4.5}Chapter Summary}{38}{section.4.5}%
-\contentsline {chapter}{\numberline {5}The Gemmini DNN Accelerator: An Architectural Overview}{43}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Introduction: The Full-Stack Accelerator Philosophy}{43}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Top-Level Architectural Blueprint}{44}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Analysis of Core Architectural Components}{44}{section.5.3}%
-\contentsline {subsection}{\numberline {5.3.1}The Systolic Compute Engine}{44}{subsection.5.3.1}%
-\contentsline {subsubsection}{\numberline {5.3.1.1}Mapping Convolution to Hardware: The \texttt {im2col} Transformation}{46}{subsubsection.5.3.1.1}%
-\contentsline {subsection}{\numberline {5.3.2}The On-Chip Memory Subsystem}{47}{subsection.5.3.2}%
-\contentsline {section}{\numberline {5.4}SoC Integration and System-Level Features}{48}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}The RoCC Coprocessor Interface}{48}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2}Virtual Memory Support}{48}{subsection.5.4.2}%
-\contentsline {section}{\numberline {5.5}Summary}{49}{section.5.5}%
-\contentsline {chapter}{\numberline {6}Gemmini's Internal Architecture and Programming Model}{51}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Internal Command and Control Flow}{51}{section.6.1}%
-\contentsline {subsection}{\numberline {6.1.1}Command Unrolling and Buffering}{51}{subsection.6.1.1}%
-\contentsline {subsection}{\numberline {6.1.2}Reservation Station and Execution Control}{53}{subsection.6.1.2}%
-\contentsline {subsection}{\numberline {6.1.3}The Mesh and Scratchpad}{54}{subsection.6.1.3}%
-\contentsline {section}{\numberline {6.2}The Multi-Level Programming Model}{54}{section.6.2}%
-\contentsline {subsection}{\numberline {6.2.1}Low-Level: Gemmini ISA}{56}{subsection.6.2.1}%
-\contentsline {subsection}{\numberline {6.2.2}Mid-Level: Hand-Tuned C Library}{56}{subsection.6.2.2}%
-\contentsline {subsection}{\numberline {6.2.3}High-Level: Compiler Support (Conceptual)}{56}{subsection.6.2.3}%
-\contentsline {section}{\numberline {6.3}Gemmini Configuration in This Thesis}{56}{section.6.3}%
-\contentsline {chapter}{TÀI LIỆU THAM KHẢO}{59}{section*.51}%
+\contentsline {subsection}{\numberline {3.1.2}The Chipyard Compilation and Elaboration Flow}{20}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}Verilator Simulation Tool}{22}{subsection.3.1.3}%
+\contentsline {section}{\numberline {3.2}The Rocket Processor Core}{23}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Rocket Chip SoC Structure}{24}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Bus and Interconnect}{24}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Memory and Cache}{29}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Core-Complex}{29}{subsection.3.3.3}%
+\contentsline {subsection}{\numberline {3.3.4}Peripheral Components}{30}{subsection.3.3.4}%
+\contentsline {chapter}{\numberline {4}Architectural Foundations of DNN Acceleration}{35}{chapter.4}%
+\contentsline {section}{\numberline {4.1}The Data-Compute Divide: The Memory Wall}{35}{section.4.1}%
+\contentsline {section}{\numberline {4.2}A Classic Solution: The Systolic Principle}{36}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Case Studies in Modern Systolic Design}{38}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Google's TPUv1: A Datacenter-Scale Design}{38}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}NVIDIA NVDLA: An Open-Source Accelerator IP}{38}{subsection.4.3.2}%
+\contentsline {section}{\numberline {4.4}A Formal Framework: Dataflows}{38}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Chapter Summary}{40}{section.4.5}%
+\contentsline {chapter}{\numberline {5}The Gemmini DNN Accelerator: An Architectural Overview}{45}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Introduction: The Full-Stack Accelerator Philosophy}{45}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Top-Level Architectural Blueprint}{46}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Analysis of Core Architectural Components}{46}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}The Systolic Compute Engine}{46}{subsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.1.1}Mapping Convolution to Hardware: The \texttt {im2col} Transformation}{48}{subsubsection.5.3.1.1}%
+\contentsline {subsection}{\numberline {5.3.2}The On-Chip Memory Subsystem}{49}{subsection.5.3.2}%
+\contentsline {section}{\numberline {5.4}SoC Integration and System-Level Features}{50}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}The RoCC Coprocessor Interface}{50}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Virtual Memory Support}{50}{subsection.5.4.2}%
+\contentsline {section}{\numberline {5.5}Summary}{51}{section.5.5}%
+\contentsline {chapter}{\numberline {6}Gemmini's Internal Architecture and Programming Model}{53}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Internal Command and Control Flow}{53}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}Command Unrolling and Buffering}{53}{subsection.6.1.1}%
+\contentsline {subsection}{\numberline {6.1.2}Reservation Station and Execution Control}{55}{subsection.6.1.2}%
+\contentsline {subsection}{\numberline {6.1.3}The Mesh and Scratchpad}{56}{subsection.6.1.3}%
+\contentsline {section}{\numberline {6.2}The Multi-Level Programming Model}{56}{section.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Low-Level: Gemmini ISA}{58}{subsection.6.2.1}%
+\contentsline {subsection}{\numberline {6.2.2}Mid-Level: Hand-Tuned C Library}{58}{subsection.6.2.2}%
+\contentsline {subsection}{\numberline {6.2.3}High-Level: Compiler Support (Conceptual)}{58}{subsection.6.2.3}%
+\contentsline {section}{\numberline {6.3}Gemmini Configuration in This Thesis}{58}{section.6.3}%
+\contentsline {chapter}{TÀI LIỆU THAM KHẢO}{61}{section*.52}%
