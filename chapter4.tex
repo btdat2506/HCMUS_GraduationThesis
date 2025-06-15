@@ -1,71 +1,105 @@
 % !TeX root = main.tex
-\chapter{The Gemmini DNN Accelerator: An Architectural Overview}
-\label{chap:gemmini_overview}
+\chapter{Architectural Foundations of DNN Acceleration}
+\label{ch:foundations}
 
-As established in the previous chapter, the System-on-Chip (SoC) developed in this thesis utilizes a single \texttt{Rocket} Core augmented with a specialized accelerator for deep learning workloads. This chapter delves into the high-level architecture of this accelerator: \texttt{Gemmini}. 
+% Chapter Introduction
+The efficient execution of Deep Neural Networks (DNNs) presents one of the most significant challenges and opportunities in modern computer architecture. While today's general-purpose CPUs are highly optimized for a wide range of tasks, their fundamental design principles are often mismatched with the unique computational and data movement patterns of large-scale neural networks. This chapter will establish the foundational concepts that motivate the need for specialized hardware. We will begin by exploring the core problem---the immense cost of data movement---and then introduce the classic architectural paradigm designed to solve it: the systolic array. Finally, we will examine how this timeless principle is embodied in state-of-the-art industrial accelerators, providing the necessary context to understand the design of the Gemmini accelerator, which is the central subject of this thesis.
+
+\section{The Data-Compute Divide: The Memory Wall}
+\label{sec:memory_wall}
+
+The performance of any computing system is ultimately limited by two factors: the speed of its computations and the speed at which it can supply data to its computational units. For decades, Moore's Law drove exponential growth in the number of transistors on a chip, leading to dramatic increases in processing power. However, the speed of off-chip memory systems, such as DRAM, has improved at a much slower pace. This growing disparity between processor speed and memory speed is famously known as the \textbf{Memory Wall} \cite{wulf1995hitting}.
+
+For data-intensive workloads like DNNs, this is the primary performance bottleneck. The problem can be understood with a simple analogy: imagine a master chef (the processor) who can perform culinary tasks with superhuman speed. However, their ingredients (the data) are stored in a large warehouse across the street (DRAM). Even though the chef is exceptionally fast, their overall productivity is dominated by the time spent walking to and from the warehouse to fetch each ingredient.
+
+This bottleneck is not just about latency; it is fundamentally about energy. As quantified by Horowitz \cite{horowitz2014energy}, the energy required to perform a complex 32-bit floating-point computation is dwarfed by the energy needed to fetch its operands from off-chip DRAM (Figure \ref{fig:energy_cost}). This immense energy cost of data movement means that for DNNs, which perform billions of operations, any viable high-performance hardware solution must be designed with a primary objective: to minimize data movement.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{EfficientDNN_EnergyConsumption.pdf} 
+    \caption[The Relative Energy Cost of Computation vs. Memory Access]{The relative energy cost of various arithmetic and memory operations. A 32-bit DRAM read is orders of magnitude more costly than a 32-bit floating-point addition. This disparity is the primary motivation for specialized accelerator architectures. Adapted from Horowitz, as presented in Sze et al. \cite{sze2020efficient, horowitz2014energy}.}
+    \label{fig:energy_cost}
+\end{figure}
+
+\section{A Classic Solution: The Systolic Principle}
+\label{sec:systolic_principle}
+
+In his seminal 1982 paper, H.T. Kung proposed a novel architectural paradigm designed specifically to address the memory wall: the \textbf{systolic array} \cite{kung1982systolic}. The architecture is named by analogy to the human circulatory system. Just as the heart rhythmically pumps blood to the body's cells, in a systolic system, memory "pumps" data through a regular grid of simple Processing Elements (PEs).
+
+The core principle is to \textbf{maximize the number of computations performed for each data item fetched from memory}. Instead of fetching an operand, using it once in a central ALU, and then discarding it (the conventional approach), a systolic array passes an operand from one PE to the next in a pipelined fashion. At each step of its journey, the data element participates in another computation. This structure, illustrated conceptually in Figure \ref{fig:conventional_vs_systolic}, amortizes the high cost of the initial memory access over dozens or even hundreds of useful operations.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.9\textwidth]{Gemmini_Logo.pdf}
-    \caption{Gemmini Logo. Source: \cite{gemini-dac}.}
-    \label{fig:gemmini_logo}
+    \includegraphics[width=0.9\textwidth]{SystolicArray_Kung1982.pdf} 
+    \caption[Conventional vs. Systolic Processing]{A conceptual comparison of a conventional von Neumann architecture and a systolic architecture. The conventional approach (top) is bottlenecked by the memory bus. The systolic approach (bottom) uses an array of PEs to achieve high throughput with the same memory bandwidth by reusing data internally. Adapted from the presentation of Kung's work \cite{kung1982systolic}.}
+    \label{fig:conventional_vs_systolic}
 \end{figure}
 
-\section{Introduction to Gemmini}
-\label{sec:gemmini_intro}
+\section{Case Studies in Modern Systolic Design}
+\label{sec:case_studies}
+While the systolic principle is four decades old, it has become the dominant paradigm for modern high-performance DNN accelerators. We will examine two landmark industrial designs that showcase this principle in practice.
 
-\texttt{Gemmini} is an open-source, full-stack Deep Neural Network (DNN) accelerator generator developed at the University of California, Berkeley \cite{gemini-dac}. It is designed not merely as a standalone hardware component, but as a complete ecosystem for exploring and evaluating domain-specific hardware acceleration. 
-
-A key philosophy behind \texttt{Gemmini} is the concept of "full-stack" evaluation. Many DNN accelerators are designed and tested in isolation, which fails to account for critical system-level effects such as memory bus contention, cache coherency overhead, and operating system interactions (e.g., page faults and context switches) \cite{gemini-dac}. By generating not only the accelerator RTL but also a complete, Linux-capable SoC using the \texttt{Chipyard} framework, \texttt{Gemmini} enables a comprehensive evaluation of these cross-stack interactions. This allows for a more realistic assessment of performance and energy efficiency, making it a powerful tool for academic research. For this thesis, leveraging \texttt{Gemmini} provides the opportunity to explore a powerful DNN accelerator within a realistic SoC environment.
-
-\section{Core Architectural Components}
-\label{sec:gemmini_core_components}
-
-The \texttt{Gemmini} generator can produce a wide range of accelerator instances based on a flexible architectural template. The core components, shown in Figure~\ref{fig:gemmini_template}, are detailed below.
+\subsection{Google's TPUv1: A Datacenter-Scale Design}
+Google's Tensor Processing Unit (TPU) was one of the first large-scale custom ASICs designed specifically for accelerating DNN inference in datacenters \cite{jouppi2017tpu}. As shown in Figure \ref{fig:tpu_diagram}, its architecture is a direct embodiment of the systolic principle. The heart of the TPU is a massive 256x256 Matrix Multiply Unit, which is a two-dimensional systolic array of 65,536 8-bit multiply-accumulate (MAC) units. To feed this vast computational engine, the TPU relies on a large, software-controlled on-chip memory called the Unified Buffer (a 24 MiB scratchpad), which stores input activations and intermediate partial sums. The design philosophy of the TPU prioritizes deterministic, high-throughput performance for inference tasks where low latency is critical.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.9\textwidth]{Gemmini_ArchitectureOverview.pdf}
-    \caption{High-level overview of the Gemmini accelerator template integrated with a host CPU and system memory hierarchy. Source: \cite{gemini-dac}.}
-    \label{fig:gemmini_template}
+    \includegraphics[width=\textwidth]{TPU_v1_Overview.pdf} 
+    \caption[The Google TPUv1 Block Diagram]{A high-level block diagram of the Google TPUv1. The design is dominated by the systolic Matrix Multiply Unit and its large on-chip Unified Buffer. Adapted from Jouppi et al. \cite{jouppi2017tpu, mittal2021survey}.}
+    \label{fig:tpu_diagram}
 \end{figure}
 
-\subsection{The Systolic Array (Spatial Array)}
-\label{subsec:systolic_array}
+\subsection{NVIDIA NVDLA: An Open-Source Accelerator IP}
+In contrast to the monolithic, datacenter-focused TPU, the NVIDIA Deep Learning Accelerator (NVDLA) is an open-source, configurable IP core designed for integration into a wide range of Systems-on-Chip (SoCs), particularly for embedded systems \cite{farshchi2019nvdla}. As shown in Figure \ref{fig:nvdla_diagram}, the NVDLA has a more modular design, with a dedicated Convolutional Core (which contains the MAC units), a Post-Processing unit for activation functions and pooling, and a Convolutional Buffer for storing weights and inputs. Unlike the TPU's custom interface, the NVDLA uses industry-standard bus protocols (AXI and APB) for memory access and control, simplifying its integration into third-party SoC designs. Its configurability (e.g., `nv\_small`, `nv\_large`) allows a system designer to trade off area and performance, making it a flexible solution for the embedded space.
 
-The computational heart of \texttt{Gemmini} is its systolic array, also referred to as a spatial array. This component consists of a 2D grid of Processing Elements (PEs), each capable of performing a Multiply-Accumulate (MAC) operation in a single cycle. The systolic array is highly configurable, with key parameters including:
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{NVDLA_ArchitectureOverview.pdf} 
+    \caption[The NVDLA High-Level Architecture]{The high-level architecture of the NVDLA. The design is partitioned into distinct functional units connected via standard bus interfaces. Adapted from Farshchi et al. \cite{farshchi2019nvdla}.}
+    \label{fig:nvdla_diagram}
+\end{figure}
+
+\section{A Formal Framework: Dataflows}
+\label{sec:formal_dataflows}
+The design choices made in architectures like the TPU and NVDLA can be formally described using the concept of a \textbf{dataflow}. The dataflow defines the strategy for moving data through the systolic array to maximize reuse. The effectiveness of a given dataflow depends on the structure of the DNN layer being executed. The two most common dataflows, which we will see are directly relevant to Gemmini, are:
 \begin{itemize}
-    \item \textbf{Dimensions:} The number of rows and columns in the PE grid (e.g., 16x16, 32x32) can be specified at generation time.
-    \item \textbf{Dataflow:} \texttt{Gemmini} primarily supports two dataflow strategies: Weight Stationary (WS) and Output Stationary (OS). In WS dataflow, the DNN weights are pre-loaded into the PEs and remain stationary, while input activations are streamed through. This maximizes weight reuse. In OS dataflow, partial sums of the output activations remain stationary within the PEs, while inputs and weights are streamed. This is beneficial for layers with low weight reuse. The choice of dataflow has a significant impact on performance and energy efficiency.
-    \item \textbf{Pipelining:} The degree of pipelining within the array and the PEs can be configured, affecting the maximum clock frequency and throughput.
+    \item \textbf{Weight Stationary (WS):} This dataflow prioritizes weight reuse. Filter weights are pre-loaded into the PEs and remain stationary, while input activations are streamed in. This strategy, used by the Google TPU, is highly efficient for layers with large input feature maps and relatively small filters.
+    \item \textbf{Output Stationary (OS):} This dataflow prioritizes minimizing the movement of partial sums. Each PE is responsible for accumulating the final value for a single output activation, which remains stationary in its accumulator. Inputs and weights are streamed to the PE as needed. This can be more efficient for layers where partial sum read/write energy is a dominant cost.
 \end{itemize}
-This configurable systolic array allows \texttt{Gemmini} to efficiently execute the dense matrix multiplications that are fundamental to modern DNNs, especially for convolutional and fully-connected layers.
-
-\subsection{On-Chip Memory Hierarchy}
-\label{subsec:gemmini_onchip_mem}
-
-To feed the high-throughput systolic array and avoid becoming memory-bound, \texttt{Gemmini} includes a dedicated on-chip memory hierarchy.
-\begin{itemize}
-    \item \textbf{Local Scratchpad Memory:} This is a software-managed SRAM used for staging input activations, weights, and intermediate feature maps close to the systolic array. Its purpose is to reduce the latency and energy consumption associated with fetching data from higher levels of the memory hierarchy, such as the shared L2 cache or main memory (DRAM). Its capacity and banking are configurable.
-    \item \textbf{Accumulator Memory:} Separate from the main scratchpad, \texttt{Gemmini} features a dedicated memory to store the partial sums generated by the MAC operations. This memory typically uses a higher precision data type (e.g., 32-bit integers) than the input data (e.g., 8-bit integers) to maintain accuracy during accumulation.
-\end{itemize}
-
-\subsection{Integration as a RoCC Accelerator}
-\label{subsec:gemmini_rocc}
-
-As discussed in Chapter 3, \texttt{Gemmini} is designed to be integrated as a Rocket Custom Coprocessor (\texttt{RoCC}). This enables tight coupling with the host \texttt{Rocket} Core, allowing it to be controlled via custom RISC-V instructions dispatched by the core's main pipeline. 
-
-This integration uses a decoupled access-execute model, as illustrated conceptually in Figure~\ref{fig:decoupled_pipelines}. The host CPU issues three main types of commands to \texttt{Gemmini}: load (from main memory to scratchpad), execute (perform computation on data within the scratchpad), and store (from scratchpad to main memory). These commands are placed into separate hardware queues, allowing \texttt{Gemmini}'s DMA engine to handle data movement in parallel with the systolic array's computations. This overlapping of communication and computation is crucial for hiding memory latency and maximizing the utilization of the systolic array.
+These strategies, visually contrasted in Figure \ref{fig:dataflow_taxonomy} and \ref{fig:dataflow_comparison}, represent a fundamental trade-off in accelerator design. The choice of dataflow directly impacts which types of data reuse, shown in Figure \ref{fig:dnn_reuse}, are most effectively exploited.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.8\textwidth]{Gemmini_DecoupledAccessExecutePipeline.pdf}
-    \caption{Conceptual view of Gemmini's decoupled access-execute pipelines, managed by separate hardware command queues for Load, Execute, and Store operations. Source: \cite{gemini-dac}.}
-    \label{fig:decoupled_pipelines}
+    \includegraphics[width=0.9\textwidth]{EfficientDNN_DataReuse.pdf} 
+    \caption[Data Reuse Opportunities in DNNs]{The three primary forms of data reuse in convolutional layers: convolutional, filter, and input reuse. Adapted from Sze et al. \cite{sze2020efficient}.}
+    \label{fig:dnn_reuse}
 \end{figure}
 
-\section{Summary}
-\label{sec:gemmini_overview_summary}
-In summary, \texttt{Gemmini} is a sophisticated, highly configurable DNN accelerator generator. Its key architectural features include a powerful systolic array, a dedicated on-chip memory hierarchy, and a tightly-coupled integration with a host processor via the \texttt{RoCC} interface. This design enables the high-performance execution of DNN workloads within a full-stack, system-level context. 
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.9\textwidth]{EfficientDNN_ModernDataflow.pdf} 
+    \caption[Taxonomy of Common DNN Dataflows]{A visual comparison of Weight Stationary (left) and Output Stationary (right) dataflows. Adapted from Sze et al. \cite{sze2020efficient}.}
+    \label{fig:dataflow_taxonomy}
+\end{figure}
 
-Having established this high-level architectural overview, the following chapter will now perform a deep dive into the specifics of \texttt{Gemmini}'s internal command processing flow and its multi-level programming model.
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Gemmini_compute_os.pdf}
+        \caption{Output Stationary (OS)}
+        \label{fig:os_dataflow}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Gemmini_compute_ws.pdf}
+        \caption{Weight Stationary (WS)}
+        \label{fig:ws_dataflow}
+    \end{subfigure}
+    \caption[Comparison of OS and WS Dataflows]{A visual comparison of the two primary dataflows supported by Gemmini. (a) In the \textbf{Output Stationary} dataflow, the result matrix C remains stationary in the PEs to accumulate partial sums. (b) In the \textbf{Weight Stationary} dataflow, the weight matrix B is preloaded and remains stationary in the PEs to maximize weight reuse. The choice between these strategies represents a fundamental trade-off in accelerator design. Source: \cite{gemini-dac}.}
+    \label{fig:dataflow_comparison}
+\end{figure}
+
+\section{Chapter Summary}
+This chapter has built a foundational argument for the necessity of specialized hardware for DNN acceleration. We began with the core architectural challenge---the Memory Wall---and introduced the systolic array as a classic and enduring solution that minimizes costly data movement by maximizing data reuse. By examining modern industrial accelerators like the Google TPU and NVDLA, we have seen this principle in action. Finally, we formalized these strategies with the concept of dataflows, such as Weight Stationary and Output Stationary. These foundational concepts provide the necessary framework to understand the design and operation of the Gemmini accelerator, which will be the focus of the subsequent chapters.

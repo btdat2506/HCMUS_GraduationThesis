@@ -1,0 +1,82 @@
+\section{related work}
+Systolic architectures first came into prominence in the early 1980s~\cite{why-systolic, kung1979systolic}, and since then, many systolic accelerators have been developed.
+There has also been much work on algorithms which can design new systolic arrays methodologically, rather than through ad-hoc intuition~\cite{algoinfo}.
+
+Early systolic arrays were used to compute convolutions~\cite{kungconv}, solutions to triangular linear systems~\cite{why-systolic}, matrix multiplications, and more. Systolic architectures enable modular and extensible designs, use local neighbor-to-neighbor message passing, and contain easy-to-floorplan regular structures.
+%especially by discouraging difficult-to-route global signals.
+
+Systolic architectures have recently regained popularity, since the convolution and matrix multiplication kernels common in machine learning and deep learning application are highly susceptible to multi-dimensional acceleration using systolic arrays.  
+
+% Industry DNN accelerators:
+Commercially deployed ASIC implementations of NN accelerators include the Google TPU \cite{tpu} for cloud workloads, as well as edge inference implementations by Samsung \cite{samsung}, Nvidia \cite{nvidia}, Apple \cite{apple}, and Tesla \cite{bannon2019accelerated, bannon2019systems}. In particular, a detailed description of the original TPU implementation includes a $256\times256$ matrix multiplication unit implemented using a reduced-precision systolic MAC array with a weight stationary dataflow for NN inference in the cloud. Successor versions included floating-point representation, additional memory, and improved utilization for both training and inference \cite{tpu2_3}.
+
+%To target ML workloads in the cloud, Google designed the custom TPUv1 ASIC~\cite{tpu}, which uses a weight-stationary (WS) 256x256 systolic MAC array at its core to accelerate GEMM. The successor TPUv2 and TPUv3~\cite{tpu2_3} ASICs utilized a similar systolic array, added more memory, and used multiple arrays to improve utilization. The cloud TPUs were designed to accelerate both training and inference, while another ASIC, the edge-TPU, was optimized for energy efficient inference only for edge devices. Other industry players, including Samsung~\cite{samsung}, Apple, Qualcomm, and Tesla have designed inference accelerators utilizing systolic arrays. \textbf{TODO: add citations, or remove this sentence}.
+
+Prior work has demonstrated the integration of an open-source commercial DNN accelerator (NVDLA) with the Rocket Chip ecosystem and the FireSim platform \cite{farzad2019rocketnvdla}. The accelerator in this work was integrated using the memory bus, as opposed to Gemmini which is integrated using the RoCC interface. %and enables full design-space demonstrated using Gemmini. 
+Prior work ~\cite{seldridge} has also demonstrated the integration of academic NN accelerators with the Rocket Chip ecosystem using the RoCC interface, but did not use systolic architectures for that purpose.
+Gemmini puts an emphasis on enabling design space exploration rather than single design-point integration.
+%Eldridge et. al. proposed an NN accelerator, DANA~\cite{seldridge}, integrated as a co-processor for Rocket using the RoCC interface, however the accelerator was only capable of executing multi-layer perceptrons and not convolutions.
+
+Academic researchers have proposed numerous systolic accelerators, especially for neural-network inference. For example, NeuFlow~\cite{neuflow} was a systolic-inspired architecture which allowed individual processing elements (PEs) to be re-configured at runtime to perform tasks such as multiply-accumulates, divisions, and non-linear activations. ShiDianNao~\cite{shidiannao}, similarly, allowed PEs to be reconfigured at runtime to perform multiply-accumulates, additions, and max poolings. 
+Eyeriss~\cite{eyeriss} implemented a weight-stationary dataflow using a spatial array. Eyeriss v2~\cite{eyeriss2} improved on the original Eyeriss by demonstrating a new PE architecture that can operate on sparse CSC-encoded matrices, and a hierarchical mesh NoC capable of unicast, multicast, and broadcast data transfers to maximize reuse.
+These and other systolic-inspired architectures typically permit both global and local connections between PEs and global memory, which is not strictly systolic, but often improves performance.
+
+%Chen et. al. proposed Eyeriss\cite{eyeriss}, a convolutional layer accelerator implemented as a spatial array of PEs computing using a weight stationary dataflow. Eyeriss utilized a NoC to support multicasting weights to several PEs, and had a 2-level memory hierarchy consisting of a large buffer SRAM and PE-local input, weight, and partial sum register files. Eyeriss v2\cite{eyeriss2} demonstrated a new PE architecture that can operate on sparse CSC-encoded matrices, and a hierarchical mesh NoC capable of unicast, multicast, and broadcast data transfers to maximize reuse. While Eyeriss proposed a novel architecture, the work did not explore the full design space and evaluate how different accelerator parameterizations affect throughput and energy efficiency.
+
+%talk about flex-flow as a multi-dataflow proposal
+Several previous proposals~\cite{squeeze, lu2017flexflow, fu2017} have presented performance and energy benefits resulting from flexible data-flow options in NN accelerators. However, the benefits and impact of the dataflow structure of NN accelerators is still an active area of research, and some works~\cite{overrrated} have shown that optimal memory-hierarchies and loop-blocking strategies can have a more significant impact on energy efficiency than the choice of dataflows. 
+
+%Talk about ISSCC/VLSI accelerators
+Various energy efficient neural network accelerator proposals have also been presented in the integrated circuits community \cite{ueyoshi2018quest, lee2018unpu, bankman2018always, karnik2018cm, shin201714, yin20171, ando2017brein, kim20192, sayal201914, lee20197, yue20197}. Many of these proposals focus on exploiting sparsity and quantization features of DNNs. Furthermore, while some of these proposals address runtime-configurability, they still address only a single fabrication-capable design point, and most do not present design and elaboration time parameterization. Further, most of these accelerators are tested in isolation, often without a fully integrated software environment, hence potentially neglecting system-level effects. 
+
+%talk about FPGA-based accelerators; just aggregate a bunch of citations and contrast them to ASIC implementation for peak energy efficiency
+A host of DNN accelerators targeted for FPGA implementation have also been proposed\cite{zeng2018, wang2016, shen2018, dicecco2016, guan2017, guo2018, zhang2018, zhang2015, venieris2016, sharma2016, zhang2017, wang2017}, taking advantage of FPGA reconfigurability to implement exotic layers, specialize the hardware for a specific network, and evaluate multiple design points. However, FPGA acceleration frameworks do not necessarily translate well to ASIC implementations, and are not ideal for scenarios where energy efficiency is critical.
+
+%talk about ISCA/MICRO/HPCA/ASPLOS Simulated accelerators
+% Karu Sankaralingam (Wisconsin) - CGRAs (nowatzki2017) - SW simulated on model, but they have Chisel RTL too
+Some prior works \cite{yazdani2016,song2017,srivastava2018,sharify2018,squeeze,angizi2018,min2019,nowatzki2017} use analytical or high-level model-based simulations to evaluate different parameterizations of a proposed accelerator architecture. 
+%While modeling is useful to explore a design space, it is difficult to validate the model unless there is corresponding RTL and the physical implementation of the circuit. 
+In contrast, Gemmini performs design space exploration on the RTL directly and uses feedback from FPGA-accelerated simulation and physical design to find optimal design points for ASIC implementation.
+
+%Processing in Memory
+% Jishen Zhao - in-memory compute for DNNs (liu2018,chi2016)
+% Lide Duan - NVM crossbar arrays for DL acceleration (yan2018)
+% Jing Li (Wisconsin) - ML accelerator stuff (zha2019 - Liquid Silicon)
+% Yuan Xie (UCSB) - PIM with ReRAM, FPGA stuff (ji2019,chang2019)
+Since the energy consumed during DNN inference and matrix multiplication is often dominated by external memory accesses, academic researchers have proposed processing in memory\cite{liu2018,chi2016,yan2018,yan2018_2,zha2019,ji2019,chang2019}. These works include the development of new SRAM circuits and the use of novel devices such as ReRAMs. Gemmini is designed and validated for CMOS implementation, and uses design space exploration to discover the ideal memory access patterns and memory hierarchy to conserve energy.
+
+%co-design and generators
+Researchers have also proposed methodological systems and algorithms to automatically generate systolic architectures directly from the algorithms they are meant to accelerate. For example, PolySA~\cite{polysa} analyzes polyhedral models to attempt to find the optimal mapping between a sequential algorithm and a set of parallel PEs. Yang et al.~\cite{overrrated} extended the Halide programming language to automatically generate C++ high-level-synthesis (HLS) implementations of systolic arrays.
+%we need to have a sentence to differentiate from these
+
+%talk about VTA (as an open-source generator/research platform with software stack
+%need to mention VTA here, and talk about the fact that they focus on FPGA targets rather than ASIC
+Prior work has also introduced TVM \cite{chen2018} and VTA \cite{moreau2018} as an integrated research platform for SW/HW evaluation of NN accelerators. While Gemmini and VTA hold many architectural similarities, including the use of a GEMM core, explicit memory management, and explicit instruction dependency handling, VTA has primarily targeted FPGA accelerators implementations, as opposed to Gemmini which currently targets primarily ASIC designs and has been used in the fabrication on multiple test-chips. Furthermore, Gemmini's integration with the RISC-V eco-system enables an additional level of customization in SW/HW co-design. 
+
+%Chen et. al. proposed TVM\cite{chen2018}, an open-source DNN compiler stack capable of ingesting a compute graph, optimizing it for a particular architecture, and optionally delegating inner kernels to specialized accelerators. Moreau et. al. proposed VTA\cite{moreau2018}, a decoupled accelerator with a tensor ALU and GEMM core, and a CISC ISA with explicit memory management and instruction dependency handling. VTA integrates with TVM by using a JIT compiler to lower TVM IR at runtime, and by using TVM's tensorization intrinsic. TVM and VTA form a full stack environment for DNN acceleration, however the VTA targets an FPGA implementation, whereas Gemmini targets an optimal ASIC design.
+
+
+
+% PC Members to Cite
+% Lu Peng - Fooling AI with AI (too far from our work)
+% Antonio Gonzalez - RNN accelerator (http://arco.e.ac.upc.edu/wiki/index.php?title=Publications) (not sure where to cite the RNN accelerator - E-PUR)
+
+% \textcolor{red}{Hasan, Done by 4th of May} \\
+% 2.1 systolic arrays \& Inference \\
+% 2.2 back to the nineties\\
+%     UCSD\\
+%     Eyeriss\\
+%     TPU -- all versions\\
+%     Tesla GPU\\
+%     Dataflows are overrated\\
+%     Samsung?
+%     others?
+
+
+
+%Recent accelerators designed by architects in industry have helped to rekindle interest in systolic architectures. Google's TPUv1~\cite{tpu}, for example, is built around a weight-stationary 256-by-256 systolic array which performs matrix multiplications, as is Tesla's ``Accelerated Mathematical Engine''~\cite{tesla}.
+
+
+%Systolic architectures have regained popularity as machine learning workloads have proliferated in the cloud and at the edge. Common kernels such as GEMM and 2D convolution are used extensively in modern DNNs and systolic hardware accelerators can achieve optimal energy efficiency and performance.
+
+%Yang et al. \cite{overrrated} concluded that a systolic array's dataflow does not have a significant effect upon performance or power consumption, assuming that its memory hierarchy and loop-blocking strategy are optimal. Complementary work from Kwon et al.~\cite{squeeze} suggests that different dataflows have a different impact on different layer types, and hence multi-dataflow accelerators can provide some performance and energy benefits.

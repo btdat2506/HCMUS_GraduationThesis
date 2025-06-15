@@ -1,0 +1,24 @@
+\begin{itemize}
+    \item Ameer - write mobilenet on imagenet, By Monday
+    \item Vighnesh - fix tiled WS bug and run mobilenet
+    \item Alon - squeezenet code check.
+    \item Alon - Detailed section about the evaluation methodology (full software stack and implementation. not shortcuts). Talk about the different programming models (direct through RoCC instructions, vs. using a device driver for a larger SoC).
+    \item Hasan - get the new performance numbers 
+    \item Vighnesh proof read
+    \item Alon and Vighnesh, explain why the architecture is simple, and more comparison against related work
+    
+    %more todos (7/8/2019)
+    \item Vighnesh - Additional figure of the actual systolic array (basically: zoom in. Preferably Omni-graffle). Need to see the multiple data-flows
+    \item We need to talk explicitly about quantization and bitwidths
+    \item I'm not sure the floorplan figure is exactly what we want. Maybe it's better to have a post-place&route figure?
+    \item need a lot more related work (didn't even mention VTA or NVDLA in the original report)
+    
+    %Generator stuff:
+    \item Vighnesh - Have the chisel generator generate the C header file with the constants for the matmul functions (TILE\_DIM, SCRATCHPAD\_SIZE, etc.). More figures
+    \item Hasan - fix the DMA re-ordering feature to allow a larger systolic array (make it a generator parameter: if the array size is bigger than the bus size, then add the re-ordering code). 
+    \item Alon - generate FireSim AGFIs. More re-writing
+    \item Ameer - Finish MobileNet
+    \item - intel tapout - try to make it a 32x32 array of int8 elements. might get pushback on from Intel on SRAM sizes. If pushback is strong, might want to change the element size from int8 to int4.
+    
+    
+\end{itemize}

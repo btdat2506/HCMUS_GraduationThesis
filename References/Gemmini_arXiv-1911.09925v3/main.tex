@@ -1,0 +1,89 @@
+\documentclass[9pt,conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+
+% Our packages
+\usepackage{booktabs}
+\usepackage{subcaption}
+\usepackage{soul}
+\usepackage{url}
+
+\usepackage{tabularx}
+\newcolumntype{P}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}{>{\hsize=0.5\hsize}X}
+\usepackage{makecell}
+\usepackage{multirow}
+\usepackage{pifont}% http://ctan.org/pkg/pifont
+
+% Custom commands
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=0.75pt] (char) {\small #1};}}
+
+\newcommand{\comment}[1]{{\color{red} [{#1}]}}          % shortcut for visible remark
+\newcommand{\fixme}[1]{{\color{red} {#1}}}          % shortcut for visible remark
+
+\newcommand{\sophia}[1]{{\color{red} Sophia: [{#1}]}}
+
+\begin{document}
+\bstctlcite{IEEEexample:BSTcontrol}
+
+\title{Gemmini: Enabling Systematic Deep-Learning Architecture Evaluation via Full-Stack Integration}
+
+% \author{Hasan Genc (\texttt{hngenc@berkeley.edu}), Seah Kim, Alon Amid, Ameer Haj-Ali, Vighnesh Iyer, Pranav Prakash, Jerry Zhao, \\
+% Daniel Grubb, Harrison Liew, Howard Mao, Albert Ou, Colin Schmidt, Samuel Steffl, John Wright, \\
+% Ion Stoica, Jonathan Ragan-Kelley, Krste Asanovic, Borivoje Nikolic, Yakun Sophia Shao \\
+% UC Berkeley}
+
+% \author{\IEEEauthorblockN{1\textsuperscript{st} Author}
+% \IEEEauthorblockA{\textit{1\textsuperscript{st} Institution} \\
+% email1@example.edu}
+% \and
+% \IEEEauthorblockN{2\textsuperscript{nd} Author}
+% \IEEEauthorblockA{\textit{2\textsuperscript{nd} Institution} \\
+% email2@example.edu}
+% }
+
+\author{\IEEEauthorblockN{Hasan Genc*, Seah Kim*, Alon Amid*, Ameer Haj-Ali*, Vighnesh Iyer*, Pranav Prakash*, Jerry Zhao*, Daniel Grubb*,\\ Harrison Liew*, Howard Mao*, Albert Ou*, Colin Schmidt*, Samuel Steffl*, John Wright*, Ion Stoica*,\\ Jonathan Ragan-Kelley†, Krste Asanovic*, Borivoje Nikolic*, Yakun Sophia Shao*}
+\IEEEauthorblockA{\textit{*UC Berkeley, †MIT} \\
+hngenc@berkeley.edu}
+\vspace{-0.25in}
+}
+
+\maketitle
+
+%%%%%% -- PAPER CONTENT STARTS-- %%%%%%%%
+
+%\input{organization}
+
+\input{abstract.tex}
+\input{intro.tex}
+\input{motivation}
+\input{architecture.tex}
+\input{evaluation}
+\input{case_study}
+%\input{related.tex}
+\input{conclusion.tex}
+\input{acknowledgements.tex}
+
+%%%%%%% -- PAPER CONTENT ENDS -- %%%%%%%%
+
+% \newpage
+
+%%%%%%%%% -- BIB STYLE AND FILE -- %%%%%%%%
+\bibliographystyle{IEEEtran}
+\bibliography{ref,sophia}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}

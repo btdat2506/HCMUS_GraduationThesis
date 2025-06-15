@@ -1,0 +1,42 @@
+% \section{Organization}
+
+\textbf{Main idea of paper:} full-stack integration (programming model, SoC, RTL, etc.) is needed to accurately investigate accelerator performance/efficiency
+
+\textbf{Sections:}
+\begin{itemize}
+    \item Abstract and Introduction: 0.75 page
+    \item Background and Motivation: 1 page
+        \begin{itemize}
+            \item I would really like to keep the table if possible
+        \end{itemize}
+    \item Gemmini Design: 1.25 pages
+        \begin{itemize}
+            \item \textit{Architectural template:} 0.5 pages
+            \item \textit{Programming support:} 0.5 pages
+            \item \textit{System parameters:} 0.5 pages
+            \item This will require some rewriting, because the focus will be on the full-stack integration, rather than the paramterizability
+            \item Make clear that we have convolution, and talk about how we support it without im2col data duplication. Also mention that we have pooling, transpose, etc., but don't spend entire paragraphs on it.
+            \item Spend one paragraph introducing programming modes and one paragraph talking about data-staging, and one paragraph introducing virtual memory.
+        \end{itemize}
+    \item Evaluation: 1 page
+        \begin{itemize}
+            \item If we can't get to NVDLA-like performance one week before the deadline, 
+            then remove the NVDLA comparison.
+            \item DAC papers usually have detailed evaluation metrics. Keep the tables, but cut down on text here. (E.g. cut down on paragraph that talks about P\&R stats, but keep the table).
+        \end{itemize}
+    \item Case Study: Virtual Memory: 0.75 pages
+        \begin{itemize}
+            \item Should we reword this to make the language less assertive?
+            \item Try to frame this as a co-design ``problem'' instead of a characterization
+            \item Show how much the single-register reduces burstiness of requests
+        \end{itemize}
+    \item Case Study: Scratchpad vs L2: 1 pages
+        \begin{itemize}
+            \item Frame this more clearly as a memory partitioning and codesign problem, rather than a resource contention characterization.
+        \end{itemize}
+    \item Conclusion: 0.25 pages
+\end{itemize}
+
+\hl{Highlighted text} should be removed. \textcolor{red}{Red text} are notes.
+\newpage
+

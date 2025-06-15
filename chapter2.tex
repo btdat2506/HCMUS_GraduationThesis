@@ -3,7 +3,7 @@
 
 \section{Overview of RISC-V}
 
-Designing and developing a microprocessor, or Central Processing Unit (CPU), is a complex process requiring the collaboration of many experts in fields such as digital logic design, compiler development, and operating systems, along with significant financial resources. Major vendors like ARM, with prominent processor lines such as Cortex-M and Cortex-A, often impose high licensing fees and strict confidentiality requirements on their designs. This creates considerable barriers to hardware and software research and customization, particularly for academic institutions or small businesses. In response to these limitations, the RISC-V architecture \cite{waterman2014riscv, waterman2015riscvprivileged} was developed and introduced as an open-source solution, providing a flexible platform that eliminates licensing costs and allows for need-based customization. By fostering innovation and opening up a freer research ecosystem, RISC-V is reshaping the traditional approach to microprocessor development, aiming for more efficient and comprehensive solutions.
+Designing and developing a microprocessor, or Central Processing Unit (CPU), is a complex process requiring the collaboration of many experts in fields such as digital logic design, compiler development, and operating systems, along with significant financial resources. Major vendors like ARM, with prominent processor lines such as Cortex-M and Cortex-A, often impose high licensing fees and strict confidentiality requirements on their designs. This creates considerable barriers to hardware and software research and customization, particularly for academic institutions or small businesses. In response to these limitations, the RISC-V architecture \cite{riscv:manual:user:2024, waterman2015riscvprivileged} was developed and introduced as an open-source solution, providing a flexible platform that eliminates licensing costs and allows for need-based customization. By fostering innovation and opening up a freer research ecosystem, RISC-V is reshaping the traditional approach to microprocessor development, aiming for more efficient and comprehensive solutions.
 
 \begin{figure}[h!]
     \centering
@@ -33,11 +33,11 @@ To suit various implementers and ensure flexibility in designs with specialized 
 
 \subsection{RISC-V 32-bit and the RV32I Base Instruction Set}
 
-RV32I \cite{waterman2014riscv} is the base instruction set present in almost all 32-bit RISC-V microprocessor architectures. The assembly instructions in this set use 32 32-bit registers, named \texttt{x0} - \texttt{x31}, to store integers. Each register, in addition to being numbered from 0 to 31, is also referred to by its Application Binary Interface (ABI) name, which reflects its specific function. For example, register \texttt{x0} is a read-only register containing the constant value "0", and register \texttt{x1} is used as the return address register, storing the return address when a function is executed. Table \ref{tab:rv32i_registers} lists these registers and their functions in detail.
+RV32I \cite{riscv:manual:user:2024} is the base instruction set present in almost all 32-bit RISC-V microprocessor architectures. The assembly instructions in this set use 32 32-bit registers, named \texttt{x0} - \texttt{x31}, to store integers. Each register, in addition to being numbered from 0 to 31, is also referred to by its Application Binary Interface (ABI) name, which reflects its specific function. For example, register \texttt{x0} is a read-only register containing the constant value "0", and register \texttt{x1} is used as the return address register, storing the return address when a function is executed. Table \ref{tab:rv32i_registers} lists these registers and their functions in detail.
 
 \begin{table}[h!]
     \centering
-    \caption{ABI names and functions of registers in RV32I. Source \cite{waterman2014riscv}}
+    \caption{ABI names and functions of registers in RV32I. Source \cite{riscv:manual:user:2024}}
     \label{tab:rv32i_registers}
     \begin{tabular}{lll}
     \toprule
@@ -64,9 +64,8 @@ The assembly instructions in RV32I use six different 32-bit instruction formats,
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{RISCV_BaseInstructionFormats.pdf}
-    \caption{Instruction encoding formats in RV32I. Source \cite{waterman2014riscv}}
+    \caption{Instruction encoding formats in RV32I. Source \cite{riscv:manual:user:2024}}
     \label{fig:rv32i_formats}
-    \textit{Note: This figure should depict the R, I, S, U, B, and J formats as shown in the RISC-V specification.}
 \end{figure}
 
 Figure \ref{fig:rv32i_instructions} details all instructions in the RV32I base instruction set with their respective formats, specific opcode values, and function codes (\texttt{funct3} and \texttt{funct7}). Functionally, the RV32I set is divided into five distinct groups:
@@ -78,20 +77,20 @@ Figure \ref{fig:rv32i_instructions} details all instructions in the RV32I base i
     \item 1 memory access ordering instruction - FENCE, used by other processing cores (in multi-core scenarios) or other peripheral devices in the system. The I-type format is used for this instruction with some specific bit encoding rules and opcodes.
 \end{itemize}
 
-\begin{figure}[h!]
+\begin{figure}[htbp!]
     \centering
-    % \includegraphics[width=\textwidth]{rv32i_instruction_list_placeholder.png}
-    \fbox{Placeholder for RV32I Instruction List Diagram}
-    \caption{Instructions in the RV32I base instruction set. Source \cite{waterman2014riscv}}
+    \includegraphics[width=0.7\textwidth]{RV32I_BaseInstructionSet.pdf}
+    % \fbox{Placeholder for RV32I Instruction List Diagram}
+    \caption{Instructions in the RV32I base instruction set. Source \cite{riscv:manual:user:2024}}
     \label{fig:rv32i_instructions}
-    \textit{Note: This figure should list the RV32I instructions as shown in the RISC-V specification.}
+    % \textit{Note: This figure should list the RV32I instructions as shown in the RISC-V specification.}
 \end{figure}
 
 With these 40 instructions, the microprocessor can perform most basic operations on integers. Additionally, several standard pseudo-instructions are defined to add tasks for which there are no dedicated instructions in the set. For example, the MOVE instruction - "\texttt{mv rd, rs}" - performs the function of moving/copying data between two registers. In a program, this instruction might be generated in the assembly code by a RISC-V compiler but is actually converted by assemblers into a standard instruction when translating to machine code, namely ADDI - Add Immediate "\texttt{addi rd, rs, 0}", which adds the source register to the constant "0" and assigns it to the destination register, achieving a similar function. Some other pseudo-instructions and their equivalent standard instructions are shown in Table \ref{tab:pseudo_instructions}.
 
 \begin{table}[h!]
     \centering
-    \caption{Pseudo-instructions and their corresponding standard instructions. Source \cite{waterman2014riscv}}
+    \caption{Pseudo-instructions and their corresponding standard instructions. Source \cite{riscv:manual:user:2024}}
     \label{tab:pseudo_instructions}
     \begin{tabular}{lll}
     \toprule
@@ -119,11 +118,11 @@ With these 40 instructions, the microprocessor can perform most basic operations
     \end{tabular}
 \end{table}
 
-As mentioned, a goal of RISC-V is to support implementations requiring more features beyond the base instruction set. This is reflected in RISC-V defining extensions \cite{waterman2014riscv} for its instruction set architecture. These extensions define additional instruction encodings for various functionalities. For example, the standard M extension adds instructions for integer multiplication and division, while the standard F extension defines instructions for single-precision floating-point computation and manipulation.
+As mentioned, a goal of RISC-V is to support implementations requiring more features beyond the base instruction set. This is reflected in RISC-V defining extensions \cite{riscv:manual:user:2024} for its instruction set architecture. These extensions define additional instruction encodings for various functionalities. For example, the standard M extension adds instructions for integer multiplication and division, while the standard F extension defines instructions for single-precision floating-point computation and manipulation.
 
 \begin{table}[h!]
     \centering
-    \caption{Development status of extended RISC-V instruction sets. Source \cite{waterman2014riscv}}
+    \caption{Development status of extended RISC-V instruction sets. Source \cite{riscv:manual:user:2024}}
     \label{tab:extension_status}
     \begin{tabular}{llll}
     \toprule
@@ -152,8 +151,8 @@ The compiler and calling conventions maintain the invariant that all 32-bit valu
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.8\textwidth]{RISCV_64bit_ADDIW.pdf}
-    \caption{Instruction encoding format for ADDIW in 64-bit architecture. \cite{waterman2014riscv}}
+    \includegraphics[width=\textwidth]{RISCV_64bit_ADDIW.pdf}
+    \caption{Instruction encoding format for ADDIW in 64-bit architecture. \cite{riscv:manual:user:2024}}
     \label{fig:addiw_format}
 \end{figure}
 
@@ -161,8 +160,8 @@ Some distinctly different instructions found only in RV64I include the \texttt{A
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.8\textwidth]{RISCV_64bit_I_Type.pdf}
-    \caption{Encoding format for 64-bit I-type shift instructions. \cite{waterman2014riscv}}
+    \includegraphics[width=\textwidth]{RISCV_64bit_I_Type.pdf}
+    \caption{Encoding format for 64-bit I-type shift instructions. \cite{riscv:manual:user:2024}}
     \label{fig:rv64i_shift_i_format}
 \end{figure}
 
@@ -170,8 +169,8 @@ I-type shift operations in RV64I (Figure \ref{fig:rv64i_shift_i_format}) use the
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.8\textwidth]{RISCV_64bit_I_Type_ShiftBit.pdf}
-    \caption{Encoding format for 64-bit R-type shift instructions for word operations. \cite{waterman2014riscv}}
+    \includegraphics[width=\textwidth]{RISCV_64bit_I_Type_ShiftBit.pdf}
+    \caption{Encoding format for 64-bit R-type shift instructions for word operations. \cite{riscv:manual:user:2024}}
     \label{fig:rv64i_shift_r_format}
 \end{figure}
 
@@ -182,13 +181,13 @@ Finally, load-store instructions can be mentioned. RV64I extends the address spa
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{RISCV_64bit_LoadStoreWord.pdf}
-    \caption{Encoding formats for 64-bit LOAD and STORE instructions. \cite{waterman2014riscv}}
+    \caption{Encoding formats for 64-bit LOAD and STORE instructions. \cite{riscv:manual:user:2024}}
     \label{fig:rv64i_load_store_format}
 \end{figure}
 
 The instruction formats are shown in Figure \ref{fig:rv64i_load_store_format}. The \texttt{LD} instruction here will load a 64-bit value, \texttt{LW} loads a 32-bit value (sign-extended to 64-bits) from memory into a register, and \texttt{LWU} zero-extends a 32-bit value from memory into register \texttt{rd}. Similarly, \texttt{LH/LHU} and \texttt{LB/LBU} handle 16-bit and 8-bit values. The \texttt{SD}, \texttt{SW}, \texttt{SH}, and \texttt{SB} instructions store 64-bit, 32-bit, 16-bit, and 8-bit values from register \texttt{rs2} to memory, respectively.
 
-\subsection{RISC-V Processor Cores}
+\section{RISC-V Processor Cores}
 
 With its open-source nature, system developers can freely implement designs based on the RISC-V architecture, supported by an increasingly robust and growing ecosystem. The RISC-V ISA ecosystem mentioned here includes a diverse range of components from hardware design tools, low-level firmware development, bootloaders, to fully functional operating system kernels. Currently, development tools such as GCC/LLVM compilers, QEMU and Verilator simulators, and even the Linux operating system have incorporated RISC-V architecture and are under active development. As of the time of writing this thesis, there are over 100 open-source hardware processor cores and more than 40 open-source SoC platforms using the RISC-V ISA that have been and continue to be developed.
 
@@ -200,9 +199,10 @@ A modern general-purpose CPU is often designed using a pipeline architecture. Th
 
 \begin{figure}[h!]
     \centering
-    % \includegraphics[width=0.7\textwidth]{pipeline_stages_placeholder.png}
-    \fbox{Placeholder for Pipeline Stages Diagram}
-    \caption{Process of handling instructions through pipeline stages.}
+    \includegraphics[width=0.9\textwidth]{RISC_Pipeline.pdf}
+    % \fbox{Placeholder for Pipeline Stages Diagram}
+    % \fbox{Process of handling instructions through pipeline stages }
+    \caption{Basic five-stage pipeline in a RISC machine. The vertical axis is successive instructions; the horizontal axis is time. So in the green column, the earliest instruction is in WB stage, and the latest instruction is undergoing instruction fetch.}
     \label{fig:pipeline_stages}
 \end{figure}
 
@@ -238,13 +238,14 @@ The design of this microprocessor integrates many advanced features, including a
 
 Rocket is considered the most prominent microprocessor core in the open-source RISC-V development community due to its well-updated and stably supported development documentation. It is built using Chisel, a relatively new hardware construction language based on Scala, employing an object-oriented approach similar to software development. Therefore, the flexibility of the system development process and the applicability of Rocket Core are very high, making it suitable for implementing multi-core systems.
 
-Along with Rocket Core, the Berkeley Out-of-Order Machine (BOOM) \cite{celio2015boom, celio2016boom_spec} is also a prominent open-source RISC-V core, designed for high performance and out-of-order execution. Also developed within the microprocessor architecture research group at the University of California, Berkeley, BOOM is aimed at applications in advanced academic research and industry, featuring a flexible design and high operational performance. BOOM is also written in the Chisel language as a generator, like Rocket Core, allowing for rapid deployment and customization of the core according to the RV64GC RISC-V architecture. The latest version, SonicBOOM \cite{zhao2020sonicboom} (also known as BOOMv3), achieves a performance of 6.2 CoreMarks/MHz, capable of competing directly with high-performance commercial processor cores, setting a high standard for open-source processor design.
+Along with Rocket Core, the Berkeley Out-of-Order Machine (BOOM) \cite{celio2015boom, celio2016boom_spec,celio_phdthesis_2018boom} is also a prominent open-source RISC-V core, designed for high performance and out-of-order execution. Also developed within the microprocessor architecture research group at the University of California, Berkeley, BOOM is aimed at applications in advanced academic research and industry, featuring a flexible design and high operational performance. BOOM is also written in the Chisel language as a generator, like Rocket Core, allowing for rapid deployment and customization of the core according to the RV64GC RISC-V architecture. The latest version, SonicBOOM \cite{zhao2020sonicboom} (also known as BOOMv3), achieves a performance of 6.2 CoreMarks/MHz, capable of competing directly with high-performance commercial processor cores, setting a high standard for open-source processor design.
 
 \begin{figure}[h!]
     \centering
-    % \includegraphics[width=0.9\textwidth]{boom_architecture_placeholder.png}
-    \fbox{Placeholder for BOOM Architecture Diagram}
-    \caption{Berkeley Out-of-Order Machine Processor Architecture. Source \cite{celio2015boom}}
+    \includegraphics[width=0.9\textwidth]{BOOM_Pipeline.pdf}
+    % \fbox{Placeholder for BOOM Architecture Diagram}
+    % \caption{Berkeley Out-of-Order Machine Processor Architecture. Source \cite{celio2015boom}}
+    \caption{Berkeley Out-of-Order Machine Processor Pipeline Architecture. Source \cite{celio_phdthesis_2018boom}}
     \label{fig:boom_architecture}
 \end{figure}
 
@@ -264,7 +265,7 @@ Structurally, BOOM features a 10-stage pipeline architecture including Fetch, De
 
 Similar to Rocket Core, this is also considered one of the most prominent open-source microprocessor cores. However, BOOM's design is more geared towards ASIC implementation, and its numerous features along with the use of Chisel for implementation might pose difficulties in creating a multi-core design in Verilog and deploying it on FPGAs.
 
-\subsection{Chipyard - Rocket Chip}
+\section{System-on-Chip Design Framework: Chipyard - Rocket Chip}
 
 The Rocket Chip project, also developed by the Berkeley Architecture Research (BAR) group at the University of California, Berkeley, marked a significant advancement in open-source processor design. This project provides a flexible, scalable, and configurable platform, enabling the creation of custom RISC-V microprocessors tailored to diverse performance and application requirements. Rocket Chip is essentially a library of hardware generators that can be configured and interconnected in various ways, producing diverse SoC designs. This library can generate an in-order core (Rocket) or an out-of-order core (BOOM), and these cores can be connected to co-processors via an interface named RoCC (Rocket Custom Coprocessor) \cite{asanovic2016rocket}.
 
@@ -279,7 +280,7 @@ Subsequently, to develop and expand the capabilities of Rocket Chip, Chipyard wa
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.8\textwidth]{Chipyard_Toolchain.pdf} % Replace placeholder.png with your actual image file
+    \includegraphics[width=0.8\textwidth]{Chipyard_Toolchain.pdf}
     \caption{Component structure of Chipyard. Source: \cite{zhao2021chipyard}}
     \label{fig:chipyard_structure}
 \end{figure}

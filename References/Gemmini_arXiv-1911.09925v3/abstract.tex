@@ -1,0 +1,38 @@
+\begin{abstract}
+
+DNN accelerators are often developed and evaluated in isolation without considering the cross-stack, system-level effects in real-world environments. This makes it difficult to appreciate the impact of System-on-Chip (SoC) resource contention, OS overheads, and programming-stack inefficiencies on overall performance/energy-efficiency. To address this challenge, we present Gemmini, an open-source\footnote{\url{https://github.com/ucb-bar/gemmini}},
+full-stack DNN accelerator generator. Gemmini generates a wide design-space of efficient ASIC accelerators from a flexible architectural template, together with flexible programming stacks and full SoCs with shared resources that capture system-level effects. Gemmini-generated accelerators have also been fabricated, delivering up to three orders-of-magnitude speedups over high-performance CPUs on various DNN benchmarks. % Gemmini is open-sourced at \url{https://github.com/ucb-bar/gemmini}.
+
+\end{abstract}
+
+%=============Full, 200-word abstract below==============
+% Rapid advances in Deep Neural Networks (DNNs) have resulted in high demand for efficient DNN hardware accelerators.
+% However, DNN accelerators are often developed and evaluated in isolation without considering the cross-stack, system-level effects in real-world execution environments.
+% This makes it difficult for researchers and engineers to appreciate the impact of System-on-Chip (SoC) resource contention, OS overheads, and programming-stack inefficiencies on overall performance and energy efficiency.
+% To address this challenge, we present Gemmini, a full-stack, open-source DNN accelerator generator that enables systematic evaluations of deep-learning architectures.
+% Gemmini generates a wide design-space of efficient DNN ASIC accelerators based on a flexible architectural template, together with a full SoC execution environment with host CPUs and shared resources to capture system-level effects.
+% Gemmini also provides a multi-level software flow that allows researchers to investigate the impacts of both high- and low-level programming models on DNN performance and programmer productivity.
+% % Gemmini results
+% Gemmini-generated DNN accelerators have been successfully fabricated, and they can deliver up to 2,670x speedup with respect to a baseline CPU across a range of DNN benchmarks, and comparable speedup to state-of-the-art, commercial DNN accelerators. We also demonstrate, through several case studies, how Gemmini enables hardware designers to understand system-level behaviors for emerging DNN applications.
+
+
+
+
+%==================OLD TEXT BELOW=============================
+%A large majority of DNN accelerators, however, target a single hardware design
+%point to accelerate the main computational kernels of deep neural networks. %
+%such as convolutions or matrix multiplication.
+%On the other hand, the spectrum of use-cases for neural network accelerators,
+%ranging from edge devices to cloud, presents a prime opportunity for agile
+%hardware design and generator methodologies.
+
+% Gemmini runs with the RISC-V ISA, and is integrated with the Rocket Chip System-on-Chip generator ecosystem, including Rocket in-order cores and BOOM out-of-order cores.
+
+%\textcolor{red}{Through several case studies, we show that Gemmini excels at
+%system-level integration, and hardware configurability. We also support multiple
+%frontends, allowing architects and programmers to choose between multiple
+%programming models, which each make different tradeoffs between fixed hardware
+%costs, runtime performance, and developer productivity.}
+%Gemmini-generated accelerators were used in the fabrication of test
+%systems-on-chip in TSMC 16nm and Intel 22FFL process technologies, achieving
+%\textcolor{red}{comparable performance to NVDLA}.

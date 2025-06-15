@@ -105,7 +105,7 @@
   url         = {http://www.eecs.berkeley.edu/Pubs/TechRpts/2014/EECS-2014-146.html}
 }
 
-@misc{genc2019gemmini,
+misc{genc2019gemmini,
   author        = {Genc, Hasan and Haj-Ali, Ameer and Iyer, Vighnesh and Mao, Howard and Schmidt, Colin and Amid, Alon and Zhao, Jerry and Grubb, Daniel and Liew, Harrison and Ou, Albert and Steffl, Samuel and Wright, John and Stoica, Ion and Ragan-Kelley, Jonathan and Asanovi{'c}, Krste and Nikoli{'c}, Borivoje and Shao, Yakun Sophia},
   title         = {Gemmini: An agile systolic array generator enabling systematic evaluations of deep-learning architectures},
   year          = {2019},
@@ -186,6 +186,79 @@ DOI = {10.3390/s23052380}
   note    = {Accessed: Jun. 6, 2025}
 }
 
+@inproceedings{10.1145/3079856.3080246,
+author = {Jouppi, Norman P. and Young, Cliff and Patil, Nishant and Patterson, David and Agrawal, Gaurav and Bajwa, Raminder and Bates, Sarah and Bhatia, Suresh and Boden, Nan and Borchers, Al and Boyle, Rick and Cantin, Pierre-luc and Chao, Clifford and Clark, Chris and Coriell, Jeremy and Daley, Mike and Dau, Matt and Dean, Jeffrey and Gelb, Ben and Ghaemmaghami, Tara Vazir and Gottipati, Rajendra and Gulland, William and Hagmann, Robert and Ho, C. Richard and Hogberg, Doug and Hu, John and Hundt, Robert and Hurt, Dan and Ibarz, Julian and Jaffey, Aaron and Jaworski, Alek and Kaplan, Alexander and Khaitan, Harshit and Killebrew, Daniel and Koch, Andy and Kumar, Naveen and Lacy, Steve and Laudon, James and Law, James and Le, Diemthu and Leary, Chris and Liu, Zhuyuan and Lucke, Kyle and Lundin, Alan and MacKean, Gordon and Maggiore, Adriana and Mahony, Maire and Miller, Kieran and Nagarajan, Rahul and Narayanaswami, Ravi and Ni, Ray and Nix, Kathy and Norrie, Thomas and Omernick, Mark and Penukonda, Narayana and Phelps, Andy and Ross, Jonathan and Ross, Matt and Salek, Amir and Samadiani, Emad and Severn, Chris and Sizikov, Gregory and Snelham, Matthew and Souter, Jed and Steinberg, Dan and Swing, Andy and Tan, Mercedes and Thorson, Gregory and Tian, Bo and Toma, Horia and Tuttle, Erick and Vasudevan, Vijay and Walter, Richard and Wang, Walter and Wilcox, Eric and Yoon, Doe Hyun},
+title = {In-Datacenter Performance Analysis of a Tensor Processing Unit},
+year = {2017},
+isbn = {9781450348928},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/3079856.3080246},
+doi = {10.1145/3079856.3080246},
+abstract = {Many architects believe that major improvements in cost-energy-performance must now come from domain-specific hardware. This paper evaluates a custom ASIC---called a Tensor Processing Unit (TPU) --- deployed in datacenters since 2015 that accelerates the inference phase of neural networks (NN). The heart of the TPU is a 65,536 8-bit MAC matrix multiply unit that offers a peak throughput of 92 TeraOps/second (TOPS) and a large (28 MiB) software-managed on-chip memory. The TPU's deterministic execution model is a better match to the 99th-percentile response-time requirement of our NN applications than are the time-varying optimizations of CPUs and GPUs that help average throughput more than guaranteed latency. The lack of such features helps explain why, despite having myriad MACs and a big memory, the TPU is relatively small and low power. We compare the TPU to a server-class Intel Haswell CPU and an Nvidia K80 GPU, which are contemporaries deployed in the same datacenters. Our workload, written in the high-level TensorFlow framework, uses production NN applications (MLPs, CNNs, and LSTMs) that represent 95\% of our datacenters' NN inference demand. Despite low utilization for some applications, the TPU is on average about 15X -- 30X faster than its contemporary GPU or CPU, with TOPS/Watt about 30X -- 80X higher. Moreover, using the CPU's GDDR5 memory in the TPU would triple achieved TOPS and raise TOPS/Watt to nearly 70X the GPU and 200X the CPU.},
+booktitle = {Proceedings of the 44th Annual International Symposium on Computer Architecture},
+pages = {1–12},
+numpages = {12},
+keywords = {CNN, DNN, GPU, LSTM, MLP, RNN, TPU, TensorFlow, accelerator, deep learning, domain-specific architecture, neural network},
+location = {Toronto, ON, Canada},
+series = {ISCA '17}
+}
+
+@article{jouppi2017tpu,
+author = {Jouppi, Norman P. and Young, Cliff and Patil, Nishant and Patterson, David and Agrawal, Gaurav and Bajwa, Raminder and Bates, Sarah and Bhatia, Suresh and Boden, Nan and Borchers, Al and Boyle, Rick and Cantin, Pierre-luc and Chao, Clifford and Clark, Chris and Coriell, Jeremy and Daley, Mike and Dau, Matt and Dean, Jeffrey and Gelb, Ben and Ghaemmaghami, Tara Vazir and Gottipati, Rajendra and Gulland, William and Hagmann, Robert and Ho, C. Richard and Hogberg, Doug and Hu, John and Hundt, Robert and Hurt, Dan and Ibarz, Julian and Jaffey, Aaron and Jaworski, Alek and Kaplan, Alexander and Khaitan, Harshit and Killebrew, Daniel and Koch, Andy and Kumar, Naveen and Lacy, Steve and Laudon, James and Law, James and Le, Diemthu and Leary, Chris and Liu, Zhuyuan and Lucke, Kyle and Lundin, Alan and MacKean, Gordon and Maggiore, Adriana and Mahony, Maire and Miller, Kieran and Nagarajan, Rahul and Narayanaswami, Ravi and Ni, Ray and Nix, Kathy and Norrie, Thomas and Omernick, Mark and Penukonda, Narayana and Phelps, Andy and Ross, Jonathan and Ross, Matt and Salek, Amir and Samadiani, Emad and Severn, Chris and Sizikov, Gregory and Snelham, Matthew and Souter, Jed and Steinberg, Dan and Swing, Andy and Tan, Mercedes and Thorson, Gregory and Tian, Bo and Toma, Horia and Tuttle, Erick and Vasudevan, Vijay and Walter, Richard and Wang, Walter and Wilcox, Eric and Yoon, Doe Hyun},
+title = {In-Datacenter Performance Analysis of a Tensor Processing Unit},
+year = {2017},
+issue_date = {May 2017},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {45},
+number = {2},
+issn = {0163-5964},
+url = {https://doi.org/10.1145/3140659.3080246},
+doi = {10.1145/3140659.3080246},
+abstract = {Many architects believe that major improvements in cost-energy-performance must now come from domain-specific hardware. This paper evaluates a custom ASIC---called a Tensor Processing Unit (TPU) --- deployed in datacenters since 2015 that accelerates the inference phase of neural networks (NN). The heart of the TPU is a 65,536 8-bit MAC matrix multiply unit that offers a peak throughput of 92 TeraOps/second (TOPS) and a large (28 MiB) software-managed on-chip memory. The TPU's deterministic execution model is a better match to the 99th-percentile response-time requirement of our NN applications than are the time-varying optimizations of CPUs and GPUs that help average throughput more than guaranteed latency. The lack of such features helps explain why, despite having myriad MACs and a big memory, the TPU is relatively small and low power. We compare the TPU to a server-class Intel Haswell CPU and an Nvidia K80 GPU, which are contemporaries deployed in the same datacenters. Our workload, written in the high-level TensorFlow framework, uses production NN applications (MLPs, CNNs, and LSTMs) that represent 95\% of our datacenters' NN inference demand. Despite low utilization for some applications, the TPU is on average about 15X -- 30X faster than its contemporary GPU or CPU, with TOPS/Watt about 30X -- 80X higher. Moreover, using the CPU's GDDR5 memory in the TPU would triple achieved TOPS and raise TOPS/Watt to nearly 70X the GPU and 200X the CPU.},
+journal = {SIGARCH Comput. Archit. News},
+month = jun,
+pages = {1–12},
+numpages = {12},
+keywords = {CNN, DNN, GPU, LSTM, MLP, RNN, TPU, TensorFlow, accelerator, deep learning, domain-specific architecture, neural network}
+}
+
+@misc{nvidia2018xavier,
+  author       = {NVIDIA},
+  title        = {NVIDIA Xavier},
+  howpublished = {Hot Chips 30},
+  year         = {2018},
+  url          = {https://old.hotchips.org/hc30/1conf/1.12_Nvidia_XavierHotchips2018Final_814.pdf},
+  note         = {Accessed: Jun. 9, 2025}
+}
+
+@INPROCEEDINGS{farshchi2019nvdla,
+  author={Farshchi, Farzad and Huang, Qijing and Yun, Heechul},
+  booktitle={2019 2nd Workshop on Energy Efficient Machine Learning and Cognitive Computing for Embedded Applications (EMC2)}, 
+  title={Integrating NVIDIA Deep Learning Accelerator (NVDLA) with RISC-V SoC on FireSim}, 
+  year={2019},
+  volume={},
+  number={},
+  pages={21-25},
+  keywords={Field programmable gate arrays;Open source software;Random access memory;Rockets;Clocks;Protocols;Hardware;NVDLA;FireSim;RISC-V;FPGA;Cloud;DNN;Embedded Systems},
+  doi={10.1109/EMC249363.2019.00012}}
+
+@book{sze2020efficient, title={Efficient processing of deep neural networks}, url={https://doi.org/10.1007/978-3-031-01766-7}, DOI={10.1007/978-3-031-01766-7}, journal={Synthesis lectures on computer architecture}, author={Sze, Vivienne and Chen, Yu-Hsin and Yang, Tien-Ju and Emer, Joel S.}, year={2020}, month=jan }
+
+@INPROCEEDINGS{horowitz2014energy,
+  author={Horowitz, Mark},
+  booktitle={2014 IEEE International Solid-State Circuits Conference Digest of Technical Papers (ISSCC)}, 
+  title={1.1 Computing's energy problem (and what we can do about it)}, 
+  year={2014},
+  volume={},
+  number={},
+  pages={10-14},
+  keywords={CMOS integrated circuits;Hardware;Transistors;Voltage control;CMOS technology;Energy efficiency;Logic gates},
+  doi={10.1109/ISSCC.2014.6757323}}
+
+
+
 % Full-day Tutorial on FireSim and Chipyard at ISCA 2023
 % Speakers: Sagar Karandikar, Jerry Zhao, Vighnesh Iyer, JunSun Choi, Joonho Whangbo, Dima Nikiforov, Shengjun Kris Dong. Full-day Tutorial on FireSim and Chipyard at ISCA 2023. Orlando, FL, June 2023.
 % Slides: https://fires.im/isca-2023-tutorial/
@@ -199,6 +272,38 @@ DOI = {10.3390/s23052380}
   year         = {2021},
   url          = {https://fires.im/isca21-slides-pdf/02_chipyard_basics.pdf},
   note         = {Accessed: Jun. 6, 2025}
+}
+
+@article{wulf1995hitting,
+author = {Wulf, Wm. A. and McKee, Sally A.},
+title = {Hitting the memory wall: implications of the obvious},
+year = {1995},
+issue_date = {March 1995},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {23},
+number = {1},
+issn = {0163-5964},
+url = {https://doi.org/10.1145/216585.216588},
+doi = {10.1145/216585.216588},
+journal = {SIGARCH Comput. Archit. News},
+month = mar,
+pages = {20–24},
+numpages = {5}
+}
+
+@article{mittal2021survey,
+title = {A survey On hardware accelerators and optimization techniques for RNNs},
+journal = {Journal of Systems Architecture},
+volume = {112},
+pages = {101839},
+year = {2021},
+issn = {1383-7621},
+doi = {https://doi.org/10.1016/j.sysarc.2020.101839},
+url = {https://www.sciencedirect.com/science/article/pii/S1383762120301314},
+author = {Sparsh Mittal and Sumanth Umesh},
+keywords = {Recurrent neural networks, Deep learning, GPU, FPGA, ASIC, Pruning, Parallelization, Low-precision},
+abstract = {“Recurrent neural networks” (RNNs) are powerful artificial intelligence models that have shown remarkable effectiveness in several tasks such as music generation, speech recognition and machine translation. RNN computations involve both intra-timestep and inter-timestep dependencies. Due to these features, hardware acceleration of RNNs is more challenging than that of CNNs. Recently, several researchers have proposed hardware architectures for RNNs. In this paper, we present a survey of GPU/FPGA/ASIC-based accelerators and optimization techniques for RNNs. We highlight the key ideas of different techniques to bring out their similarities and differences. Improvements in deep-learning algorithms have inevitably gone hand-in-hand with the improvements in the hardware-accelerators. Nevertheless, there is a need and scope of even greater synergy between these two fields. This survey seeks to synergize the efforts of researchers in the area of deep learning, computer architecture, and chip-design.}
 }
 
 
@@ -395,6 +500,26 @@ DOI = {10.3390/s23052380}
   month     = {mar},
   note      = {Colocated with DATE 2019 Design Automation and Test in Europe}
 }
+
+Below are Gemmini-generated
+
+@misc{Genc2022GemminiMLSys,
+  author       = {Genc, Hasan and Guo, Simon and Kim, Seah and Nikiforov, Vadim (Dima)},
+  title        = {{Gemmini @ MLSys 2022}},
+  howpublished = {Presentation Slides, MLSys 2022 Tutorial},
+  year         = {2022},
+  url          = {https://mlsys.org/virtual/2022/tutorial/18433},
+  note         = {Accessed: [Your Access Date]}
+}
+
+@misc{Genc2021GemminiIISWC,
+  author       = {Genc, Hasan and Nikiforov, Vadim (Dima) and Guo, Simon and Nandakumar, Avinash},
+  title        = {{Gemmini @ IISWC 2021}},
+  howpublished = {Presentation Slides, IISWC 2021 Tutorial},
+  year         = {2021},
+  note         = {Accessed: [Your Access Date]}
+}
+
 
 % Belows are crypto-related references
 
@@ -613,3 +738,8 @@ DOI = {10.3390/s23052380}
   pages   = {485--498},
   doi     = {10.1109/TCSI.2013.2280026}
 }
+
+
+
+
+

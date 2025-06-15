@@ -1,0 +1,199 @@
+\section{Background and Motivation}\label{sec:motivation}
+
+The demand for fast and efficient DNN execution from edge to cloud has led to a significant effort in developing novel accelerator instances that are
+specialized for different DNN algorithms and/or different deployment scenarios.
+% While such efforts have opened up new opportunities for DNN accelerators, they pose unique challenges in accelerator implementation, software ecosystem, and full-system integration of accelerators.
+This section discusses recent advances in DNN accelerators and
+DNN accelerator generators, motivating the need for a full-stack approach to
+evaluate deep learning architectures.
+
+\subsection{DNN Accelerators}
+
+Researchers have proposed a large variety of novel DNN accelerators with different performance and energy efficiency targets for different applications across a diverse set of deployment scenarios~\cite{eyeriss2,shidiannao,scaledeep,moreau2018}. At the architecture level, different DNN accelerators exploit different reuse patterns to build specialized memory hierarchies~\cite{interstellar-asplos2020} and interconnect networks~\cite{maeri-asplos2018} to improve performance and energy efficiency. Most existing hardware DNN architectures are largely spatial, where parallel execution units are laid out spatially either in a systolic fashion, as in the case of the TPU, or in parallel vector units like Brainwave~\cite{brainwave-isca-2018} and NVDLA~\cite{nvdla-hotchips}. Based on these architectural templates, recent advances have also started exploring how to leverage applications' sparsity patterns~\cite{sigma-hpca2020,sparse-tpu,sparse-train} and/or emerging in-memory computing technology~\cite{pipelayer,algo-hardware-codesign-for-in-memory}.
+
+\subsection{DNN Accelerator Generators}
+Recent research has designed hardware generators % for general-purpose processors~\cite{Rocket-RISCV-2016} and, more recently,
+for DNN accelerators~\cite{nvdla-hotchips,moreau2018,polysa,venkatesan2019magnet,dnnweaver,maeri-asplos2018}.
+Table~\ref{tab:generator-comparison} compares the different features supported by existing hardware generators compared to Gemmini.
+In contrast to building specific instances of hardware, generator-based
+approaches provide parameterizable architectural
+templates that can generate a wide variety of hardware and software instances, improving
+hardware design productivity.
+Here, we discuss the hardware, software, and system level requirements for DNN
+accelerator generators to enable full-stack, systematic DNN architecture
+evaluation.
+
+DNN accelerator generators must provide flexible architectural templates to cover a wide variety of different DNN accelerator instances, each suited for a different execution environment and a different area/power/performance target. Most DNN accelerator generators today focus only on fixed-point representations and/or only support a single dataflow. In addition, today's generators only target a specific spatial array type, \textit{i.e.}, systolic-based (as in the TPU) or vector-based (as in NVDLA), making it challenging to systematically compare against them. In contrast, Gemmini supports 1) both floating and fixed point data types to handle data representations in training and inference, 2) multiple dataflows that can be configured at design time and run time, 3) both vector and systolic spatial array architectures, enabling quantitative comparison of their efficiency and scalability differences, and 4) direct execution of different DNN operators.
+    
+Moreover, DNN accelerator generators also need to provide an easy-to-use
+programming interface so that end users can
+quickly program their applications for the generated accelerators.
+% This is of particular importance for the field of deep-learning research and
+% development where new advances are happening almost every day, if not every
+% hour.
+Different developers would prefer different software design environments based upon their targets or research interests.
+For example, DNN application practitioners would prefer that the hardware
+programming environment be hidden by DNN development frameworks like
+PyTorch or TVM so that they don't need to worry about low-level development
+details, as in the case of VTA~\cite{moreau2018} and DNNWeaver~\cite{dnnweaver}.
+At the same time, framework developers and system programmers may want to
+interact with the hardware at a low level, in either C/C++ or assembly, to
+accurately control hardware states and squeeze every bit of efficiency out, as in the case of MAGNet~\cite{venkatesan2019magnet} and Maeri~\cite{maeri-asplos2018}.
+Unlike other DNN generators that tend to focus on one of these
+requirements, Gemmini provides a multi-level programming interface
+%with both C/C++ and ONNX~\cite{onnx}, an open exchange format built to represent DNN models across different frameworks,
+to satisfy users with different requirements.
+In addition, Gemmini is the first infrastructure that provides hardware support for virtual memory without the need for any special driver software, making it significantly easier for end-users to program accelerators.
+
+
+%Finally, we would like to emphasize the importance of accelerator
+Third, system-level integration, including both the SoC and the system software, is also critical in DNN accelerator generators.
+Today's DNN accelerators are typically designed and evaluated in isolation. However, when they are eventually deployed, they need to be integrated as part of a larger system.
+In fact, recent industry evaluations have demonstrated that modern ML
+workloads could spend as much as 77\% of their time running on CPUs, even in the
+presence of a hardware accelerator, to execute either new operators or to move
+data between the CPU and accelerators~\cite{centaur-isca2020, edge-facebook,datacenter-facebook,ai-tax-hpca}.
+% ~\cite{centaur-isca2020, edge-facebook,datacenter-facebook,ai-tax-hpca}.
+However, unfortunately, none of the existing DNN accelerator generators support full SoC integration with host CPUs and shared resources like caches and system buses. Motivated by this observation, Gemmini has built-in system integration support where users can directly instantiate a complete SoC environment that can boot Linux, directly enabling architects to evaluate subtle trade-offs at the
+system level.
+%, which remain folded when viewing only the standalone accelerator block.
+
+%There may be other subtle ways in which the full SoC or software stack impact
+%performance, such as through cache contention or page evictions.
+%A generator with full SoC and system integration makes it easier for architects
+%to consider these trade-offs.
+
+%=================OLD TEXT===============================
+%One such generator is NVDLA~\cite{nvdla}, which can produce accelerators which
+%target a variety of different ML kernels, sparsity techniques, and memory
+%interfaces. By selecting different parameters, architects can produce
+%accelerators that target low-power edge devices, or high performance servers,
+%all using the same generator. Most of the hardware blocks that NVDLA is composed
+%of can also optionally be taken out.
+
+%However, the customizability of the individual hardware blocks is somewhat
+%limited. For example, NVDLA's convolution engine is made up of a set of
+%dot-product vector operators, but these can't be reconfigured by architects into
+%a simple systolic array that would benefit from highly regular workloads.
+%Additionally, NVDLA does not support full SoC integration on it's own; it
+%instead produces hardware blocks that must be hooked up to the appropriate
+%memory and system interfaces by the architect.
+
+%MAGNet~\cite{venkatesan2019magnet} is another ASIC generator which provides a
+%configurable HLS template as well as automated design-space-exploration tools
+%which will tune this HLS template for specific neural networks such as ResNet50
+%or AlexNet. However, the MAGNet project did not investigate full system
+%integration, and nor does it describe a software stack, which is vital to
+%running real workloads.
+
+%PolySA~\cite{polysa} is another HLS-based generator. PolySA consumes C/C++ code
+%describing algorithms to accelerate, and it then maps them to fixed systolic
+%arrays. However, the work is focused primarily on the generation of the systolic
+%arrays themselves, and so the full-system integration is not investigated.
+
+%Prior work has also introduced VTA~\cite{moreau2018} and TVM~\cite{chen2018} as
+%an integrated research platform for SW/HW evaluation of NN accelerators. VTA
+%uses HLS to generate hardware accelerators while the TVM language is used to map
+%operations onto them, providing an elegant programming interface. However, VTA
+%does not target full SoC integration. The generator is also limited to integer
+%datatypes, although many modern workloads, such as model training, require
+%floating-point support
+
+
+
+%For example, NeuFlow~\cite{neuflow} is a systolic-inspired architecture
+%which supports a high degress of runtime configurability of individual
+%processing elements (PEs). ShiDianNao~\cite{shidiannao} and
+%Eyeriss~\cite{eyeriss}, similarly are composed of two-dimensional meshes, while
+%also supporting broadcast and global connections between PEs and local
+%scratchpads, which is not strictly systolic, but often improves performance.
+%NVDLA~\cite{nvdla}, on the other hand, generates convolution engines composed of
+%a one-dimensional set of parallel vector dot product trees. There are also many
+%sparse accelerators based upon a variety of different architectures, such as
+%Cambricon-X~\cite{} and SIGMA~\cite{}, whose parallel vector units contain
+%different kinds of dot product reduction trees.
+
+%%A large number of ML accelerator generators have been proposed, but existing
+%solutions lack certain features that make them fully generalizable across all
+%existing workloads and execution environments. For example, many existing
+%solutions are specific instances of hardware, rather than parameterizable
+%generators that can scale from the edge to the cloud. Many accelerators also
+%lack full-system integration, from SoCs to system software, limiting their ease
+%of use. We discuss some prior solutions in this section, as well as their
+%limitations which are addressed by Gemmini. \textcolor{red}{(Preview the
+%following two sections here and move this paragraph up into intro).}
+
+
+% For example, NeuFlow~\cite{neuflow} is a systolic-inspired architecture which
+% allows individual processing elements (PEs) to be re-configured at runtime to
+% perform tasks such as multiply-accumulates, divisions, and non-linear
+% activations. ShiDianNao~\cite{shidiannao}, similarly, allowed PEs, arranged in
+% a two-dimensional mesh, to be reconfigured at runtime to perform
+% multiply-accumulates, additions, and max poolings. 
+% Eyeriss~\cite{eyeriss} implemented a weight-stationary dataflow using a
+% spatial array. Eyeriss v2~\cite{eyeriss2} improved on the original Eyeriss by
+% demonstrating a new PE architecture that can operate on sparse CSC-encoded
+% matrices, and a hierarchical mesh NoC capable of unicast, multicast, and
+% broadcast data transfers to maximize reuse.  These and other systolic-inspired
+% architectures typically permit both global and local connections between PEs
+% and global memory, which is not strictly systolic, but often improves
+% performance.
+
+% \textcolor{red}{Make this paragraph focus more on different environments.}
+% Commercially deployed ASIC implementations of NN accelerators include the
+% Google TPU \cite{tpu} for cloud workloads, as well as edge inference
+% implementations by Samsung \cite{samsung}, Nvidia \cite{nvidia}, Apple
+% \cite{apple}, and Tesla~\cite{bannon2019accelerated, bannon2019systems}
+% \textcolor{red}{(replace these patents with the HotChips presentation)}, who's
+% design is highly systolic. In particular, a detailed description of the
+% original TPU implementation includes a $256\times256$ matrix multiplication
+% unit implemented using a reduced-precision systolic MAC array with a weight
+% stationary dataflow for NN inference in the cloud. Successor versions included
+% floating-point representation, additional memory, and improved utilization for
+% both training and inference~\cite{tpu2_3}.
+
+% \textcolor{red}{(We would also need to cite Cambricon, Convoluton, SCNN, and
+% other sparse accelerators). Mention that Cambricon-X and Convoluton were based
+% on DianNao.} Accelerators targeting sparse workloads tend to be far less
+% systolic, such as SIGMA~\cite{}, an accelerator which introduces a novel
+% multiply-add reduction tree network within PEs, achieving high utilization on
+% sparse GEMM workloads. In general, enabling sparse processing and mapping on
+% accelerators that were not specifically targeted at sparse workloads requires
+% much customization. \textcolor{red}{(Do we have a source for this? Can we
+% mention that Eyeriss v2 targets sparse while Eyeriss v1 doesn't?)}
+
+% \textcolor{red}{Reword: All of these architectures are tuned for different workloads/constraints. What we need is a generator that satisfies all of these requirements.} These accelerators were designed to accommodate significant runtime reconfigurations, especially the reconfiguration of connections between individual PEs, and between PEs and local memory. However, their architectures were quite fixed. \textcolor{red}{For example, they lacked the ability to switch between meshes of PEs performing scalar operations, and collections of PEs performing vector operations, even though both designs may be more suitable for different execution environments, physical design technologies, and workload types.} Thus, they provide highly efficient accelerators that work well for specific scenarios, but may not be suitable across all scenarios.
+
+%\textcolor{red}{(We don't need one paragraph for each accelerator. Instead have 3 paragraphs for each requirement.)}
+
+%\textcolor{red}{Make this three paragraphs} An ideal hardware generator would:
+
+%\begin{enumerate}
+
+
+%=================Table Playground======================
+%\begin{table*}[]
+%\centering
+%\begin{tabular}{|l|ccccc|}
+%\hline
+% & \textbf{NVDLA} & \textbf{MAGNet} & \textbf{PolySA} & \textbf{VTA} & \textbf{Gemmini} \\ \hline
+%\textit{Flexibility of architectural template} & $\times$ & $\times$ & $\times$ & $\times$ & \checkmark \\ \hline
+%\textit{Programmability} & \checkmark & $\times$ & \checkmark & \checkmark & \checkmark \\ \hline
+%\textit{Full SoC integration} & $\times$ & $\times$ & $\times$ & $\times$ & \checkmark \\ \hline
+%\end{tabular}
+%\caption{A comparison of various state-of-the-art hardware generators. \textcolor{red}{Are just $\times$'s and \checkmark's enough? Should ``Programmability'' be given a new name?}}
+%\label{tab:motivation1}
+%\end{table*}
+
+%\begin{table*}[]
+%\centering
+%\begin{tabular}{|l|c|c|c|c|c|}
+%\hline
+% & \textbf{NVDLA} & \textbf{MAGNet} & \textbf{PolySA}  & \textbf{VTA} & \textbf{Gemmini} \\ \hline
+%\textit{Flexibility} & \begin{tabular}[c]{@{}c@{}}Blocks can be removed,\\ but not customized\end{tabular} & \begin{tabular}[c]{@{}c@{}}Dataflows and dimensions\\ can be changed\end{tabular} & \begin{tabular}[c]{@{}c@{}}Arbitrary systolic\\ arrays supported\end{tabular} & \begin{tabular}[c]{@{}c@{}}GEMM instrinsics\\ can be modified\end{tabular} & \checkmark \\ \hline
+%\textit{Programm.} & \begin{tabular}[c]{@{}c@{}}Comes with NVDLA\\ compiler\end{tabular} & $\times$ & \begin{tabular}[c]{@{}c@{}}HLS solution\\ for FPGAs\end{tabular} & \begin{tabular}[c]{@{}c@{}}Programmed\\ with TVM\end{tabular} & \checkmark \\ \hline
+%\textit{Full SoC} & $\times$ & $\times$ & $\times$ & $\times$ & \checkmark       \\ \hline
+%\end{tabular}
+%\caption{A comparison of various state-of-the-art hardware generators. \textcolor{red}{(Attempt at a more full description)}}
+%\label{tab:motivation2}
+%\end{table*}
