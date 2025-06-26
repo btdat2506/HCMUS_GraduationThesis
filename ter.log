@@ -39,12 +39,7 @@ LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <13> not available
 (D:\Program Files\MikTex\texmfs\install\tex/latex/url\url.sty)
 (D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex\blx-dm.def)
 (D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex\blx-compat.def)
-(D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex\blx-bibtex.def
-
-Package biblatex Warning: Using fall-back bibtex backend:
-(biblatex)                functionality may be reduced/unavailable.
-
-) (D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex\biblatex.def)
+(D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex\biblatex.def)
 (D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex/bbx\numeric.bbx
 (D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex/bbx\standard.bbx))
 (D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex/cbx\numeric.cbx)
@@ -280,25 +275,21 @@ gflibrarydecorations.pathmorphing.code.tex)))
 (D:\Program Files\MikTex\texmfs\install\tex/latex/booktabs\booktabs.sty)
 (D:\Program Files\MikTex\texmfs\install\tex/latex/caption\subcaption.sty)
 (main.aux (chapter1.aux) (chapter2.aux) (chapter3.aux) (chapter4.aux)
-(chapter5.aux) (chapter6.aux))
-(D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex/lbx\english.lbx)
-(main.bbl
+(chapter5.aux) (chapter6.aux
 
-Package biblatex Warning: BibTeX reported the following issues
-(biblatex)                with 'sifive2018tilelink':
-(biblatex)                - Invalid format of field 'month'.
+LaTeX Warning: Label `fig:loop_conv' multiply defined.
 
 
-Package biblatex Warning: BibTeX reported the following issues
-(biblatex)                with 'riscv:manual:user:2024':
-(biblatex)                - Invalid format of field 'month'.
+LaTeX Warning: Label `sub@fig:loop_conv' multiply defined.
 
 
-Package biblatex Warning: BibTeX reported the following issues
-(biblatex)                with 'zhao2020sonicboom':
-(biblatex)                - Invalid format of field 'month'.
+LaTeX Warning: Label `fig:loop_matmul' multiply defined.
 
-) (main.out) (main.out)
+
+LaTeX Warning: Label `sub@fig:loop_matmul' multiply defined.
+
+)) (D:\Program Files\MikTex\texmfs\install\tex/latex/biblatex/lbx\english.lbx)
+(main.bbl) (main.out) (main.out)
 (D:\Program Files\MikTex\texmfs\install\tex/context/base/mkii\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 )
@@ -341,7 +332,7 @@ LaTeX Font Warning: Font shape `OMX/cmex/m/n' in size <13> not available
 [2] (main.lof (D:\Program Files\MikTex\texmfs\install\tex/latex/vntex\t5cmtt.fd
 )
 [3]
-Overfull \hbox (3.67242pt too wide) in paragraph at lines 39--39
+Overfull \hbox (3.67242pt too wide) in paragraph at lines 41--41
  [][] [][]\T5/cmr/m/n/13 Conceptual view of Gem-mini's de-cou-pled access-execu
 te pipelines, man- 
 )
@@ -417,7 +408,17 @@ ion: multiple pdfs with page group included in a single page
 [18] (chapter3.tex
 CHƯƠNG 3.
 
-[19 <./Images/Chisel_logo.pdf> <./Images/Chisel_Scala_Logo.pdf
+
+pdfTeX warning: pdflatex.exe (file ./Images/Chipyard_ChipyardFlow.pdf): PDF inc
+lusion: found PDF version <1.6>, but at most version <1.5> allowed
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+[19]
+Underfull \vbox (badness 6380) has occurred while \output is active
+[20 <./Images/Chipyard_ChipyardFlow.pdf>]
+[21 <./Images/Chisel_logo.pdf> <./Images/Chisel_Scala_Logo.pdf
 
 pdfTeX warning: pdflatex.exe (file ./Images/Chisel_Scala_Logo.pdf): PDF inclusi
 on: multiple pdfs with page group included in a single page
@@ -430,107 +431,94 @@ multiple pdfs with page group included in a single page
 pdfTeX warning: pdflatex.exe (file ./Images/Chisel_ChipsAlliance.pdf): PDF incl
 usion: multiple pdfs with page group included in a single page
 >]
-[20]
+Underfull \vbox (badness 10000) has occurred while \output is active
+[22 <./Images/Chisel_Flow.pdf>]
+[23]
 
 pdfTeX warning: pdflatex.exe (file ./Images/RocketTile_Basic.pdf): PDF inclusio
 n: found PDF version <1.7>, but at most version <1.5> allowed
 
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-
-Overfull \hbox (67.6544pt too wide) in paragraph at lines 71--72
+Overfull \hbox (67.6544pt too wide) in paragraph at lines 103--104
 \T5/cmr/m/n/13 cord-ing to im-ple-men-ta-tion needs, such as \T5/cmtt/m/n/13 Wi
 thNBigCore()\T5/cmr/m/n/13 , \T5/cmtt/m/n/13 WithNMedCore()\T5/cmr/m/n/13 , \T5
 /cmtt/m/n/13 WithNSmallCore()\T5/cmr/m/n/13 ,
 
-[21]
+[24 <./Images/RocketTile_Basic.pdf>]
 
 pdfTeX warning: pdflatex.exe (file ./Images/RocketChip_Gemmini_Diagram.pdf): PD
 F inclusion: found PDF version <1.7>, but at most version <1.5> allowed
 
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-
-[22 <./Images/RocketTile_Basic.pdf>]
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-
-[23 <./Images/RocketChip_Gemmini_Diagram.pdf>]
-[24 <./Images/TileLink_Topology.pdf>]
-[25 <./Images/TileLink_FiveChannel.pdf>]
-Overfull \hbox (3.48706pt too wide) in paragraph at lines 146--147
+[25 <./Images/RocketChip_Gemmini_Diagram.pdf>]
+[26 <./Images/TileLink_Topology.pdf>]
+[27 <./Images/TileLink_FiveChannel.pdf>]
+Overfull \hbox (3.48706pt too wide) in paragraph at lines 178--179
 []\T5/cmr/m/n/13 The choice of TileLink bus con-fig-u-ra-tion is rel-e-vant for
  con-nect-ing var-i-ous memory-
 
-[26 <./Images/TileLink_Overview.pdf>]
-[27]
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+[28]
+[29 <./Images/TileLink_Overview.pdf>]
 
 pdfTeX warning: pdflatex.exe (file ./Images/RocketBOOM_CoreComplex.pdf): PDF in
 clusion: found PDF version <1.7>, but at most version <1.5> allowed
 
+Underfull \vbox (badness 1394) has occurred while \output is active
+[30 <./Images/RocketBOOM_CoreComplex.pdf>]
 
 pdfTeX warning: pdflatex.exe (file ./Images/RocketChip_Peripherals.pdf): PDF in
 clusion: found PDF version <1.7>, but at most version <1.5> allowed
 
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-
-[28 <./Images/RocketBOOM_CoreComplex.pdf>]
+[31 <./Images/RocketChip_Peripherals.pdf>]
 
 pdfTeX warning: pdflatex.exe (file ./Images/RocketChip_WithMMIO.pdf): PDF inclu
 sion: found PDF version <1.7>, but at most version <1.5> allowed
 
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-
-[29 <./Images/RocketChip_Peripherals.pdf>]
-Underfull \vbox (badness 1342) has occurred while \output is active
-[30 <./Images/RocketChip_WithMMIO.pdf>])
-[31] (chapter4.tex
-[32]
+[32 <./Images/RocketChip_WithMMIO.pdf>])
+[33] (chapter4.tex
+[34]
 CHƯƠNG 4.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-[33]
+[35]
 
 pdfTeX warning: pdflatex.exe (file ./Images/SystolicArray_Kung1982.pdf): PDF in
 clusion: found PDF version <1.7>, but at most version <1.5> allowed
 
 Underfull \vbox (badness 10000) has occurred while \output is active
-[34 <./Images/EfficientDNN_EnergyConsumption.pdf>]
-[35 <./Images/SystolicArray_Kung1982.pdf>]
+[36 <./Images/EfficientDNN_EnergyConsumption.pdf>]
+[37 <./Images/SystolicArray_Kung1982.pdf>]
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-[36]
-[37 <./Images/TPU_v1_Overview.pdf>])
-[38 <./Images/NVDLA_ArchitectureOverview.pdf> <./Images/EfficientDNN_DataReuse.
-pdf
+[38]
+[39 <./Images/TPU_v1_Overview.pdf> <./Images/NVDLA_ArchitectureOverview.pdf
 
-pdfTeX warning: pdflatex.exe (file ./Images/EfficientDNN_DataReuse.pdf): PDF in
-clusion: multiple pdfs with page group included in a single page
+pdfTeX warning: pdflatex.exe (file ./Images/NVDLA_ArchitectureOverview.pdf): PD
+F inclusion: multiple pdfs with page group included in a single page
 >]
-[39 <./Images/EfficientDNN_ModernDataflow.pdf>]
-[40 <./Images/Gemmini_compute_os.pdf> <./Images/Gemmini_compute_ws.pdf
+[40 <./Images/EfficientDNN_DataReuse.pdf>]
+[41 <./Images/EfficientDNN_ModernDataflow.pdf>]
+[42 <./Images/Gemmini_compute_os.pdf> <./Images/Gemmini_compute_ws.pdf
 
 pdfTeX warning: pdflatex.exe (file ./Images/Gemmini_compute_ws.pdf): PDF inclus
 ion: multiple pdfs with page group included in a single page
 >]
-[41] (chapter5.tex
-[42]
+[43])
+[44 <./Images/Gemmini_SystolicNVDLA.pdf>] (chapter5.tex
 CHƯƠNG 5.
 
-[43 <./Images/Gemmini_Logo.pdf>]
-[44 <./Images/Gemmini_SystolicNVDLA.pdf>]
+[45 <./Images/Gemmini_Logo.pdf>]
+[46 <./Images/Gemmini_ArchitectureOverview.pdf> <./Images/Gemmini_MicroArchitec
+ture.png>]
 Overfull \hbox (5.3755pt too wide) in paragraph at lines 61--62
 \T5/cmr/m/n/13 main sta-tion-ary, max-i-miz-ing weight reuse as in-put ac-ti-va
 -tions are streamed
 
-[45 <./Images/Gemmini_ArchitectureOverview.pdf>]
 Overfull \hbox (9.65782pt too wide) in paragraph at lines 70--71
 \T5/cmr/m/n/13 Matrix Mul-ti-pli-ca-tion (GEMM), they are adept at ac-cel-er-at
 -ing 2D con-vo-lu-tions through
@@ -538,107 +526,68 @@ Overfull \hbox (9.65782pt too wide) in paragraph at lines 70--71
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-Underfull \vbox (badness 1484) has occurred while \output is active
-[46 <./Images/Gemmini_MicroArchitecture.png>]
+[47]
 Overfull \vbox (14.9475pt too high) has occurred while \output is active
-[47 <./Images/Gemmini_Im2Col.png>]
-[48])
-[49 <./Images/Gemmini_DecoupledAccessExecutePipeline.pdf>] (chapter6.tex
-[50]
+[48 <./Images/Gemmini_Im2Col.png>]
+[49])
+[50 <./Images/Gemmini_DecoupledAccessExecutePipeline.pdf>] (chapter6.tex
 CHƯƠNG 6.
 
 
-pdfTeX warning: pdflatex.exe (file ./Images/Gemmini_InternalOverview.pdf): PDF 
-inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+pdfTeX warning: pdflatex.exe (file ./Images/Gemmini_Internal_Overview.pdf): PDF
+ inclusion: found PDF version <1.7>, but at most version <1.5> allowed
 
-[51 <./Images/Gemmini_InternalOverview.pdf>]
+[51 <./Images/Gemmini_Internal_Overview.pdf>]
 
-LaTeX Warning: File `_YOUR_IMAGE_PATH_/Sensors_Fig4.png' not found on input lin
-e 24.
+pdfTeX warning: pdflatex.exe (file ./Images/Gemmini_Internal_LoopConv.pdf): PDF
+ inclusion: found PDF version <1.7>, but at most version <1.5> allowed
 
 
-! Package pdftex.def Error: File `_YOUR_IMAGE_PATH_/Sensors_Fig4.png' not found
-: using draft setting.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.24 ...width]{_YOUR_IMAGE_PATH_/Sensors_Fig4.png}
-                                                  
+pdfTeX warning: pdflatex.exe (file ./Images/Gemmini_Internal_LoopMatmul.pdf): P
+DF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
 
 Underfull \vbox (badness 10000) has occurred while \output is active
-[52]
+[52 <./Images/Gemmini_Internal_LoopConv.pdf> <./Images/Gemmini_Internal_LoopMat
+mul.pdf>]
 
-LaTeX Warning: File `_YOUR_IMAGE_PATH_/Sensors_Fig6.png' not found on input lin
-e 34.
-
-
-! Package pdftex.def Error: File `_YOUR_IMAGE_PATH_/Sensors_Fig6.png' not found
-: using draft setting.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.34 ...width]{_YOUR_IMAGE_PATH_/Sensors_Fig6.png}
-                                                  
-
-[53]
-
-LaTeX Warning: File `_YOUR_IMAGE_PATH_/Sensors_Fig8.png' not found on input lin
-e 44.
+pdfTeX warning: pdflatex.exe (file ./Images/Gemmini_Internal_SRAM_Im2Col.pdf): 
+PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
 
 
-! Package pdftex.def Error: File `_YOUR_IMAGE_PATH_/Sensors_Fig8.png' not found
-: using draft setting.
+pdfTeX warning: pdflatex.exe (file ./Images/Gemmini_Internal_SRAM_ExecuteContro
+ller.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> al
+lowed
 
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.44 ...width]{_YOUR_IMAGE_PATH_/Sensors_Fig8.png}
-                                                  
+[53 <./Images/Gemmini_Internal_SRAM_Im2Col.pdf> <./Images/Gemmini_Internal_SRAM
+_ExecuteController.pdf>]
 
-LaTeX Warning: File `_YOUR_IMAGE_PATH_/Sensors_Fig9.png' not found on input lin
-e 51.
+pdfTeX warning: pdflatex.exe (file ./Images/Gemmini_Internal_Mesh.pdf): PDF inc
+lusion: found PDF version <1.7>, but at most version <1.5> allowed
 
 
-! Package pdftex.def Error: File `_YOUR_IMAGE_PATH_/Sensors_Fig9.png' not found
-: using draft setting.
+pdfTeX warning: pdflatex.exe (file ./Images/Gemmini_Internal_Scratchpad.pdf): P
+DF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
 
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.51 ...width]{_YOUR_IMAGE_PATH_/Sensors_Fig9.png}
-                                                  
-
-Underfull \vbox (badness 1490) has occurred while \output is active
-[54]
+[54 <./Images/Gemmini_Internal_Mesh.pdf> <./Images/Gemmini_Internal_Scratchpad.
+pdf>]
+Underfull \vbox (badness 1859) has occurred while \output is active
 [55]
 ! Undefined control sequence.
-l.74 \todo
-          [inline]{Specify the key parameters for your Gemmini instance here...
+l.100 \todo
+           [inline]{Specify the key parameters for your Gemmini instance her...
 
-
-[56])
+)
+[56]
 [57]
 [58]
-[59]
-[60]
-Overfull \hbox (9.73006pt too wide) in paragraph at lines 249--249
-\T5/cmr/m/n/13 In: \T5/cmr/m/it/13 Fourth Work-shop on Com-puter Ar-chi-tec-tur
-e Re-search with RISC-V (CARRV)\T5/cmr/m/n/13 .
-
-[61] (main.aux (chapter1.aux) (chapter2.aux) (chapter3.aux) (chapter4.aux)
+[59] (main.aux (chapter1.aux) (chapter2.aux) (chapter3.aux) (chapter4.aux)
 (chapter5.aux) (chapter6.aux))
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.0pt have occurred.
 
 
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+LaTeX Warning: There were multiply-defined labels.
 
  )
 (see the transcript file for additional information) <D:\Program Files\MikTex\t
@@ -650,6 +599,6 @@ fs/install/fonts/type1/vntex/vnr/vnr12.pfb><D:/Program Files/MikTex/texmfs/inst
 all/fonts/type1/vntex/vnr/vnr17.pfb><D:/Program Files/MikTex/texmfs/install/fon
 ts/type1/vntex/vnr/vnti12.pfb><D:/Program Files/MikTex/texmfs/install/fonts/typ
 e1/vntex/vnr/vntt12.pfb>
-Output written on main.pdf (71 pages, 4211552 bytes).
+Output written on main.pdf (69 pages, 5272920 bytes).
 SyncTeX written on main.synctex.gz.
 Transcript written on main.log.

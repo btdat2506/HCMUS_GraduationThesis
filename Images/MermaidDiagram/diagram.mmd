@@ -1,0 +1,42 @@
+graph TD
+    subgraph "1. Design & Configuration"
+        A1[Scala/Chisel Sources]
+        A2[Software Sources]
+        A3[Makefiles & Configs]
+    end
+
+    subgraph "2. Automated Build Process"
+        B1["Hardware Generation<br/>(Chisel -> Verilog, DTS)"]
+        B2["Software Compilation<br/>(U-Boot, OpenSBI, Linux)"]
+        
+        A1 & A3 --> B1
+        A2 & A3 --> B2
+    end
+    
+    subgraph "3. FPGA Synthesis (Vivado)"
+        C1["Synthesis & Implementation<br/>(Verilog -> Bitstream)"]
+        
+        B1 --> C1
+    end
+
+    subgraph "4. Deployment & Verification"
+        D1["Prepare SD Card<br/>(Bootloader, Kernel, FS)"]
+        D2["Program FPGA<br/>(JTAG or Flash)"]
+        D3["Boot Linux on FPGA"]
+        D4["Run Verification Tests"]
+
+        B2 --> D1
+        C1 --> D2
+        D1 & D2 --> D3
+        D3 --> D4
+    end
+
+classDef design fill:#cde4ff,stroke:#6699ff,stroke-width:2px;
+classDef build fill:#d5e8d4,stroke:#82b366,stroke-width:2px;
+classDef synth fill:#ffe6cc,stroke:#d79b00,stroke-width:2px;
+classDef deploy fill:#f8cecc,stroke:#b85450,stroke-width:2px;
+
+class A1,A2,A3 design;
+class B1,B2 build;
+class C1 synth;
+class D1,D2,D3,D4 deploy;

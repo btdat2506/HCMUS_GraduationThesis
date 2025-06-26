@@ -77,11 +77,11 @@ Figure \ref{fig:rv32i_instructions} details all instructions in the RV32I base i
     \item 1 memory access ordering instruction - FENCE, used by other processing cores (in multi-core scenarios) or other peripheral devices in the system. The I-type format is used for this instruction with some specific bit encoding rules and opcodes.
 \end{itemize}
 
-\begin{figure}[htbp!]
+\begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\textwidth]{RV32I_BaseInstructionSet.pdf}
+    \includegraphics[width=0.8\textwidth]{RV32I_BaseInstructionSet.pdf}
     % \fbox{Placeholder for RV32I Instruction List Diagram}
-    \caption{Instructions in the RV32I base instruction set. Source \cite{riscv:manual:user:2024}}
+    \caption{Instructions in the RV32I base instruction set. \cite{riscv:manual:user:2024}}
     \label{fig:rv32i_instructions}
     % \textit{Note: This figure should list the RV32I instructions as shown in the RISC-V specification.}
 \end{figure}
@@ -225,12 +225,12 @@ Despite its many strengths and implementation benefits, out-of-order processors 
 
 \subsection{Open-Source RISC-V Processor Cores}
 
-Rocket \cite{asanovic2016rocket}, or Rocket Core, is a RISC-V instruction set architecture microprocessor core designed by the Berkeley Architecture Research group. Rocket features a 5-stage, in-order architecture and implements the RISC-V RV32G and RV64G instruction sets.
+Rocket \cite{asanovic2016rocketchip}, or Rocket Core, is a RISC-V instruction set architecture microprocessor core designed by the Berkeley Architecture Research group. Rocket features a 5-stage, in-order architecture and implements the RISC-V RV32G and RV64G instruction sets.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.7\textwidth]{Rocket_Core_Pipeline_5stages.pdf}
-    \caption{Pipeline of Rocket core. Source \cite{asanovic2016rocket}}
+    \caption{Pipeline of Rocket core. Source \cite{asanovic2016rocketchip}}
     \label{fig:rocket_pipeline}
 \end{figure}
 
@@ -238,7 +238,7 @@ The design of this microprocessor integrates many advanced features, including a
 
 Rocket is considered the most prominent microprocessor core in the open-source RISC-V development community due to its well-updated and stably supported development documentation. It is built using Chisel, a relatively new hardware construction language based on Scala, employing an object-oriented approach similar to software development. Therefore, the flexibility of the system development process and the applicability of Rocket Core are very high, making it suitable for implementing multi-core systems.
 
-Along with Rocket Core, the Berkeley Out-of-Order Machine (BOOM) \cite{celio2015boom, celio2016boom_spec,celio_phdthesis_2018boom} is also a prominent open-source RISC-V core, designed for high performance and out-of-order execution. Also developed within the microprocessor architecture research group at the University of California, Berkeley, BOOM is aimed at applications in advanced academic research and industry, featuring a flexible design and high operational performance. BOOM is also written in the Chisel language as a generator, like Rocket Core, allowing for rapid deployment and customization of the core according to the RV64GC RISC-V architecture. The latest version, SonicBOOM \cite{zhao2020sonicboom} (also known as BOOMv3), achieves a performance of 6.2 CoreMarks/MHz, capable of competing directly with high-performance commercial processor cores, setting a high standard for open-source processor design.
+Along with Rocket Core, the Berkeley Out-of-Order Machine (BOOM) \cite{celio2015boom, celio2016boom_spec,celio_phdthesis_2018boom} is also a prominent open-source RISC-V core, designed for high performance and out-of-order execution. Also developed within the microprocessor architecture research group at the University of California, Berkeley, BOOM is aimed at applications in advanced academic research and industry, featuring a flexible design and high operational performance. BOOM is also written in the Chisel language as a generator, like Rocket Core, allowing for rapid deployment and customization of the core according to the RV64GC RISC-V architecture. The latest version, SonicBOOM \cite{zhao2020sonicboom_ieee} (also known as BOOMv3), achieves a performance of 6.2 CoreMarks/MHz, capable of competing directly with high-performance commercial processor cores, setting a high standard for open-source processor design.
 
 \begin{figure}[h!]
     \centering
@@ -267,7 +267,7 @@ Similar to Rocket Core, this is also considered one of the most prominent open-s
 
 \section{System-on-Chip Design Framework: Chipyard - Rocket Chip}
 
-The Rocket Chip project, also developed by the Berkeley Architecture Research (BAR) group at the University of California, Berkeley, marked a significant advancement in open-source processor design. This project provides a flexible, scalable, and configurable platform, enabling the creation of custom RISC-V microprocessors tailored to diverse performance and application requirements. Rocket Chip is essentially a library of hardware generators that can be configured and interconnected in various ways, producing diverse SoC designs. This library can generate an in-order core (Rocket) or an out-of-order core (BOOM), and these cores can be connected to co-processors via an interface named RoCC (Rocket Custom Coprocessor) \cite{asanovic2016rocket}.
+The Rocket Chip project, also developed by the Berkeley Architecture Research (BAR) group at the University of California, Berkeley, marked a significant advancement in open-source processor design. This project provides a flexible, scalable, and configurable platform, enabling the creation of custom RISC-V microprocessors tailored to diverse performance and application requirements. Rocket Chip is essentially a library of hardware generators that can be configured and interconnected in various ways, producing diverse SoC designs. This library can generate an in-order core (Rocket) or an out-of-order core (BOOM), and these cores can be connected to co-processors via an interface named RoCC (Rocket Custom Coprocessor) \cite{asanovic2016rocketchip}.
 
 \begin{figure}[h!]
     \centering

@@ -11,7 +11,7 @@ A custom \texttt{RoCC} instruction sent from the Rocket core is not executed dir
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\textwidth]{Gemmini_InternalOverview.pdf}
+    \includegraphics[width=\textwidth]{Gemmini_Internal_Overview.pdf}
     \caption{Overview of the internal modules in the generated Gemmini hardware architecture, showing the flow of commands from the RoCC interface through various queues and controllers. Source: \cite{gookyi2023gemmini_case_study}.}
     \label{fig:gemmini_internal_modules}
 \end{figure}
@@ -19,9 +19,21 @@ A custom \texttt{RoCC} instruction sent from the Rocket core is not executed dir
 \subsection{Command Unrolling and Buffering}
 The initial \texttt{RoCC} instructions received from the CPU are often "complex" commands that encapsulate entire loops (e.g., `loop\_matmul`). As shown in Figure~\ref{fig:command_unrollers}, modules like \texttt{LoopMatmul} and \texttt{LoopConv} are responsible for unrolling these high-level tasks into a stream of simpler, primitive micro-operations for loading, storing, and executing on tiled sub-matrices. These primitive commands are then buffered in a queue before being sent to a central dispatcher.
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{_YOUR_IMAGE_PATH_/Sensors_Fig4.png}
+    \begin{subfigure}[b]{0.9\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Gemmini_Internal_LoopConv.pdf}
+        \caption{LoopConv module}
+        \label{fig:loop_conv}
+    \end{subfigure}
+    \vspace{1em}
+    \begin{subfigure}[b]{0.7\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Gemmini_Internal_LoopMatmul.pdf}
+        \caption{LoopMatmul module}
+        \label{fig:loop_matmul}
+    \end{subfigure}
     \caption{Gemmini's command unrolling modules (\texttt{LoopConv} and \texttt{LoopMatmul}), which translate high-level commands into a series of primitive operations. Source: \cite{gookyi2023gemmini_case_study}.}
     \label{fig:command_unrollers}
 \end{figure}
@@ -29,9 +41,22 @@ The initial \texttt{RoCC} instructions received from the CPU are often "complex"
 \subsection{Reservation Station and Execution Control}
 The stream of primitive commands is received by the \texttt{ReservationStation} module, which reorders and dispatches them to the appropriate back-end controller. The \texttt{ExecuteController} (Figure~\ref{fig:execute_controller}) manages the actual computation. It issues commands to the systolic array and orchestrates the movement of data between the scratchpad and the computational units. It also contains logic to manage optional units, such as the hardware \texttt{im2col} unit or data transposer.
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{_YOUR_IMAGE_PATH_/Sensors_Fig6.png}
+    % \fbox{Sensors_Fig6.png}    
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Gemmini_Internal_SRAM_Im2Col.pdf}
+        \caption{SRAM controllers: Im2Col module}
+        \label{fig:loop_conv}
+    \end{subfigure}
+    \vspace{1em}
+    \begin{subfigure}[b]{0.9\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Gemmini_Internal_SRAM_ExecuteController.pdf}
+        \caption{SRAM controllers: ExecuteController module}
+        \label{fig:loop_matmul}
+    \end{subfigure}
     \caption{The \texttt{ExecuteController} module and its associated SRAM control interfaces. Source: \cite{gookyi2023gemmini_case_study}.}
     \label{fig:execute_controller}
 \end{figure}
@@ -39,17 +64,17 @@ The stream of primitive commands is received by the \texttt{ReservationStation} 
 \subsection{The Mesh and Scratchpad}
 The \texttt{ExecuteController} ultimately controls the two lowest-level hardware blocks: the Mesh and the Scratchpad. The Mesh (Figure~\ref{fig:mesh_module}) is the direct hardware implementation of the systolic array, containing the grid of PEs. The Scratchpad (Figure~\ref{fig:scratchpad_module}) implements the on-chip memory, containing the SRAM banks and logic for interfacing with the DMA engine and the systolic array's accumulator.
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=0.7\textwidth]{_YOUR_IMAGE_PATH_/Sensors_Fig8.png}
+    \includegraphics[width=\textwidth]{Gemmini_Internal_Mesh.pdf}
     \caption{The Mesh module, which implements the systolic array of PEs and supports different dataflows (Output Stationary and Weight Stationary). Source: \cite{gookyi2023gemmini_case_study}.}
     \label{fig:mesh_module}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{_YOUR_IMAGE_PATH_/Sensors_Fig9.png}
-    \caption{The internal structure of the Scratchpad module, showing the various interfaces to the TLB, DMA, and internal memory banks. Source: \cite{gookyi2023gemmini_case_study}.}
+    \includegraphics[width=0.9\textwidth]{Gemmini_Internal_Scratchpad.pdf}
+    \caption{The internal structure of the Scratchpad module, showing the various interfaces to the TLB, DMA, and internal memory banks. \cite{gookyi2023gemmini_case_study}.}
     \label{fig:scratchpad_module}
 \end{figure}
 
@@ -71,6 +96,7 @@ The Gemmini ecosystem is designed to support higher-level compilation flows. Thi
 \label{sec:gemmini_configuration}
 
 The Gemmini accelerator integrated into the SoC for this thesis is based on a specific configuration suitable for the target AI applications and FPGA resource constraints. Within the Chipyard framework, this configuration is defined in a Scala configuration file. 
+
 \todo[inline]{Specify the key parameters for your Gemmini instance here. For example: The instance was configured with a 16x16 systolic array using 8-bit integer data types for inputs and weights, and a 32-bit integer accumulator. The scratchpad was configured with 256KB of capacity and the accumulator memory with 64KB. The Weight Stationary (WS) dataflow was selected, and the hardware \texttt{im2col} unit was included to offload this pre-processing step from the host CPU. These parameters were chosen to balance performance for target DNN workloads with the resource constraints of the target FPGA. The detailed performance implications of these choices will be explored in subsequent chapters.}
 
 The integration follows the standard \texttt{RoCC} methodology provided by Chipyard, ensuring that Gemmini coexists with the Rocket Core, shares the system memory hierarchy, and can be programmed using custom RISC-V instructions dispatched to its \texttt{RoCC} slot.

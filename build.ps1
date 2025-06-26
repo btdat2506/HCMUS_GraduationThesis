@@ -10,9 +10,9 @@ pdflatex -interaction=nonstopmode -synctex=1 main.tex
 Write-Host "Running makeglossaries..."
 makeglossaries main
 
-# Run bibtex
-Write-Host "Running bibtex..."
-bibtex main
+# Run biber
+Write-Host "Running biber..."
+biber main
 
 rm main.pdf
 

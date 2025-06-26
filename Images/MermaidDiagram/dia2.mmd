@@ -1,0 +1,41 @@
+graph TD
+    subgraph SD_Detail["SD Card Controller (axi_sdc_controller.v)"]
+        direction TB
+        
+        subgraph SD_AXI_Interfaces["AXI Interfaces"]
+            SD_SLAVE["S_AXI_LITE<br/>(Control Interface)<br/>• Command/Argument Registers<br/>• Status/Response Registers<br/>• Configuration Registers<br/>• Block Size/Count<br/>• DMA Address<br/>• Clock Divider<br/>• Interrupt Control"]
+            SD_MASTER["M_AXI<br/>(DMA Master Interface)<br/>• Burst Read/Write<br/>• Configurable Address Width<br/>• AXI4 Full Protocol<br/>• Automatic FIFO Management"]
+        end
+        
+        subgraph SD_Core_Logic["SD Card Core Logic"]
+            SD_CMD_MASTER["sd_cmd_master<br/>• Command State Machine<br/>• Response Handling<br/>• Timeout Management<br/>• CRC/Index Checking"]
+            SD_CMD_SERIAL["sd_cmd_serial_host<br/>• CMD Line Protocol<br/>• CRC-7 Generation<br/>• Serial Bit Transmission"]
+            SD_DATA_MASTER["sd_data_master<br/>• Data Transfer Control<br/>• FIFO Management<br/>• Multi-block Support<br/>• Error Handling"]
+            SD_DATA_SERIAL["sd_data_serial_host<br/>• 1-bit/4-bit Data Mode<br/>• CRC-16 per Data Line<br/>• Block Transfer Protocol"]
+        end
+        
+        subgraph SD_Internal_FIFO["Internal FIFO System"]
+            SD_FIFO_MEM["FIFO Memory<br/>• Configurable Depth (fifo_addr_bits=7)<br/>• 128 x 32-bit entries<br/>• Dual-port access<br/>• Flow control"]
+            SD_FIFO_CTRL["FIFO Control<br/>• Almost Full/Empty flags<br/>• Overflow/Underflow protection<br/>• Clock domain crossing"]
+        end
+        
+        subgraph SD_Clock_Gen["Clock Generation"]
+            SD_CLK_DIV["Programmable Clock Divider<br/>• Default: 400KHz (div=124)<br/>• Up to 50MHz (div=0)<br/>• Dynamic flow control<br/>• FIFO-aware throttling"]
+        end
+        
+        subgraph SD_Physical["Physical SD Interface"]
+            SD_PINS["SD Card Pins<br/>• sdio_cmd (bidirectional)<br/>• sdio_dat[3:0] (bidirectional)<br/>• sdio_clk (output)<br/>• sdio_cd (card detect input)<br/>• sdio_reset (output)"]
+        end
+    end
+    
+    SD_SLAVE --> SD_CMD_MASTER
+    SD_SLAVE --> SD_DATA_MASTER
+    SD_CMD_MASTER --> SD_CMD_SERIAL
+    SD_DATA_MASTER --> SD_DATA_SERIAL
+    SD_DATA_MASTER --> SD_FIFO_CTRL
+    SD_MASTER --> SD_FIFO_MEM
+    SD_FIFO_MEM --> SD_DATA_SERIAL
+    SD_CLK_DIV --> SD_CMD_SERIAL
+    SD_CLK_DIV --> SD_DATA_SERIAL
+    SD_CMD_SERIAL --> SD_PINS
+    SD_DATA_SERIAL --> SD_PINS

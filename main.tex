@@ -15,7 +15,7 @@
 % Tài liệu tham khảo
 \usepackage[
 	sorting=nty,
-	backend=bibtex,
+	backend=biber,
 	defernumbers=true]{biblatex}
 \usepackage[unicode]{hyperref} % Bookmark tiếng Việt
 \addbibresource{References/references.bib}
@@ -226,6 +226,8 @@
 
 \include{chapter6}
 
+\include{chapter7}
+
 % Công trình của tác giả (nếu không có thì comment 02 dòng dưới)
 \cleardoublepage
 \newpage
@@ -246,7 +248,8 @@
 %\DeclareNameAlias{default}{last-first}
 
 % \printbibliography[heading=subbibliography, title={Tiếng Anh}, notkeyword=Viet, resetnumbers=true] 
-\printbibliography[heading=subbibliography, resetnumbers=true] 
+\printbibliography[heading=subbibliography, resetnumbers=true]
+% \printbibliography 
 % ===================================================================== %
 % CHÚ Ý: phải gán lại resetnumbers=số tài liệu tham khảo tiếng Việt + 1 %
 % ===================================================================== %
