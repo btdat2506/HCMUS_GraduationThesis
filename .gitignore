@@ -1,2 +1,49 @@
 # Add directories or file patterns to ignore during indexing (e.g. foo/ or *.csv)
 Backup/
+.cursorignore
+
+# ===================================================================
+# Comprehensive .gitignore for LaTeX projects
+# ===================================================================
+
+# 1. Final Output
+*.pdf
+!Images/**/*.pdf
+!References/**/*.pdf
+
+# 2. LaTeX Auxiliary and Log Files
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*ter.log
+
+# 3. Bibliography Files (BibTeX/Biber)
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+
+# 4. Glossary and Acronym Files
+*.acn
+*.acr
+*.alg
+*.glo
+*.gls
+*.glg
+*.ist
+
+# 5. Intermediate Formats and Build Files
+*.dvi
+*.ps
+*.xdv
+*.bak
+_minted*
+
+# 6. Editor-specific and Workspace Files
+.vscode/
