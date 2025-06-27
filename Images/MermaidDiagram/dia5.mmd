@@ -1,0 +1,74 @@
+---
+config:
+  theme: redux
+---
+flowchart TD
+    %% RISC-V Core and System
+    RISCV["🚀 RISC-V RocketChip<br/>Core + SystemBus"]
+    
+    %% Periphery Bus
+    PERIBUS["🔌 PeripheryBus<br/>AXI4 Interface"]
+    
+    %% Application Layer
+    APP["🖥️ Application Layer<br/>Network Applications"]
+    
+    %% Linux Network Stack
+    KERNEL["🐧 Linux Network Stack<br/>TCP/IP, Socket Layer"]
+    
+    %% Device Driver
+    DRIVER["⚙️ Linux Ethernet Driver<br/>fpga-axi-eth.c"]
+    
+    %% AXI Ethernet Controller (DMA)
+    AXICTL["🔧 Ethernet DMA Controller<br/>ethernet.v"]
+    
+    %% Board Adapter
+    BOARD["🎯 Board-Specific Adapter<br/>ethernet-vc707.v"]
+    
+    %% Verilog Ethernet Library
+    MACLIB["📚 Verilog Ethernet Library<br/>eth_mac_1g_fifo.v"]
+    
+    %% Xilinx PHY IP
+    PHYIP["💾 Xilinx SGMII PHY IP<br/>gig_ethernet_pcs_pma_0"]
+    
+    %% Physical Interface
+    SGMII["⚡ SGMII Physical Interface<br/>1 Gbps Serial"]
+    
+    %% RISC-V System connections
+    RISCV -->|"TileLink"| PERIBUS
+    PERIBUS -->|"AXI4-Lite (registers)<br/>AXI4 (DMA)"| AXICTL
+    
+    %% Software stack connections
+    APP -->|"TCP/UDP Sockets"| KERNEL
+    KERNEL -->|"Network Device Interface"| DRIVER
+    DRIVER -->|"Memory-mapped I/O<br/>DMA Setup"| AXICTL
+    AXICTL -->|"AXI Stream<br/>TX/RX Data"| BOARD
+    BOARD -->|"AXI Stream to<br/>GMII Conversion"| MACLIB
+    MACLIB -->|"GMII Interface<br/>8-bit @ 125MHz"| PHYIP
+    PHYIP -->|"SGMII Protocol<br/>SerDes + Auto-negotiation"| SGMII
+    
+    %% Additional components with dotted connections
+    PATCH["🔧 Timing Patch<br/>ethernet.patch<br/>RGMII Clock Fix"]
+    BUILD["🏗️ Build System<br/>vivado.tcl<br/>ethernet-vc707.tcl"]
+    
+    %% Styling
+    classDef riscvLayer fill:#ffebee,stroke:#d32f2f,stroke-width:3px
+    classDef busLayer fill:#fff8e1,stroke:#f57c00,stroke-width:2px
+    classDef appLayer fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef kernelLayer fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef driverLayer fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef hwLayer fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef phyLayer fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef support fill:#f5f5f5,stroke:#616161,stroke-width:1px,stroke-dasharray: 5 5
+    
+    class RISCV riscvLayer
+    class PERIBUS busLayer
+    class APP appLayer
+    class KERNEL kernelLayer
+    class DRIVER driverLayer
+    class AXICTL,BOARD,MACLIB hwLayer
+    class PHYIP,SGMII phyLayer
+    class PATCH,BUILD support
+    class DRIVER driverLayer
+    class AXICTL,BOARD,MACLIB hwLayer
+    class PHYIP,SGMII phyLayer
+    class PATCH,BUILD support

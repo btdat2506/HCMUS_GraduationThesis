@@ -1,6 +1,21 @@
 # HCMUS FETEL Graduation Thesis Report
 
-Work in progress!
+To build the latex pdf file, run the following code block in the terminal at the repository directory:
+
+```powershell
+./build.ps1
+```
+
+For the documents of the system implementation of the ```Rocket64b1gem16``` on the VC707: 
+- DDR: [docs/ddr_memory_controller_implementation.md](docs/ddr_memory_controller_implementation.md)
+- UART: [docs/uart_controller_implementation.md](docs/uart_controller_implementation.md)
+- Ethernet: [docs/ethernet_implementation_subsection.md](docs/ethernet_implementation_subsection.md)
+- Control Bus: [docs/control_bus_peripherals_implementation.md](docs/control_bus_peripherals_implementation.md)
+- SD Card: [docs/sd_card_controller_implementation.md](docs/sd_card_controller_implementation.md)
+- XADC Fan Control: [docs/xadc_fan_control_implementation.md](docs/xadc_fan_control_implementation.md)
+- Gemmini: [docs/gemmini.md](docs/gemmini.md)
+
+
 
 ## Mục tiêu
 - Hiểu cấu trúc Chipyard

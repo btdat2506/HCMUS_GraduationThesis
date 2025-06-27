@@ -1,0 +1,36 @@
+graph LR
+    subgraph RocketChip_CPU
+        direction TB
+        CPU_Control
+        AXI_MM_Interface[Memory Interface]
+    end
+
+    subgraph Ethernet_Subsystem
+        subgraph Ethernet_DMA ["ethernet.v<br/>(DMA Controller)"]
+            direction LR
+            AXI_MM_Master
+            AXIS_TX_Master["TX_AXIS (Master)"]
+            AXIS_RX_Slave["RX_AXIS (Slave)"]
+            AXI_Lite_Slave["AXI-Lite (Slave)<br/>Control Registers"]
+        end
+
+        subgraph MAC_PHY ["ethernet-vc707<br/>(MAC and PHY Interface)"]
+            direction LR
+            AXIS_TX_Slave["TX_AXIS (Slave)"]
+            AXIS_RX_Master["RX_AXIS (Master)"]
+            SGMII_Interface
+        end
+    end
+
+    subgraph External_Network
+        Network
+    end
+
+    CPU_Control -- "1. Configure via AXI-Lite" --> AXI_Lite_Slave
+    AXI_MM_Interface -- "2. Packet data via AXI-MM (DMA)" --- AXI_MM_Master
+
+    AXIS_TX_Master -- "3. TX Data (AXI-Stream)" --> AXIS_TX_Slave
+    AXIS_RX_Master -- "RX Data (AXI-Stream)" --> AXIS_RX_Slave
+
+    MAC_PHY -- "4. SGMII" --> Network
+end

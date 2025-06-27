@@ -1,0 +1,40 @@
+graph LR
+    subgraph CPU_MEM["CPU & Memory"]
+        CPU["RocketChip<br/>RISC-V CPU"]
+        DDR["DDR3 Memory<br/>Controller"]
+    end
+
+    subgraph ETH_SUBSYSTEM["Ethernet Subsystem"]
+        subgraph ETH_DMA_BLOCK["Ethernet DMA (ethernet.v)"]
+            DMA_CTRL["DMA Control<br/>Registers"]
+            TX_DMA["TX DMA<br/>Engine"]
+            RX_DMA["RX DMA<br/>Engine"]
+        end
+
+        subgraph ETH_PHY_BLOCK["Ethernet PHY (ethernet-vc707.v)"]
+            ETH_MAC["Ethernet MAC<br/>(eth_mac_1g_fifo)"]
+            PCS_PMA["PCS/PMA Core<br/>(gig_ethernet_pcs_pma)"]
+        end
+    end
+
+    subgraph EXTERNAL["External"]
+        ETH_PORT["Ethernet<br/>SGMII Port"]
+    end
+
+    %% Control path
+    CPU -->|"AXI4-Lite<br/>(Configuration)"| DMA_CTRL
+
+    %% Memory path
+    TX_DMA <-->|"AXI4<br/>(DMA Read)"| DDR
+    RX_DMA <-->|"AXI4<br/>(DMA Write)"| DDR
+
+    %% Data streaming path
+    TX_DMA -->|"TX_AXIS<br/>(AXI-Stream)"| ETH_MAC
+    ETH_MAC -->|"RX_AXIS<br/>(AXI-Stream)"| RX_DMA
+
+    %% Physical layer
+    ETH_MAC <-->|"GMII<br/>(Internal)"| PCS_PMA
+    PCS_PMA <-->|"SGMII<br/>(Physical)"| ETH_PORT
+
+    %% Connection annotations
+    ETH_MAC -.->|"This is the connection<br/>you asked about"| PCS_PMA

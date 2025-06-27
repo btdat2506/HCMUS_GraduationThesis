@@ -1,0 +1,82 @@
+graph TD
+    subgraph External["External Interfaces"]
+        DDR3["DDR3 Memory"]
+        UART_PHY["UART/RS232"]
+        ETH_PHY["Ethernet SGMII"]
+        SD_CARD["SD Card"]
+        CLK_200["200MHz Clock"]
+        RESET["System Reset"]
+    end
+
+    subgraph FPGA["FPGA (VC707 Board)"]
+        subgraph Clocks["Clock Generation"]
+            CLK_WIZ["Clock Wizard<br/>200MHz → 100/200MHz"]
+        end
+
+        subgraph CPU["CPU Subsystem"]
+            ROCKET["RocketChip<br/>RISC-V CPU"]
+        end
+
+        subgraph Memory["Memory Subsystem"]
+            MIG["DDR3 Controller<br/>(MIG)"]
+            MEM_IC["Memory<br/>Interconnect"]
+        end
+
+        subgraph IO_Sub["I/O Subsystem"]
+            subgraph Controllers["Peripheral Controllers"]
+                UART_CTRL["UART<br/>Controller"]
+                SD_CTRL["SD Card<br/>Controller"]
+                ETH_DMA["Ethernet<br/>DMA Engine"]
+                XADC["Temperature<br/>Sensor"]
+            end
+
+            subgraph Interconnects["AXI Interconnects"]
+                IO_SLAVE["IO Bus<br/>(Peripheral Access)"]
+                DMA_MASTER["DMA Bus<br/>(Memory Access)"]
+            end
+
+            subgraph ETH_PHY_CTRL["Ethernet PHY"]
+                ETH_MAC["Ethernet MAC<br/>(VC707 Specific)"]
+            end
+
+            IRQ_CONCAT["Interrupt<br/>Concatenator"]
+        end
+    end
+
+    %% External connections
+    CLK_200 --> CLK_WIZ
+    RESET --> ROCKET
+    DDR3 <--> MIG
+    UART_PHY <--> UART_CTRL
+    ETH_PHY <--> ETH_MAC
+    SD_CARD <--> SD_CTRL
+
+    %% Clock distribution
+    CLK_WIZ --> ROCKET
+    CLK_WIZ --> MEM_IC
+    CLK_WIZ --> IO_SLAVE
+
+    %% Main system buses
+    ROCKET -.->|"MEM_AXI4<br/>(Memory Access)"| MEM_IC
+    MEM_IC --> MIG
+    
+    ROCKET -.->|"IO_AXI4<br/>(Control Bus)"| IO_SLAVE
+    DMA_MASTER -.->|"DMA_AXI4<br/>(DMA Bus)"| ROCKET
+
+    %% Peripheral connections to buses
+    IO_SLAVE --> UART_CTRL
+    IO_SLAVE --> SD_CTRL
+    IO_SLAVE --> ETH_DMA
+    IO_SLAVE --> XADC
+
+    SD_CTRL --> DMA_MASTER
+    ETH_DMA --> DMA_MASTER
+
+    %% Ethernet data path
+    ETH_DMA <-.->|"AXI-Stream<br/>(Packet Data)"| ETH_MAC
+
+    %% Interrupts
+    UART_CTRL --> IRQ_CONCAT
+    SD_CTRL --> IRQ_CONCAT
+    ETH_DMA --> IRQ_CONCAT
+    IRQ_CONCAT --> ROCKET

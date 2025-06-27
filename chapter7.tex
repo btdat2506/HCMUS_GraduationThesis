@@ -7,6 +7,13 @@ This chapter details the implementation of the RISC-V System-on-Chip (SoC) featu
 \section{Hardware Implementation: SoC Configuration}
 The foundation of our hardware design is the Chipyard SoC generation framework, which provides a flexible and powerful environment for constructing complex RISC-V systems. We leverage Chipyard to define a custom SoC that includes a 64-bit Rocket Core alongside the Gemmini accelerator.
 
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{VC707_ImplementedRocket.pdf}
+  \caption{The implemented Rocket SoC with Gemmini on the VC707 FPGA board. The Rocket Core is connected to a 16x16 Gemmini systolic array, and various peripherals are integrated via AXI interfaces.}
+  \label{fig:rocket_soc}
+\end{figure}
+
 \subsection{The \texttt{Rocket64b1gem16} Configuration}
 The specific configuration for our SoC is named \texttt{Rocket64b1gem16}. This name concisely describes its key features: a 64-bit Rocket Core (\texttt{Rocket64}), one "big" core (\texttt{b1}), and a 16x16 Gemmini systolic array (\texttt{gem16}). This configuration is defined in Scala using Chipyard's \texttt{Config} classes, which employ a mixin-based approach to compose system components.
 
@@ -58,6 +65,72 @@ class WithGemmini(mesh_size: Int, bus_bits: Int) extends Config((site, here, up)
 \end{lstlisting}
 
 The Gemmini accelerator reserves a block of custom instruction opcodes. As defined in its configuration (\texttt{GemminiArrayConfig}), it uses \texttt{OpcodeSet.custom3}. When the Rocket Core's instruction decoder encounters an opcode from this set, it recognizes it as a RoCC instruction and dispatches it to the Gemmini unit, along with values from the processor's register file. The Rocket Tile then wires up the RoCC command and response channels between the core and the Gemmini module, enabling them to communicate.
+
+\section{Peripheral Integration}
+
+The peripherals of the SoC are integrated firstly by having an controller, which is created by IP blocks (using Verilog). These controller are the middle-man for translating the AXI bus transactions from the Rocket Core to the specific peripheral protocols. The peripherals include ...
+
+To operate these peripherals, the Operating Systems (barebone or Linux) will has a driver for each peripheral. The driver will interact with the controller, which in turn communicates with the peripheral hardware. The drivers are typically implemented in C and are part of the Linux kernel or the bare-metal runtime environment.
+
+\subsection{SD Card: AXI SD Card Controller and SD Mode}
+The SoC includes an AXI SD Card controller, which allows the system to boot from an SD card. This controller is integrated into the system using the Chipyard framework's diplomacy mechanism, which automatically wires up the necessary AXI interfaces.
+
+The SD card is accessed in SD mode, which is a common mode for embedded systems. The controller supports standard SD commands and allows the system to read and write data blocks, making it suitable for booting the operating system and storing user data.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{SD_ModeSD_MultiBlockRead.pdf}
+  \caption{SD Mode: Multi-Block Read Operation. \cite{CactusTechnologies_SDCardInterface}}
+  \label{fig:sd_mode_multiblock_read}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{SD_ModeSD_MultiBlockWrite.pdf}
+  \caption{SD Mode: Multi-Block Write Operation. \cite{CactusTechnologies_SDCardInterface}}
+  \label{fig:sd_mode_multiblock_write}
+\end{figure}
+
+For comparion, here is how the same operation looks in SPI mode, which is another common mode for SD cards. The SPI mode is often used for compatibility with older systems or when a simpler interface is required. The SPI Mode offers lower speed compared to SD mode, but it is simpler to implement and can be used in systems that do not require high-speed data transfer.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{SD_ModeSPI_MultiBlockRead.pdf}
+  \caption{SPI Mode: Multi-Block Read Operation. \cite{CactusTechnologies_SDCardInterface}}
+  \label{fig:sd_mode_multiblock_read}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{SD_ModeSPI_MultiBlockRead.pdf}
+  \caption{SPI Mode: Multi-Block Read Operation. \cite{CactusTechnologies_SDCardInterface}}
+  \label{fig:sd_mode_multiblock_read}
+\end{figure}
+
+
+\subsection{UART: AXI UART Controller}
+
+
+\subsection{Ethernet: AXI Ethernet Controller}
+
+The Ethernet subsystem provides high-speed network connectivity for the RISC-V RocketChip SoC, enabling communication with external systems and networks. The implementation consists of a four-layer architecture that bridges the processor's AXI4 bus interface to the physical Ethernet connection on the VC707 FPGA board.
+
+The Ethernet subsystem is implemented as a hierarchical design with four distinct functional blocks, as illustrated in Figure \ref{fig:rocket_soc}. 
+
+\begin{enumerate}
+  \item \textbf{Ethernet DMA Controller}: serves as the primary interface between the RocketChip SoC and the Ethernet MAC layer. Provide functionality for managing data transfers between the SoC and the Ethernet MAC, including packet buffering, flow control, and interrupt handling.
+
+  \item \textbf{SGMII 1Gbps Ethernet MAC}: The MAC (Media Access Control) layer is implemented using the open-source \texttt{eth\_mac\_1g\_fifo} module from the verilog-ethernet \textbf{Cite the repo here} project. This component provides: IEEE 802.3 Compliance, integrated frame-level FIFO Buffering, Frame Processing (Automatic frame padding, FCS generation and checking, and frame validation), AXI4-Stream Interface, Standard GMII Interface (Gigabit Media Independent Interface).
+
+  \item \textbf{SGMII PHY Interface}: implemented using Xilinx's integrated SGMII IP core within the VC707 FPGA. This layer provides: SGMII Protocol (Serial Gigabit Media Independent Interface), Auto-negotiation, Clock Generation (125 MHz clock), Signal Conditioning.
+
+  \item \textbf{Physical RJ45 Interface}: The physical layer terminates at the RJ45 connector on the VC707 board.
+\end{enumerate}
+
+
+
+
+
 
 \section{Development Environment}
 The project requires a specific development environment to ensure that all tools, compilers, and dependencies are correctly configured. The primary environment is an Ubuntu 20.04 LTS workstation. The initial setup is automated by the \texttt{Makefile} through the `apt-install` target, which installs essential packages such as a Java Development Kit, device-tree-compiler, and the GCC toolchain for RISC-V.

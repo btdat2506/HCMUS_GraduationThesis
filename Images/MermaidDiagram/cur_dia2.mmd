@@ -1,0 +1,106 @@
+graph TD
+    subgraph "External World"
+        direction LR
+        sys_clk_200MHz["Differential 200MHz Clock"]
+        sgmii_clk_125MHz["Differential 125MHz SGMII Clock"]
+        reset_in["External Reset"]
+        DDR3_PHY["DDR3 Memory PHY"]
+        UART_PHY["UART PHY (RS232)"]
+        SGMII_PHY["Ethernet SGMII PHY"]
+        SD_PHY["SD Card Socket"]
+    end
+
+    subgraph "FPGA (VC707)"
+        direction TB
+
+        subgraph "Clocking & Reset"
+            sys_diff_clock_buf["sys_diff_clock_buf"]
+            clk_wiz_0["Clock Wizard (clk_wiz_0)<br>in: 200MHz<br>out1: axi_clock (Rocket)<br>out2: 200MHz (DDR/Eth)<br>out3: 100MHz (SD/UART)"]
+        end
+
+        subgraph "CPU Core"
+            RocketChip["RocketChip CPU<br><i>$rocket_module_name</i>"]
+        end
+
+        subgraph "Memory Subsystem (DDR)"
+            direction LR
+            mem_interconnect["AXI SmartConnect<br>(axi_smc_1)"]
+            mig["MIG 7-Series<br>DDR3 Controller"]
+        end
+
+        subgraph "I/O Subsystem (IO)"
+            direction TB
+
+            subgraph "AXI Interconnects"
+                direction LR
+                io_s["Peripheral Bus<br>AXI SmartConnect (io_axi_s)"]
+                io_m["DMA Bus<br>AXI SmartConnect (io_axi_m)"]
+            end
+
+            subgraph "Peripherals"
+                direction TB
+                UART["UART Controller"]
+                SD["SD Card Controller"]
+                EthernetDMA["Ethernet DMA"]
+                XADC["XADC<br>(Temp/Voltage Sensor)"]
+            end
+
+            subgraph "Ethernet PHY/MAC Layer (EthernetVC707)"
+                 EthernetVC707["ethernet_vc707<br>+<br>gig_ethernet_pcs_pma"]
+            end
+
+            subgraph "Interrupts"
+                 xlconcat["Interrupt Concatenator<br>(xlconcat_0)"]
+            end
+        end
+    end
+
+    %% Clocking
+    sys_clk_200MHz --> sys_diff_clock_buf
+    sys_diff_clock_buf -- "200MHz" --> clk_wiz_0
+    clk_wiz_0 -- "axi_clock" --> RocketChip
+    clk_wiz_0 -- "axi_clock" --> mem_interconnect
+    clk_wiz_0 -- "axi_clock" --> io_s
+    clk_wiz_0 -- "100MHz" --> SD
+    clk_wiz_0 -- "100MHz" --> UART
+    clk_wiz_0 -- "200MHz" --> EthernetDMA
+    clk_wiz_0 -- "200MHz" --> EthernetVC707
+    clk_wiz_0 -- "200MHz" --> mig
+
+    %% Reset
+    reset_in -- "sys_reset" --> RocketChip
+    reset_in -- "sys_reset" --> mig
+    reset_in -- "sys_reset" --> EthernetVC707
+    reset_in -- "aresetn (inverted)" --> io_s
+    reset_in -- "aresetn (inverted)" --> io_m
+    reset_in -- "aresetn (inverted)" --> mem_interconnect
+
+    %% Main Data/Control Busses
+    RocketChip -- "MEM_AXI4 (to Memory)" --> mem_interconnect
+    mem_interconnect -- "S_AXI" --> mig
+    mig -- "DDR3 Interface" --> DDR3_PHY
+
+    RocketChip -- "IO_AXI4 (Peripheral Access)" --> io_s
+    io_s -- "to UART" --> UART
+    io_s -- "to SD Cfg" --> SD
+    io_s -- "to Eth Cfg" --> EthernetDMA
+    io_s -- "to XADC" --> XADC
+
+    SD -- "M_AXI (DMA)" --> io_m
+    EthernetDMA -- "M_AXI (DMA)" --> io_m
+    io_m -- "DMA_AXI4 (to RocketChip)" --> RocketChip
+
+    %% Peripheral Connections
+    UART -- "UART Pins" --> UART_PHY
+    SD -- "SDIO Pins" --> SD_PHY
+
+    EthernetDMA -- "TX/RX AXI-Stream" --> EthernetVC707
+    EthernetVC707 -- "SGMII" --> SGMII_PHY
+    sgmii_clk_125MHz --> EthernetVC707
+
+    %% Interrupts
+    UART -- "IRQ" --> xlconcat
+    SD -- "IRQ" --> xlconcat
+    EthernetDMA -- "IRQ" --> xlconcat
+    xlconcat -- "Combined IRQs" --> RocketChip
+end
