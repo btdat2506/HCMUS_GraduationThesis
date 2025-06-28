@@ -1,0 +1,215 @@
+---
+config:
+  theme: redux
+---
+flowchart TB
+    %% Input Commands
+    InCmd[Input Commands]
+    Queue[Command Queue]
+    
+    %% Configuration Controller
+    subgraph ConfigCtrl [Configuration Controller]
+        direction TB
+        ConfigIdle[Config: IDLE]
+        ConfigBounds[Config: BOUNDS]
+        ConfigAddrs[Config: ADDRS]
+        ConfigStrides[Config: STRIDES]
+        ConfigSpad[Config: SPAD]
+        ConfigRun[Config: RUN]
+        
+        ConfigIdle --> ConfigBounds
+        ConfigBounds --> ConfigAddrs  
+        ConfigAddrs --> ConfigStrides
+        ConfigStrides --> ConfigSpad
+        ConfigSpad --> ConfigRun
+        ConfigRun --> ConfigIdle
+    end
+    
+    %% Concurrent Loop Management
+    subgraph LoopMgmt [Concurrent Loop Management]
+        direction LR
+        HeadLoop[Head Loop]
+        TailLoop[Tail Loop]
+        LoopState[Loop State Registers]
+        
+        HeadLoop -.-> TailLoop
+        TailLoop -.-> HeadLoop
+        LoopState -.-> HeadLoop
+        LoopState -.-> TailLoop
+    end
+    
+    %% Resource Utilization
+    subgraph ResUtil [Resource Utilization]
+        direction TB
+        LdUtil[LD Utilization Counter]
+        StUtil[ST Utilization Counter] 
+        ExUtil[EX Utilization Counter]
+        ROBOverload{ROB Overloaded?}
+        
+        LdUtil --> ROBOverload
+        StUtil --> ROBOverload
+        ExUtil --> ROBOverload
+    end
+    
+    %% LoopMatmul Components with FSMs
+    subgraph LdA [LoopMatmulLdA]
+        direction TB
+        LdAIdle[IDLE]
+        LdALd[LD - Loading Matrix A]
+        LdAIterA[Iterator: i, k]
+        
+        LdAIdle --> LdALd
+        LdALd --> LdAIdle
+        LdALd -.-> LdAIterA
+    end
+    
+    subgraph LdB [LoopMatmulLdB]
+        direction TB
+        LdBIdle[IDLE]
+        LdBLd[LD - Loading Matrix B]
+        LdBIterB[Iterator: j, k]
+        
+        LdBIdle --> LdBLd
+        LdBLd --> LdBIdle
+        LdBLd -.-> LdBIterB
+    end
+    
+    subgraph LdD [LoopMatmulLdD]
+        direction TB
+        LdDIdle[IDLE]
+        LdDLd[LD - Loading Bias/Accumulator]
+        LdDIterD[Iterator: i, j]
+        
+        LdDIdle --> LdDLd
+        LdDLd --> LdDIdle
+        LdDLd -.-> LdDIterD
+    end
+    
+    subgraph Execute [LoopMatmulExecute]
+        direction TB
+        ExIdle[IDLE]
+        ExPre[PRE - Preload]
+        ExComp[COMP - Compute]
+        ExIterEx[Iterator: i, j, k]
+        ExSync[Sync with LdA/LdB/LdD]
+        
+        ExIdle --> ExPre
+        ExPre --> ExComp
+        ExComp --> ExPre
+        ExComp --> ExIdle
+        ExComp -.-> ExIterEx
+        ExSync -.-> ExPre
+    end
+    
+    subgraph StC [LoopMatmulStC]
+        direction TB
+        StCIdle[IDLE]
+        StCSt[ST - Store to DRAM]
+        StCLnConfig[LN_CONFIG - LayerNorm Config]
+        StCLnSt[LN_ST - LayerNorm Store]
+        StCIterSt[Iterator: i, j]
+        StCSync[Sync with Execute]
+        
+        StCIdle --> StCSt
+        StCSt --> StCIdle
+        StCSt --> StCLnConfig
+        StCLnConfig --> StCLnSt
+        StCLnSt --> StCLnConfig
+        StCLnSt --> StCIdle
+        StCSt -.-> StCIterSt
+        StCSync -.-> StCSt
+    end
+    
+    subgraph StCSpad [LoopMatmulStCSpad]
+        direction TB
+        StCSpadIdle[IDLE]
+        StCSpadSt[ST - Store to Scratchpad]
+        StCSpadIterSp[Iterator: i, j]
+        
+        StCSpadIdle --> StCSpadSt
+        StCSpadSt --> StCSpadIdle
+        StCSpadSt -.-> StCSpadIterSp
+    end
+    
+    %% Arbiters
+    subgraph WgtArb [Weighted Arbiter LdA/LdB]
+        direction TB
+        ArbWeighted[Weighted Arbitration]
+        ArbForceA[Force A Logic]
+        ArbForceB[Force B Logic]
+        
+        ArbForceA --> ArbWeighted
+        ArbForceB --> ArbWeighted
+    end
+    
+    subgraph GlobalArb [Global 5-Way Arbiter]
+        direction TB
+        Arb5Way[5-Way Arbitration]
+        ArbPriority[Priority: StC > Ex > LdD > LdAB > StCSpad]
+    end
+    
+    %% Memory Interfaces
+    DRAM[(DRAM)]
+    Scratchpad[(Scratchpad Memory)]
+    Accumulator[(Accumulator Memory)]
+    
+    %% Command Output
+    OutCmd[Output Commands to Gemmini Core]
+    
+    %% Main Data Flow
+    InCmd --> Queue
+    Queue --> ConfigCtrl
+    ConfigCtrl --> LoopMgmt
+    
+    %% Resource Management Flow
+    LoopMgmt --> ResUtil
+    ResUtil --> LdA
+    ResUtil --> LdB  
+    ResUtil --> LdD
+    ResUtil --> Execute
+    ResUtil --> StC
+    ResUtil --> StCSpad
+    
+    %% Component Dependencies - Iterator Synchronization
+    LdAIterA -.-> ExSync
+    LdBIterB -.-> ExSync
+    LdDIterD -.-> ExSync
+    ExIterEx -.-> StCSync
+    ExIterEx -.-> StCSpad
+    
+    %% Memory Access Flow
+    LdA --> DRAM
+    LdB --> DRAM
+    LdD --> DRAM
+    LdA --> Scratchpad
+    LdB --> Scratchpad
+    LdD --> Accumulator
+    Execute --> Scratchpad
+    Execute --> Accumulator
+    StC --> DRAM
+    StCSpad --> Scratchpad
+    
+    %% Arbitration Flow
+    LdA --> WgtArb
+    LdB --> WgtArb
+    WgtArb --> GlobalArb
+    Execute --> GlobalArb
+    LdD --> GlobalArb
+    StC --> GlobalArb
+    StCSpad --> GlobalArb
+    
+    %% Output
+    GlobalArb --> OutCmd
+    
+    %% Styling
+    classDef fsmState fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+    classDef component fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef memory fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef arbiter fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef control fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    
+    class LdAIdle,LdALd,LdBIdle,LdBLd,LdDIdle,LdDLd,ExIdle,ExPre,ExComp,StCIdle,StCSt,StCLnConfig,StCLnSt,StCSpadIdle,StCSpadSt fsmState
+    class LdA,LdB,LdD,Execute,StC,StCSpad component
+    class DRAM,Scratchpad,Accumulator memory
+    class WgtArb,GlobalArb arbiter
+    class ConfigCtrl,LoopMgmt,ResUtil control

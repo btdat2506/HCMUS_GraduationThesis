@@ -1,0 +1,116 @@
+---
+config:
+  theme: redux
+---
+stateDiagram-v2
+    direction TB
+    
+    %% Main Configuration FSM
+    state "Configuration Controller" as ConfigFSM {
+        [*] --> ConfigIdle
+        ConfigIdle --> ConfigBounds : LOOP_WS_CONFIG_BOUNDS
+        ConfigBounds --> ConfigAddrsAB : LOOP_WS_CONFIG_ADDRS_AB
+        ConfigAddrsAB --> ConfigAddrsDC : LOOP_WS_CONFIG_ADDRS_DC
+        ConfigAddrsDC --> ConfigStridesAB : LOOP_WS_CONFIG_STRIDES_AB
+        ConfigStridesAB --> ConfigStridesDC : LOOP_WS_CONFIG_STRIDES_DC
+        ConfigStridesDC --> ConfigSpad : LOOP_WS_CONFIG_SPAD_AB
+        ConfigSpad --> ConfigRun : LOOP_WS
+        ConfigRun --> ConfigIdle : loop completed
+    }
+    
+    %% LoopMatmulLdA FSM
+    state "LoopMatmulLdA" as LdAFSM {
+        [*] --> LdAIdle
+        LdAIdle --> LdALoading : req.fire
+        LdALoading --> LdALoading : cmd.fire && !iteration_complete
+        LdALoading --> LdAIdle : cmd.fire && iteration_complete
+        LdALoading --> LdAIdle : dram_addr == 0
+        
+        note right of LdALoading
+            Iterates through:
+            - i (rows)
+            - k (columns)
+            Handles transpose, padding
+        end note
+    }
+    
+    %% LoopMatmulLdB FSM  
+    state "LoopMatmulLdB" as LdBFSM {
+        [*] --> LdBIdle
+        LdBIdle --> LdBLoading : req.fire
+        LdBLoading --> LdBLoading : cmd.fire && !iteration_complete
+        LdBLoading --> LdBIdle : cmd.fire && iteration_complete
+        LdBLoading --> LdBIdle : dram_addr == 0
+        
+        note right of LdBLoading
+            Iterates through:
+            - j (output channels)
+            - k (input channels)
+            Handles transpose, padding
+        end note
+    }
+    
+    %% LoopMatmulExecute FSM
+    state "LoopMatmulExecute" as ExeFSM {
+        [*] --> ExeIdle
+        ExeIdle --> ExePreload : req.fire && ld_ahead
+        ExePreload --> ExeCompute : cmd.fire
+        ExeCompute --> ExePreload : cmd.fire && !iteration_complete
+        ExeCompute --> ExeIdle : cmd.fire && iteration_complete
+        ExeCompute --> ExeIdle : skip
+        
+        note right of ExePreload
+            Preload systolic array
+            with matrix B data
+        end note
+        
+        note right of ExeCompute
+            Matrix multiplication
+            A * B = C
+            Iterates: k -> j -> i
+        end note
+    }
+    
+    %% LoopMatmulStC FSM
+    state "LoopMatmulStC" as StCFSM {
+        [*] --> StCIdle
+        StCIdle --> StCStore : req.fire && ex_ahead && !layernorm
+        StCIdle --> StCLnConfig : req.fire && ex_ahead && layernorm
+        StCStore --> StCStore : cmd.fire && !iteration_complete
+        StCStore --> StCIdle : cmd.fire && iteration_complete
+        StCStore --> StCIdle : dram_addr == 0
+        StCLnConfig --> StCLnStore : cmd.fire
+        StCLnStore --> StCLnConfig : cmd.fire && !ln_complete
+        StCLnStore --> StCIdle : cmd.fire && ln_complete
+        
+        note right of StCLnConfig
+            LayerNorm/Softmax
+            configuration phase
+        end note
+        
+        note right of StCLnStore
+            Specialized store for
+            activation functions
+        end note
+    }
+    
+    %% Dependencies between FSMs
+    ConfigFSM --> LdAFSM : configure LdA
+    ConfigFSM --> LdBFSM : configure LdB
+    ConfigFSM --> ExeFSM : configure Execute
+    ConfigFSM --> StCFSM : configure StC
+    
+    LdAFSM --> ExeFSM : iterator sync
+    LdBFSM --> ExeFSM : iterator sync
+    ExeFSM --> StCFSM : iterator sync
+    
+    %% Styling
+    classDef configState fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef loadState fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
+    classDef executeState fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef storeState fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    
+    class ConfigIdle,ConfigBounds,ConfigAddrsAB,ConfigAddrsDC,ConfigStridesAB,ConfigStridesDC,ConfigSpad,ConfigRun configState
+    class LdAIdle,LdALoading,LdBIdle,LdBLoading loadState
+    class ExeIdle,ExePreload,ExeCompute executeState
+    class StCIdle,StCStore,StCLnConfig,StCLnStore storeState

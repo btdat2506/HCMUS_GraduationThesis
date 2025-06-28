@@ -5,7 +5,67 @@
 \chapter{INTRODUCTION}
 \label{Chapter1}
 
-This thesis is the result of a work conducted in the Computer Embedded Systems Laboratory (CESLAB) of the University of Science, VNUHCM (HCMUS), in the context of a wider project called Survey the new foundation of RISC-V and evaluate alternative open-source system-on-chip design automation solutions for future SoC Design and chip fabrication. 
+This thesis presents the design, implementation, and evaluation of a RISC-V System-on-Chip (SoC) featuring a specialized Deep Neural Network (DNN) accelerator, conducted within the Computer Embedded Systems Laboratory (CESLAB) of the University of Science, VNUHCM (HCMUS). This work represents a significant step in our laboratory's exploration of the emerging RISC-V ecosystem and open-source SoC design automation solutions for future chip development and fabrication.
+
+\section{Background and Motivation}
+
+The rapid advancement of artificial intelligence and machine learning has created an unprecedented demand for specialized computing architectures. Deep Neural Networks, which form the backbone of modern AI applications, require enormous computational resources that traditional general-purpose processors struggle to provide efficiently. This computational challenge, combined with the exponential growth in model complexity and the need for energy-efficient solutions, has driven the development of custom hardware accelerators specifically designed for DNN workloads.
+
+Traditionally, the CESLAB has been involved in designing and developing hardware accelerators (or IP Cores) on FPGA using Intel Quartus, particularly leveraging the Platform Designer tool with Nios II soft processors and Avalon Bus interfaces. While this approach has served well for many applications, the proprietary nature of these tools and the associated licensing costs have limited our ability to explore more advanced SoC design methodologies and to contribute to the broader research community.
+
+The emergence of the RISC-V instruction set architecture has fundamentally changed the landscape of processor design and SoC development. As an open-source ISA, RISC-V eliminates the barriers imposed by proprietary architectures, offering unprecedented flexibility for customization and modification. This openness has catalyzed the development of comprehensive design ecosystems that support the entire SoC development flow, from high-level specification to physical implementation.
+
+\section{The Chipyard Framework and Full-Stack Integration}
+
+Among the various RISC-V SoC design frameworks, Chipyard has emerged as the most comprehensive and mature solution for academic and industrial research. Developed at UC Berkeley, Chipyard provides a complete, open-source SoC design environment that spans from high-level hardware generators written in Chisel to full VLSI implementation flows. The framework's generator-based approach allows for the systematic exploration of different architectural configurations while maintaining design consistency across multiple implementation targets.
+
+A key innovation of Chipyard is its emphasis on \textit{full-stack integration}. Unlike traditional approaches that design and evaluate accelerators in isolation, Chipyard enables the creation of complete, Linux-capable systems that capture real-world effects such as operating system overhead, memory hierarchy interactions, and system-level resource contention. This holistic approach is crucial for understanding the true performance characteristics of specialized accelerators when deployed in practical computing environments.
+
+The framework includes the Gemmini accelerator generator, an open-source DNN accelerator specifically designed for systolic array-based matrix computations. Gemmini embodies the principles of efficient DNN acceleration through its configurable systolic array architecture, which maximizes data reuse and minimizes the costly movement of data between computational units and external memory—a fundamental challenge known as the "memory wall" in computer architecture.
+
+\section{Research Objectives and Contributions}
+
+This thesis aims to demonstrate the capabilities of the Chipyard framework through the implementation of a practical RISC-V SoC that integrates a Rocket processor core with the Gemmini DNN accelerator. The specific objectives of this work include:
+
+\begin{enumerate}
+    \item \textbf{System Architecture Design}: Develop a comprehensive understanding of the Chipyard framework and utilize it to configure a custom SoC featuring a 64-bit Rocket core coupled with a 16×16 Gemmini systolic array accelerator (Rocket64b1gem16 configuration).
+    
+    \item \textbf{Full-Stack Implementation}: Implement the complete system stack, including hardware generation, software compilation, bootloader configuration, and Linux operating system integration, demonstrating the end-to-end capability of the framework.
+    
+    \item \textbf{FPGA Prototyping}: Successfully deploy and validate the designed SoC on a Xilinx VC707 FPGA board, providing a realistic hardware platform for system evaluation and development.
+    
+    \item \textbf{Accelerator Integration}: Demonstrate the integration of the Gemmini accelerator as a Rocket Custom Coprocessor (RoCC), showcasing how specialized computational units can be seamlessly incorporated into RISC-V systems.
+    
+    \item \textbf{System Validation}: Verify the functionality of the complete system through the successful execution of both bare-metal applications and full Linux environments, including the compilation and execution of DNN acceleration test programs.
+\end{enumerate}
+
+\section{Significance and Impact}
+
+This work represents the first comprehensive exploration of the RISC-V ecosystem within CESLAB, establishing a foundation for future research in open-source SoC design and specialized accelerator development. By successfully implementing a complete, functioning system that combines a RISC-V processor with a state-of-the-art DNN accelerator, this thesis demonstrates the maturity and practicality of open-source hardware design methodologies.
+
+The significance of this work extends beyond the immediate technical achievements. It establishes a new research paradigm within our laboratory that emphasizes open-source collaboration, reproducible research, and the development of freely available intellectual property. This approach not only reduces the barriers to advanced hardware research but also contributes to the global effort to democratize access to cutting-edge computing technologies.
+
+Furthermore, the full-stack nature of this implementation provides valuable insights into the complex interactions between hardware accelerators, operating systems, and application software—interactions that are often overlooked in studies that focus solely on isolated hardware components. These insights are crucial for developing practical, deployable AI systems that can deliver their theoretical performance benefits in real-world environments. 
+
+\section{Thesis Structure and Organization}
+
+This thesis is organized into eight chapters that systematically present the theoretical foundations, implementation details, and evaluation results of our RISC-V SoC with Gemmini accelerator:
+
+\textbf{Chapter 2: RISC-V Microprocessor Instruction Set Architecture} provides a comprehensive overview of the RISC-V ISA, focusing on the RV32I base instruction set and its advantages as an open-source architecture. This chapter establishes the theoretical foundation for understanding the processor core used in our SoC implementation.
+
+\textbf{Chapter 3: A Single-Core with Gemmini RoCC Accelerator RISC-V Processor System} introduces the system architecture and design methodology using the Chipyard framework. It details the compilation and elaboration flow, the role of Chisel/Scala in hardware design, and the overall system construction approach.
+
+\textbf{Chapter 4: Architectural Foundations of DNN Acceleration} explores the fundamental challenges of Deep Neural Network acceleration, including the memory wall problem and the principles of systolic array architectures. This chapter provides the theoretical context for understanding why specialized accelerators like Gemmini are necessary for efficient DNN computation.
+
+\textbf{Chapter 5: The Gemmini DNN Accelerator: An Architectural Overview} presents a detailed analysis of the Gemmini accelerator architecture, including its systolic compute engine, memory hierarchy, and integration model within the SoC framework.
+
+\textbf{Chapter 6: Gemmini's Internal Architecture and Programming Model} delves into the internal implementation details of Gemmini, examining its command and control flow, instruction processing pipeline, and programming interfaces that enable efficient DNN acceleration.
+
+\textbf{Chapter 7: System Implementation and Testing} documents the complete implementation process, from SoC configuration and hardware generation to FPGA deployment and system validation. This chapter provides practical insights into the entire development workflow and demonstrates the successful integration of all system components.
+
+\textbf{Chapter 8: Conclusion and Future Work} summarizes the achievements of this work, evaluates the success of the implementation against the stated objectives, and outlines potential directions for future research and development.
+
+This structured approach ensures a comprehensive understanding of both the theoretical principles underlying modern SoC design and the practical challenges involved in implementing complex, multi-component systems using open-source tools and methodologies.
 
 % Problem Statement, Background, and Motivation
 % The need for research

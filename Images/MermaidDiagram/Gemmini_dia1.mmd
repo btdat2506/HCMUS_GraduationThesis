@@ -1,0 +1,86 @@
+---
+config:
+  theme: redux
+---
+flowchart TD
+    %% External interfaces
+    INPUT[("io.in<br/>GemminiCmd")]
+    OUTPUT[("io.out<br/>RoCCCommand")]
+    
+    %% Main LoopConv module
+    subgraph LoopConv["🔄 LoopConv Module"]
+        %% Command queue
+        CMD[("Queue_56<br/>(cmd)")]
+        
+        %% Configuration and state management
+        LOOPS[("Loop State<br/>Management<br/>concurrent_loops=2")]
+        
+        %% Load units (can run in parallel)
+        subgraph LoadUnits["📥 Load Units (Parallel)"]
+            LD_INPUT["LoopConv1dInput<br/>(ld_input_)<br/>📄 Input Data"]
+            LD_WEIGHTS["LoopConv1dWeight<br/>(ld_weights_)<br/>⚖️ Weights"]
+            LD_BIAS["LoopConv1dBias<br/>(ld_bias_)<br/>➕ Bias"]
+        end
+        
+        %% Execute unit
+        EX["LoopConvExecute<br/>(ex_)<br/>⚡ Computation"]
+        
+        %% Store unit
+        ST["LoopConvst<br/>(st_)<br/>💾 Store Results"]
+        
+        %% Arbiter
+        ARB["Arbiter_2<br/>(arb)<br/>🔀 5-to-1 Scheduler"]
+        
+        %% Resource management
+        UTIL[("📊 Utilization<br/>Counters<br/>ld/ex/st")]
+        
+        %% Data flow dependencies (solid arrows)
+        LD_INPUT -->|"✅ lda_completed"| EX
+        LD_WEIGHTS -->|"✅ ldb_completed"| EX
+        LD_BIAS -->|"✅ ldd_completed"| EX
+        EX -->|"✅ ex_completed"| ST
+        
+        %% Command flow to arbiter
+        LD_INPUT -->|"arb_io_in_4"| ARB
+        LD_WEIGHTS -->|"arb_io_in_3"| ARB
+        LD_BIAS -->|"arb_io_in_2"| ARB
+        EX -->|"arb_io_in_1"| ARB
+        ST -->|"arb_io_in_0"| ARB
+        
+        %% Inter-loop synchronization (dotted arrows)
+        EX -.->|"⏸️ wait_for_prev_loop"| LD_INPUT
+        EX -.->|"⏸️ wait_for_prev_loop"| LD_WEIGHTS
+        EX -.->|"⏸️ wait_for_prev_loop"| LD_BIAS
+        
+        %% Resource management signals (dotted arrows)
+        UTIL -.->|"🚫 rob_overloaded"| LD_INPUT
+        UTIL -.->|"🚫 rob_overloaded"| LD_WEIGHTS
+        UTIL -.->|"🚫 rob_overloaded"| LD_BIAS
+        UTIL -.->|"🚫 rob_overloaded"| EX
+        UTIL -.->|"🚫 rob_overloaded"| ST
+        
+        %% Configuration flow
+        CMD -->|"Config Commands"| LOOPS
+        LOOPS -.->|"Loop Parameters"| LoadUnits
+        LOOPS -.->|"Loop Parameters"| EX
+        LOOPS -.->|"Loop Parameters"| ST
+    end
+    
+    %% External connections
+    INPUT --> CMD
+    ARB --> OUTPUT
+    
+    %% Styling
+    classDef loadUnit fill:#e1f5fe,stroke:#0277bd,stroke-width:2px
+    classDef execUnit fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef storeUnit fill:#e8f5e8,stroke:#388e3c,stroke-width:2px
+    classDef arbiter fill:#fff3e0,stroke:#f57c00,stroke-width:3px
+    classDef control fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef external fill:#f1f8e9,stroke:#689f38,stroke-width:2px
+    
+    class LD_INPUT,LD_WEIGHTS,LD_BIAS loadUnit
+    class EX execUnit
+    class ST storeUnit
+    class ARB arbiter
+    class CMD,UTIL,LOOPS control
+    class INPUT,OUTPUT external
