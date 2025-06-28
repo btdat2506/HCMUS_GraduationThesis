@@ -1,0 +1,50 @@
+---
+config:
+  theme: redux
+  flowchart:
+    htmlLabels: true
+    curve: basis
+---
+flowchart TD
+    %% Core Processor
+    RocketChip["🚀 RocketChip SoC Core<br/>64-bit RISC-V<br/>Single Core"]
+    
+    %% Bus Layer
+    RocketChip --> MEM_AXI4["MEM_AXI4<br/>Memory Bus<br/>16GB Capability<br/>34-bit Address"]
+    RocketChip --> IO_AXI4["IO_AXI4<br/>Peripheral Bus<br/>32-bit Address"]
+    
+    %% Memory Subsystem
+    MEM_AXI4 --> SmartConnect1["AXI SmartConnect<br/>Address Translation<br/>34→30 bit"]
+    SmartConnect1 --> MIG["MIG 7-Series<br/>DDR3 Controller<br/>1GB Physical"]
+    MIG --> DDR3["💾 DDR3 SODIMM<br/>1GB @ 800MHz<br/>0x0000_0000 - 0x3FFF_FFFF"]
+    
+    %% Peripheral Subsystem
+    IO_AXI4 --> SmartConnect2["AXI SmartConnect<br/>I/O Hub<br/>Address Decoder"]
+    
+    %% Individual Peripherals
+    SmartConnect2 --> UART["📟 UART Controller<br/>0x6001_0000<br/>Serial Communication"]
+    SmartConnect2 --> SD["💾 SD Card Controller<br/>0x6000_0000<br/>Mass Storage"]
+    SmartConnect2 --> ETH["🌐 Ethernet MAC<br/>0x6002_0000<br/>Network Interface"]
+    SmartConnect2 --> XADC["🌡️ XADC/Fan Control<br/>0x6003_0000<br/>Temperature Monitor"]
+    
+    %% External Connections
+    DDR3 -.-> DDR3_DIMM["DDR3 SODIMM Slot<br/>Physical Memory"]
+    UART -.-> UART_PORT["UART Connector<br/>Serial Port"]
+    SD -.-> SD_SLOT["SD Card Slot<br/>Storage Device"]
+    ETH -.-> ETH_PORT["Ethernet Port<br/>RJ45 Connector"]
+    XADC -.-> TEMP_SENSOR["Temperature Sensors<br/>Fan Control"]
+    
+    %% Styling
+    classDef coreStyle fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
+    classDef busStyle fill:#fff9c4,stroke:#f57f17,stroke-width:2px,color:#000
+    classDef memStyle fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000
+    classDef ioStyle fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000
+    classDef deviceStyle fill:#fff3e0,stroke:#e65100,stroke-width:1px,color:#000
+    classDef physicalStyle fill:#f5f5f5,stroke:#616161,stroke-width:1px,color:#000,stroke-dasharray: 5 5
+    
+    class RocketChip coreStyle
+    class MEM_AXI4,IO_AXI4 busStyle
+    class SmartConnect1,MIG,DDR3 memStyle
+    class SmartConnect2 ioStyle
+    class UART,SD,ETH,XADC deviceStyle
+    class DDR3_DIMM,UART_PORT,SD_SLOT,ETH_PORT,TEMP_SENSOR physicalStyle

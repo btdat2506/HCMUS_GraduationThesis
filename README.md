@@ -13,7 +13,7 @@ For the documents of the system implementation of the ```Rocket64b1gem16``` on t
 - Control Bus: [docs/control_bus_peripherals_implementation.md](docs/control_bus_peripherals_implementation.md)
 - SD Card: [docs/sd_card_controller_implementation.md](docs/sd_card_controller_implementation.md)
 - XADC Fan Control: [docs/xadc_fan_control_implementation.md](docs/xadc_fan_control_implementation.md)
-- Gemmini: [docs/gemmini.md](docs/gemmini.md)
+- Gemmini: [docs/gemmini.md](docs/gemmini.md), [docs/gemmini_accelerator_implementation.md](docs/gemmini_accelerator_implementation.md)
 
 
 

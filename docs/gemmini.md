@@ -1,26 +1,26 @@
 ```text
-┌─────────────────────── Gemmini RoCC Accelerator ───────────────────────┐
-│                                                                        │
-│  ┌─── Controller ───┐    ┌─── Memory Subsystem ───┐                    │
-│  │                  │    │                        │                    │
-│  │ • Reservation    │    │ Scratchpad (256KB)     │   ┌─ Systolic ──┐  │
-│  │   Station        │    │ - 4 Banks              │   │ Array       │  │
-│  │ • Load Ctrl      │    │ - Single-ported        │   │             │  │
-│  │ • Store Ctrl     │◄──►│                        │   │ 16x16 PEs   │  │
-│  │ • Execute Ctrl   │    │ Accumulator (64KB)     │◄──┤             │  │
-│  │                  │    │ - 2 Banks              │   │ • WS/OS     │  │
-│  └──────────────────┘    │ - Dual-ported          │   │   Dataflow  │  │
-│                          └────────────────────────┘   └─────────────┘  │
-│  ┌─── Special Units ───┐                                               │
-│  │                    │    ┌─── DMA Engine ───┐                        │
-│  │ • Im2Col           │    │                  │                        │
-│  │ • TLB (4 entries)  │    │ • StreamReader   │                        │
-│  │ • Scaling Units    │    │ • StreamWriter   │                        │
-│  │ • Loop Unrollers   │◄──►│ • 128-bit bus    │                        │
-│  │ • Perf Counters    │    │ • 16 in-flight   │                        │
-│  └────────────────────┘    └──────────────────┘                        │
-│                                                                        │
-└────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────── Gemmini RoCC Accelerator ─────────────────────────────┐
+│                                                                              │
+│  ┌─── Controller ───┐    ┌─── Memory Subsystem ───┐                          │
+│  │                  │    │                        │                          │
+│  │ • Reservation    │    │ Scratchpad (256KB)     │   ┌─ Systolic Array ──┐  │
+│  │   Station        │    │ - 4 Banks              │   │                   │  │
+│  │ • Load Ctrl      │    │ - Single-ported        │   │    • 16x16 PEs    │  │
+│  │ • Store Ctrl     │◄──►│                        │   │                   │  │
+│  │ • Execute Ctrl   │    │ Accumulator (64KB)     │◄──┤                   │  │
+│  │                  │    │ - 2 Banks              │   │ • WS/OS           │  │
+│  └──────────────────┘    │ - Dual-ported          │   │   Dataflow        │  │
+│                          └────────────────────────┘   └───────────────────┘  │
+│  ┌─── Special Units ───┐                                                     │
+│  │                     │    ┌─── DMA Engine ───┐                             │
+│  │ • Im2Col            │    │                  │                             │
+│  │ • TLB (4 entries)   │    │ • StreamReader   │                             │
+│  │ • Scaling Units     │    │ • StreamWriter   │                             │
+│  │ • Loop Unrollers    │◄──►│ • 128-bit bus    │                             │
+│  │ • Perf Counters     │    │ • 16 in-flight   │                             │
+│  └─────────────────────┘    └──────────────────┘                             │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
         ▲                           ▲                           ▲
         │                           │                           │
     RoCC Cmd                   TileLink                    PTW (TLB)

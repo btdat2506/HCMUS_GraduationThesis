@@ -1,0 +1,69 @@
+---
+config:
+  theme: redux
+---
+flowchart TD
+    subgraph RocketChip["🚀 RocketChip SoC Core"]
+        CPU["RISC-V CPU Core<br/>64-bit, Out-of-Order"]
+        L1I["L1 I-Cache<br/>16KB"]
+        L1D["L1 D-Cache<br/>16KB"]
+        L2["L2 Cache<br/>512KB"]
+        MMU["Memory Management Unit<br/>Sv39 Virtual Memory"]
+        
+        CPU --> L1I
+        CPU --> L1D
+        L1I --> L2
+        L1D --> L2
+        CPU --> MMU
+    end
+    
+    subgraph MemInterface["Memory Interface (34-bit Address)"]
+        MEM_AXI4["MEM_AXI4 Master<br/>🔥 16GB Capability<br/>Base: 0x0<br/>Range: 0x0-0x3FFFF_FFFF"]
+    end
+    
+    subgraph SmartConnect["AXI SmartConnect"]
+        AddressDecoder["Address Decoder<br/>34-bit → 30-bit"]
+        DataPath["Data Width Converter<br/>64/256-bit → 512-bit"]
+        ClockCross["Clock Domain Crossing<br/>System → Memory UI"]
+    end
+    
+    subgraph MIGController["Xilinx MIG 7-Series"]
+        MIGAXI["S_AXI Interface<br/>512-bit Data<br/>30-bit Address"]
+        MIGPHY["DDR3 PHY<br/>800MHz (400MHz DDR)"]
+        CalibCtrl["Calibration Controller<br/>Write Leveling, DQS"]
+        MemCtrl["Memory Controller<br/>Row/Column/Bank Mgmt"]
+    end
+    
+    subgraph PhysicalMem["Physical DDR3 Memory"]
+        SODIMM["💾 DDR3 SODIMM<br/>MT8KTF25664HZ-1G6<br/>1GB (1Rx64)<br/>Physical Range:<br/>0x0-0x3FFF_FFFF"]
+    end
+    
+    %% Connections
+    L2 --> MEM_AXI4
+    MMU --> MEM_AXI4
+    MEM_AXI4 --> AddressDecoder
+    AddressDecoder --> DataPath
+    DataPath --> ClockCross
+    ClockCross --> MIGAXI
+    MIGAXI --> MemCtrl
+    MemCtrl --> MIGPHY
+    MIGPHY --> CalibCtrl
+    CalibCtrl --> SODIMM
+    
+    %% Key Insight Box
+    subgraph Insight["🔍 Key Architecture Insight"]
+        KeyPoint["16GB Design Capability<br/>vs<br/>1GB Physical Implementation<br/><br/>• RocketChip: 34-bit addressing (16GB)<br/>• MIG Controller: 30-bit addressing (1GB)<br/>• Future expandable to 8GB max"]
+    end
+    
+    %% Styling
+    classDef cpuStyle fill:#e3f2fd,stroke:#0277bd,stroke-width:2px
+    classDef memStyle fill:#f3e5f5,stroke:#6a1b9a,stroke-width:2px
+    classDef migStyle fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
+    classDef physStyle fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    classDef insightStyle fill:#ffebee,stroke:#c62828,stroke-width:3px
+    
+    class CPU,L1I,L1D,L2,MMU cpuStyle
+    class MEM_AXI4,AddressDecoder,DataPath,ClockCross memStyle
+    class MIGAXI,MIGPHY,CalibCtrl,MemCtrl migStyle
+    class SODIMM physStyle
+    class KeyPoint insightStyle
