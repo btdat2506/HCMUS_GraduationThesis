@@ -37,25 +37,40 @@ RV32I \cite{riscv:manual:user:2024} is the base instruction set present in almos
 
 \begin{table}[h!]
     \centering
-    \caption{ABI names and functions of registers in RV32I. Source \cite{riscv:manual:user:2024}}
+    \caption{RISC-V Standard 32-bit ABI Register Conventions (RV32I). \cite{riscv:manual:user:2024}}
     \label{tab:rv32i_registers}
-    \begin{tabular}{lll}
-    \toprule
+    \begin{tabular}{|l|l|l|}
+    %\toprule
+    
+    \hline
     Register & ABI Name & Description \\
-    \midrule
+    %\midrule
+    \hline
     x0 & zero & Constant "0" \\
+    \hline
     x1 & ra & Return address \\
+    \hline
     x2 & sp & Stack pointer \\
+    \hline
     x3 & gp & Global pointer \\
+    \hline
     x4 & tp & Thread pointer \\
-    x5 $\to$ x7 & t0 $\to$ t2 & Temporary \\
+    \hline
+    x5 $\to$ x7 & t0 $\to$ t2 & Temporary registers \\
+    \hline
     x8 & s0/fp & Memory/frame pointer \\
-    x9 & s1 & Memory \\
+    \hline
+    x9 & s1 & Saved register \\
+    \hline
     x10, x11 & a0, a1 & Function parameter/return value \\
+    \hline
     x12 $\to$ x17 & a2 $\to$ a7 & Function parameter \\
-    x18 $\to$ x27 & s2 $\to$ s11 & Memory \\
-    x28 $\to$ x31 & t3 $\to$ t6 & Temporary \\
-    \bottomrule
+    \hline
+    x18 $\to$ x27 & s2 $\to$ s11 & Saved register \\
+    \hline
+    x28 $\to$ x31 & t3 $\to$ t6 & Temporary registers \\
+    %\bottomrule
+    \hline    
     \end{tabular}
 \end{table}
 
@@ -79,7 +94,7 @@ Figure \ref{fig:rv32i_instructions} details all instructions in the RV32I base i
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.8\textwidth]{RV32I_BaseInstructionSet.pdf}
+    \includegraphics[width=0.9\textwidth]{RV32I_BaseInstructionSet.pdf}
     % \fbox{Placeholder for RV32I Instruction List Diagram}
     \caption{Instructions in the RV32I base instruction set. \cite{riscv:manual:user:2024}}
     \label{fig:rv32i_instructions}
@@ -89,33 +104,56 @@ Figure \ref{fig:rv32i_instructions} details all instructions in the RV32I base i
 With these 40 instructions, the microprocessor can perform most basic operations on integers. Additionally, several standard pseudo-instructions are defined to add tasks for which there are no dedicated instructions in the set. For example, the MOVE instruction - "\texttt{mv rd, rs}" - performs the function of moving/copying data between two registers. In a program, this instruction might be generated in the assembly code by a RISC-V compiler but is actually converted by assemblers into a standard instruction when translating to machine code, namely ADDI - Add Immediate "\texttt{addi rd, rs, 0}", which adds the source register to the constant "0" and assigns it to the destination register, achieving a similar function. Some other pseudo-instructions and their equivalent standard instructions are shown in Table \ref{tab:pseudo_instructions}.
 
 \begin{table}[h!]
-    \centering
-    \caption{Pseudo-instructions and their corresponding standard instructions. Source \cite{riscv:manual:user:2024}}
-    \label{tab:pseudo_instructions}
-    \begin{tabular}{lll}
-    \toprule
-    \textbf{Pseudo-instruction} & \textbf{Corresponding Core Instruction} & \textbf{Meaning} \\
-    \midrule
-    nop & addi rd, x0, x0 & No operation \\
-    li rd, imm & addi rd, x0, imm & Load constant (immediate) \\
-    mv rd, rs & addi rd, rs, 0 & Copy register \\
-    not rd, rs & xori rd, rs, -1 & One's complement (invert) \\
-    neg rd, rs & sub rd, x0, rs & Two's complement (negative) \\
-    seqz rd, rs & sltiu rd, rs, 1 & Compare equal to zero \\
-    snez rd, rs & sltiu rd, x0, rs & Compare not equal to zero \\
-    sltz rd, rs & slt rd, rs, x0 & Compare less than zero \\
-    sgtz rd, rs & slt rd, x0, rs & Compare greater than zero \\
-    beqz rs, offset & beq rs, x0, offset & Branch if equal to zero \\
-    bnez rs, offset & bne rs, x0, offset & Branch if not equal to zero \\
-    blez rs, offset & bge x0, rs, offset & Branch if less than or equal to zero \\
-    bgez rs, offset & bge rs, x0, offset & Branch if greater than or equal to zero \\
-    bltz rs, offset & blt rs, x0, offset & Branch if less than zero \\
-    bgtz rs, offset & blt x0, rs, offset & Branch if greater than zero \\
-    j offset & jal x0, offset & Jump to label (offset) \\
-    jal offset & jal x1, offset & Jump and link register \\
-    ret & jalr x0, 0(x1) & Return from subroutine \\
-    \bottomrule
-    \end{tabular}
+\centering
+\caption{Common RISC-V Pseudo-instructions. \cite{riscv:manual:user:2024}}
+\renewcommand{\arraystretch}{1.2} % Increase row spacing for readability
+\label{tab:pseudo_instructions}
+\resizebox{\textwidth}{!}{%
+%\begin{tabular}{|p{3.5cm}|p{4.0cm}|p{5.5cm}|}
+%\resizebox{\columnwidth}{!}{%
+%\begin{tabular}{lllll}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Pseudo-instruction} & \textbf{\begin{tabular}[c]{@{}l@{}}Corresponding Base\\ Instruction\end{tabular}} & \textbf{Meaning} \\
+\hline
+\texttt{nop} & \texttt{addi x0, x0, 0} & No operation \\
+\hline
+\texttt{li rd, imm} & \texttt{addi rd, x0, imm} & Load immediate \\
+\hline
+\texttt{mv rd, rs} & \texttt{addi rd, rs, 0} & Move register (copy) \\
+\hline
+\texttt{not rd, rs} & \texttt{xori rd, rs, -1} & One's complement (bitwise NOT) \\
+\hline
+\texttt{neg rd, rs} & \texttt{sub rd, x0, rs} & Two's complement (negate) \\
+\hline
+\texttt{seqz rd, rs} & \texttt{sltiu rd, rs, 1} & Set if equal to zero \\
+\hline
+\texttt{snez rd, rs} & \texttt{sltu rd, x0, rs} & Set if not equal to zero \\
+\hline
+\texttt{sltz rd, rs} & \texttt{slt rd, rs, x0} & Set if less than zero \\
+\hline
+\texttt{sgtz rd, rs} & \texttt{slt rd, x0, rs} & Set if greater than zero \\
+\hline
+\texttt{beqz rs, offset} & \texttt{beq rs, x0, offset} & Branch if equal to zero \\
+\hline
+\texttt{bnez rs, offset} & \texttt{bne rs, x0, offset} & Branch if not equal to zero \\
+\hline
+\texttt{blez rs, offset} & \texttt{bge x0, rs, offset} & Branch if less than or equal to zero \\
+\hline
+\texttt{bgez rs, offset} & \texttt{bge rs, x0, offset} & Branch if greater than or equal to zero \\
+\hline
+\texttt{bltz rs, offset} & \texttt{blt rs, x0, offset} & Branch if less than zero \\
+\hline
+\texttt{bgtz rs, offset} & \texttt{blt x0, rs, offset} & Branch if greater than zero \\
+\hline
+\texttt{j offset} & \texttt{jal x0, offset} & Jump to label (offset) \\
+\hline
+\texttt{jal offset} & \texttt{jal x1, offset} & Jump and link (call) \\
+\hline
+\texttt{ret} & \texttt{jalr x0, 0(x1)} & Return from subroutine \\
+\hline
+\end{tabular}%
+}
 \end{table}
 
 As mentioned, a goal of RISC-V is to support implementations requiring more features beyond the base instruction set. This is reflected in RISC-V defining extensions \cite{riscv:manual:user:2024} for its instruction set architecture. These extensions define additional instruction encodings for various functionalities. For example, the standard M extension adds instructions for integer multiplication and division, while the standard F extension defines instructions for single-precision floating-point computation and manipulation.
@@ -145,7 +183,14 @@ Table \ref{tab:extension_status} above clearly lists the standard extension sets
 
 \subsection{RISC-V 64-bit and the RV64I Base Instruction Set}
 
-Similar to RV32I, RV64I is the base instruction set for 64-bit microprocessor architectures, featuring 64-bit wide registers and supporting 64-bit addressing (XLEN=64), though instructions remain 32-bits wide. Architectures compliant with RV64I are compatible with RV32 instructions and include additional instructions to support operations between 32-bit and 64-bit data. For example, the \texttt{LW} instruction loads a 32-bit value and sign-extends it into a 64-bit register, while the new \texttt{LD} instruction loads a 64-bit word. The \texttt{ADD} instruction now performs 64-bit addition, while the \texttt{ADDW} instruction handles 32-bit addition, ignoring the upper 32 bits and returning a 32-bit signed value, sign-extended to 64 bits. These instructions enabling backward compatibility typically have a "W" suffix to denote 32-bit wide operations.
+Similar to RV32I, RV64I is the base instruction set for 64-bit microprocessor architectures, featuring 64-bit wide registers and supporting 64-bit addressing (XLEN=64), though instructions remain 32-bits wide. Architectures compliant with RV64I are compatible with RV32 instructions and include additional instructions to support operations between 32-bit and 64-bit data. For example, the \texttt{LW} instruction loads a 32-bit value and sign-extends it into a 64-bit register, while the new \texttt{LD} instruction loads a 64-bit word. The \texttt{ADD} instruction now performs 64-bit addition, while the \texttt{ADDW} instruction handles 32-bit addition, ignoring the upper 32 bits and returning a 32-bit signed value, sign-extended to 64 bits. These instructions enabling backward compatibility typically have a "W" suffix to denote 32-bit wide operations. These instructions, along with new 64-bit load and store operations, are summarized in Figure \ref{fig:rv64i_instructions}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{RV64I_BaseInstructionSet.pdf}
+    \caption{Instructions in the RV64I base instruction set. \cite{riscv:manual:user:2024}}
+    \label{fig:rv64i_instructions}
+\end{figure}
 
 The compiler and calling conventions maintain the invariant that all 32-bit values are stored in sign-extended format within 64-bit registers. Even 32-bit unsigned integers will have bit 31 extended into bits 63 through 32. Consequently, converting between 32-bit signed and unsigned integers is a no-operation, as is converting from a 32-bit signed integer to a 64-bit signed integer. Existing 64-bit instructions like \texttt{SLTU} (set less than unsigned) and branch comparisons continue to operate correctly on 32-bit unsigned integers under this rule. Similarly, 64-bit logical operations on 32-bit sign-extended integers preserve the sign-extension property. A few new instructions (\texttt{ADD[I]W/SUBW/SxxW}) are necessary for addition and shifts to ensure reasonable performance for 32-bit values.
 

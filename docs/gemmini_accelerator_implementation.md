@@ -794,7 +794,7 @@ class Rocket64b1gem8 extends Config(
   new RocketBaseConfig)
 
 // 16x16 Gemmini with 1 big core
-class Rocket64b1gem16 extends Config(
+class Rocket64b1gem16jtag extends Config(
   new WithGemmini(16, 64) ++
   new WithInclusiveCache  ++
   new WithNBreakpoints(8) ++

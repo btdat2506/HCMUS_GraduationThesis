@@ -7,12 +7,12 @@ While Chapter \ref{chap:gemmini_overview} described the conceptual architecture 
 \section{Internal Command and Control Flow}
 \label{sec:gemmini_internal_flow}
 
-A custom \texttt{RoCC} instruction sent from the Rocket core is not executed directly by the systolic array. Instead, it triggers a complex sequence of events within the Gemmini accelerator's internal controller modules. The overall structure of the generated hardware, as analyzed by Gookyi et al. \cite{gookyi2023gemmini_case_study}, is shown in Figure~\ref{fig:gemmini_internal_modules}. This section details the key components of this internal pipeline.
+A custom \texttt{RoCC} instruction sent from the Rocket core is not executed directly by the systolic array. Instead, it triggers a complex sequence of events within the Gemmini accelerator's internal controller modules. The overall structure of the generated hardware, is shown in Figure~\ref{fig:gemmini_internal_modules}. This section details the key components of this internal pipeline.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{Gemmini_Internal_Overview.pdf}
-    \caption{Overview of the internal modules in the generated Gemmini hardware architecture, showing the flow of commands from the RoCC interface through various queues and controllers. Source: \cite{gookyi2023gemmini_case_study}.}
+    \caption{Overview of the internal modules in the generated Gemmini hardware architecture, showing the flow of commands from the RoCC interface through various queues and controllers.}
     \label{fig:gemmini_internal_modules}
 \end{figure}
 
@@ -28,13 +28,13 @@ The initial \texttt{RoCC} instructions received from the CPU are often "complex"
         \label{fig:loop_conv}
     \end{subfigure}
     \vspace{1em}
-    \begin{subfigure}[b]{0.7\textwidth}
+    \begin{subfigure}[b]{\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Gemmini_Internal_LoopMatmul.pdf}
         \caption{LoopMatmul module}
         \label{fig:loop_matmul}
     \end{subfigure}
-    \caption{Gemmini's command unrolling modules (\texttt{LoopConv} and \texttt{LoopMatmul}), which translate high-level commands into a series of primitive operations. Source: \cite{gookyi2023gemmini_case_study}.}
+    \caption{Gemmini's command unrolling modules (\texttt{LoopConv} and \texttt{LoopMatmul}), which translate high-level commands into a series of primitive operations.}
     \label{fig:command_unrollers}
 \end{figure}
 
@@ -44,20 +44,20 @@ The stream of primitive commands is received by the \texttt{ReservationStation} 
 \begin{figure}[h!]
     \centering
     % \fbox{Sensors_Fig6.png}    
-    \begin{subfigure}[b]{0.5\textwidth}
+    \begin{subfigure}[b]{\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Gemmini_Internal_ExecuteController.pdf}
+        \caption{ExecuteController module}
+        \label{fig:loop_matmul}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Gemmini_Internal_SRAM_Im2Col.pdf}
         \caption{SRAM controllers: Im2Col module}
         \label{fig:loop_conv}
     \end{subfigure}
     \vspace{1em}
-    \begin{subfigure}[b]{0.9\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Gemmini_Internal_SRAM_ExecuteController.pdf}
-        \caption{SRAM controllers: ExecuteController module}
-        \label{fig:loop_matmul}
-    \end{subfigure}
-    \caption{The \texttt{ExecuteController} module and its associated SRAM control interfaces. Source: \cite{gookyi2023gemmini_case_study}.}
+    \caption{The \texttt{ExecuteController} module and its associated SRAM control interfaces.}
     \label{fig:execute_controller}
 \end{figure}
 
@@ -67,16 +67,58 @@ The \texttt{ExecuteController} ultimately controls the two lowest-level hardware
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{Gemmini_Internal_Mesh.pdf}
-    \caption{The Mesh module, which implements the systolic array of PEs and supports different dataflows (Output Stationary and Weight Stationary). Source: \cite{gookyi2023gemmini_case_study}.}
+    \caption{The Mesh module, which implements the systolic array of PEs and supports different dataflows (Output Stationary and Weight Stationary).}
     \label{fig:mesh_module}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.9\textwidth]{Gemmini_Internal_Scratchpad.pdf}
-    \caption{The internal structure of the Scratchpad module, showing the various interfaces to the TLB, DMA, and internal memory banks. \cite{gookyi2023gemmini_case_study}.}
+    \caption{The internal structure of the Scratchpad module, showing the various interfaces to the TLB, DMA, and internal memory banks.}
     \label{fig:scratchpad_module}
 \end{figure}
+
+\section{The RoCC Interface that controls Gemmini}
+\label{sec:gemmini_rocc_interface}
+
+The Gemmini accelerator is controlled through a custom \texttt{RoCC} interface, which allows the Rocket Core to issue commands and receive results. This interface is designed to be flexible and efficient, enabling high-throughput data transfers and command execution.
+
+\subsection{High-Level Command Unrolling}
+
+Once a \texttt{RoCCCommand} crosses the interface into Gemmini, it is not executed directly by the systolic array. Instead, the CPU often issues high-level, almost CISC-like commands such as \texttt{LOOP\_WS} or \texttt{LOOP\_CONV\_WS}, which encapsulate entire, complex operations. These commands are received by dedicated hardware controllers — \texttt{LoopMatmul} and \texttt{LoopConv} — which act as micro-code engines. Their primary function is to interpret these high-level instructions and "unroll" them into a sequence of simpler, primitive micro-operations that can be dispatched to the underlying hardware units.
+
+The internal architecture of the \texttt{LoopConv} controller, depicted in Figure \ref{fig:loop_conv}, provides a clear illustration of this command unrolling process. As the figure shows, a single high-level convolution command is not executed serially. Instead, it triggers three independent, parallel load units (\texttt{LoopConv1dInput}, \texttt{LoopConv1dWeight}, \texttt{LoopConv1dBias}) to begin fetching the necessary tensors concurrently. These load operations are decoupled from the main \texttt{LoopConvExecute} unit, which proceeds only after receiving the necessary data. Furthermore, all these parallel units contend for shared resources, a reality managed by a dedicated 5-to-1 \texttt{Arbiter} that schedules access to the memory interface. This entire process is orchestrated by a \texttt{Loop State Management} block, which takes the initial configuration and manages the state for multiple concurrent loops.
+
+\subsection{Decoupled Execution via Communicating Finite State Machines}
+
+This hardware-based command unrolling is a defining characteristic of a powerful, tightly-integrated co-processor. This design offloads what would otherwise be thousands of CPU instructions—for loop control, address calculation, data dependency checking, and synchronization—into a single accelerator command. By handling this complexity autonomously within its own hardware controllers, Gemmini frees the Rocket Core to perform other tasks, demonstrating a highly efficient division of labor between the general-purpose CPU and the specialized accelerator.
+
+The stream of micro-operations unrolled by the high-level controllers is not fed into a rigid, lock-step pipeline. Instead, Gemmini employs a more sophisticated and powerful paradigm: decoupled execution managed by a set of independent, communicating Finite State Machines (FSMs). This design allows the various stages of a complex operation—loading data, executing computation, and storing results—to proceed concurrently and asynchronously, maximizing hardware utilization.
+
+The internal structure of the \texttt{LoopMatmul} controller exemplifies this architecture. It is composed of several independent hardware modules, including \texttt{LoopMatmulLdA} (for loading matrix A), \texttt{LoopMatmulExecute}, and \texttt{LoopMatmulStC} (for storing the result matrix C). As illustrated in Figure~\ref{fig:loopmatmul_fsm}, each of these modules implements its own FSM, governing its specific task. For example, the \texttt{LoopMatmulLdA} FSM transitions from an \texttt{IDLE} state to a \texttt{Loading} state, where it autonomously handles the address calculations and data transfers for its portion of the matrix.
+
+% TO-DO: convert Gemmini_dia3.mmd to pdf
+% \begin{figure}[ht]
+%   \centering
+%   \includegraphics[width=\textwidth]{Images/Gemmini_dia3.pdf}
+%   \caption{State diagrams for the independent FSMs within the \texttt{LoopMatmul} controller. Each module (Load, Execute, Store) manages its own state, enabling asynchronous, pipelined operation.}
+%   \label{fig:loopmatmul_fsm}
+% \end{figure}
+
+While these modules operate independently, they are coordinated through a lightweight handshake mechanism referred to in the design as iterator synchronization. For instance, the \texttt{LoopMatmulExecute} FSM will not begin computation on a tile of data until it receives a signal that the \texttt{LoopMatmulLdA} and \texttt{LoopMatmulLdB} FSMs have successfully loaded the required operands into the scratchpad. This allows the \texttt{Load} modules to work ahead, fetching data for a future computation (\texttt{tile i+1}) while the \texttt{Execute} module is still busy processing the current one (\texttt{tile i}).
+
+This decoupled architecture is a deliberate and critical design choice for overcoming the "memory wall." The high latency of fetching data from off-chip DRAM is a primary performance bottleneck in any accelerator. By overlapping the long-latency memory operations (Load and Store) with the core computation (Execute), the system effectively hides this latency. This ensures that the systolic array—the most valuable computational resource—is starved for data as infrequently as possible, maximizing its utilization and achieving a throughput that would be unattainable with a simple, rigid pipeline.
+
+\subsection{Resource Management and Arbitration}
+
+The decoupled, parallel architecture described previously, while powerful, creates an inherent engineering challenge: contention for shared hardware resources. With multiple independent Load, Execute, and Store modules operating concurrently, they will inevitably attempt to access the same resources—such as the scratchpad memory ports or the primary DMA engine—at the same time. Gemmini addresses this challenge through a hierarchy of dedicated hardware arbiters.
+
+These arbiters act as traffic controllers for internal data and command pathways. For instance, the \texttt{LoopConv} controller, as shown previously in Figure \ref{fig:loopconv_controller}, features a central 5-to-1 arbiter that serializes requests from the five parallel units before they are dispatched. The \texttt{LoopMatmul} controller employs an even more complex, two-stage arbitration scheme which includes a \texttt{Global 5-Way Arbiter}. This hardware explicitly enforces a fixed-priority policy, granting higher precedence to \texttt{Store} operations to free up internal result buffers, followed by \texttt{Execute} and \texttt{Load} operations. This ensures that the system does not deadlock and that resource access is allocated in a deterministic and efficient manner.
+
+Beyond simply resolving simultaneous requests, the system must also manage its overall load to prevent its internal queues and buffers from overflowing. This is achieved through a feedback mechanism managed by resource utilization counters. These hardware counters track the number of load, store, and execute micro-operations currently in flight. If the number of pending commands in the Re-Order Buffer (ROB) exceeds a hardware-defined threshold, the controller asserts a backpressure signal (e.g., \texttt{rob\_overloaded}) to the upstream FSMs, temporarily stalling them from issuing new commands until resources become available.
+
+The inclusion of explicit hardware for arbitration and backpressure-based flow control is a critical indicator of the design's sophistication. While a simplistic proof-of-concept accelerator might function correctly under ideal, low-load conditions, it would likely fail or deadlock under the high-throughput, concurrent scenarios that this system is designed for. Therefore, the presence of this robust resource management infrastructure proves the maturity of the Gemmini accelerator, demonstrating an architecture designed not just for theoretical correctness but for practical, high-performance operation.
+
 
 \section{The Multi-Level Programming Model}
 \label{sec:gemmini_programming_model}
@@ -92,11 +134,11 @@ To abstract the complexities of direct ISA programming, Gemmini provides a C lib
 \subsection{High-Level: Compiler Support (Conceptual)}
 The Gemmini ecosystem is designed to support higher-level compilation flows. This involves tools that can take DNN models described in standard frameworks like ONNX (Open Neural Network Exchange) and compile them down to Gemmini instructions, either by calling the mid-level C library or by directly generating low-level ISA calls. This further simplifies the deployment of DNNs on Gemmini-accelerated SoCs.
 
-\section{Gemmini Configuration in This Thesis}
-\label{sec:gemmini_configuration}
+% \section{Gemmini Configuration in This Thesis}
+% \label{sec:gemmini_configuration}
 
-The Gemmini accelerator integrated into the SoC for this thesis is based on a specific configuration suitable for the target AI applications and FPGA resource constraints. Within the Chipyard framework, this configuration is defined in a Scala configuration file. 
+% The Gemmini accelerator integrated into the SoC for this thesis is based on a specific configuration suitable for the target AI applications and FPGA resource constraints. Within the Chipyard framework, this configuration is defined in a Scala configuration file. 
 
-\todo[inline]{Specify the key parameters for your Gemmini instance here. For example: The instance was configured with a 16x16 systolic array using 8-bit integer data types for inputs and weights, and a 32-bit integer accumulator. The scratchpad was configured with 256KB of capacity and the accumulator memory with 64KB. The Weight Stationary (WS) dataflow was selected, and the hardware \texttt{im2col} unit was included to offload this pre-processing step from the host CPU. These parameters were chosen to balance performance for target DNN workloads with the resource constraints of the target FPGA. The detailed performance implications of these choices will be explored in subsequent chapters.}
+% \todo[inline]{Specify the key parameters for your Gemmini instance here. For example: The instance was configured with a 16x16 systolic array using 8-bit integer data types for inputs and weights, and a 32-bit integer accumulator. The scratchpad was configured with 256KB of capacity and the accumulator memory with 64KB. The Weight Stationary (WS) dataflow was selected, and the hardware \texttt{im2col} unit was included to offload this pre-processing step from the host CPU. These parameters were chosen to balance performance for target DNN workloads with the resource constraints of the target FPGA. The detailed performance implications of these choices will be explored in subsequent chapters.}
 
-The integration follows the standard \texttt{RoCC} methodology provided by Chipyard, ensuring that Gemmini coexists with the Rocket Core, shares the system memory hierarchy, and can be programmed using custom RISC-V instructions dispatched to its \texttt{RoCC} slot.
+% The integration follows the standard \texttt{RoCC} methodology provided by Chipyard, ensuring that Gemmini coexists with the Rocket Core, shares the system memory hierarchy, and can be programmed using custom RISC-V instructions dispatched to its \texttt{RoCC} slot.

@@ -2,13 +2,16 @@
 \label{Abstract-EN}
 \addcontentsline{toc}{chapter}{ABSTRACT}
 
-% Ngữ cảnh, vấn đề
-In the era of revolutionary development in the semiconductor industry, particularly in the area of Digital \acrfull{ic} Design has been rapidly evolving, having comprehensive understanding of the design process has become increasingly critical.
-% Mục tiêu
-This report outlines the design and evaluation of an 8-bit shift register, complying with the standard Digital \acrshort{ic} Design procedures including Verilog programming, simulation, circuit synthesis, \acrfull{drc} and \acrfull{lvs} verification.
-% Phương pháp
-The entire design process was conducted using Synopsys toolsets, including \acrfull{vcs}, \acrfull{dc}, and \acrfull{icc2}. 
-% Kết quả
-The final outcome is an 8-bit shift register \acrfull{ip} that can be utilized as a basic building block in more complex designs.
-% Kết luận
-This report aims to underscore the importance of mastering modern tools and design methodologies to meet the increasing demands of the semiconductor industry.
+The increasing computational demand of Deep Neural Networks (DNNs) has exposed the limitations of traditional general-purpose processors, creating a need for specialized hardware accelerators. While FPGAs have served as a prototyping platform, transitioning to more efficient and scalable Application-Specific Integrated Circuit (ASIC) solutions requires a comprehensive, open-source design methodology. This thesis presents the design, full-stack implementation, and evaluation of a Linux-capable RISC-V System-on-Chip (SoC) featuring a dedicated DNN accelerator. The primary objective is to demonstrate a complete open-source workflow, from high-level hardware configuration in Chisel to FPGA prototyping, as a foundational step for future VLSI development at CESLAB. The system was designed using the Chipyard framework, integrating a 64-bit RISC-V Rocket Core with the Gemmini systolic array accelerator via the RoCC interface. The implemented SoC was successfully deployed on a Xilinx VC707 FPGA board, booting a full Debian Linux operating system. Performance evaluation revealed that the Gemmini accelerator achieved an approximate \textbf{958x speedup} on a representative convolution task compared to a software-only implementation on the Rocket Core. This work successfully validates the Chipyard framework as a viable path for advanced SoC design and establishes a reproducible, full-stack foundation for future research in specialized hardware acceleration.
+
+% % Ngữ cảnh, vấn đề
+% In the era of revolutionary development in the semiconductor industry, particularly in the area of Digital \acrfull{ic} Design has been rapidly evolving, having comprehensive understanding of the design process has become increasingly critical.
+% % Mục tiêu
+% This report outlines the design and evaluation of an 8-bit shift register, complying with the standard Digital \acrshort{ic} Design procedures including Verilog programming, simulation, circuit synthesis, \acrfull{drc} and \acrfull{lvs} verification.
+% % Phương pháp
+% The entire design process was conducted using Synopsys toolsets, including \acrfull{vcs}, \acrfull{dc}, and \acrfull{icc2}. 
+% % Kết quả
+% The final outcome is an 8-bit shift register \acrfull{ip} that can be utilized as a basic building block in more complex designs.
+% % Kết luận
+% This report aims to underscore the importance of mastering modern tools and design methodologies to meet the increasing demands of the semiconductor industry.
+

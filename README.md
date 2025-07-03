@@ -6,7 +6,7 @@ To build the latex pdf file, run the following code block in the terminal at the
 ./build.ps1
 ```
 
-For the documents of the system implementation of the ```Rocket64b1gem16``` on the VC707: 
+For the documents of the system implementation of the ```Rocket64b1gem16jtag``` on the VC707: 
 - DDR: [docs/ddr_memory_controller_implementation.md](docs/ddr_memory_controller_implementation.md)
 - UART: [docs/uart_controller_implementation.md](docs/uart_controller_implementation.md)
 - Ethernet: [docs/ethernet_implementation_subsection.md](docs/ethernet_implementation_subsection.md)
@@ -26,7 +26,7 @@ For the documents of the system implementation of the ```Rocket64b1gem16``` on t
 ## Kết quả hiện tại
 
 Trước tiên, đã hiểu được rằng Chipyard là một framework. 
-Sau đó, đã xây dựng được một hệ thống Rocket Chip (cấu hình 1 Big Core có Gemmini Accelerator (Rocket64b1gem16 , https://github.com/eugene-tarassov/vivado-risc-v)) trên board VC707.
+Sau đó, đã xây dựng được một hệ thống Rocket Chip (cấu hình 1 Big Core có Gemmini Accelerator (Rocket64b1gem16jtag , https://github.com/eugene-tarassov/vivado-risc-v)) trên board VC707.
 Sau đó, chạy Linux trên hệ thống đó (https://github.com/eugene-tarassov/vivado-risc-v)
 Sau đó, build và chạy https://github.com/ucb-bar/gemmini-rocc-tests/blob/dev/bareMetalC/template.c này thử, và thành công.
 
@@ -155,7 +155,7 @@ import freechips.rocketchip.diplomacy._
 ...
 
 
-class Rocket64b1gem16 extends Config(
+class Rocket64b1gem16jtag extends Config(
   new WithGemmini(16, 64) ++
   new WithInclusiveCache  ++
   new WithNBreakpoints(8) ++
@@ -171,7 +171,7 @@ class Rocket64b1gem16 extends Config(
   new BaseConfig)
 ```
 
-This is Rocket 64-bit (1 Big Core) with 16x16 Gemmini (called Rocket64b1gem16 for short).
+This is Rocket 64-bit (1 Big Core) with 16x16 Gemmini (called Rocket64b1gem16jtag for short).
 
 Here's the BaseConfig which it uses:
 
@@ -340,7 +340,7 @@ class WithGemmini(mesh_size: Int, bus_bits: Int) extends Config((site, here, up)
   case SystemBusKey => up(SystemBusKey).copy(beatBytes = bus_bits/8)
 })
 
-class Rocket64b1gem16 extends Config(
+class Rocket64b1gem16jtag extends Config(
   new WithGemmini(16, 64) ++
   new WithInclusiveCache  ++
   new WithNBreakpoints(8) ++

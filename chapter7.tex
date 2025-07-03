@@ -7,7 +7,7 @@ This chapter details the implementation of the RISC-V System-on-Chip (SoC) featu
 \section{Hardware Implementation: SoC Configuration}
 The foundation of our hardware design is the Chipyard SoC generation framework, which provides a flexible and powerful environment for constructing complex RISC-V systems. The result of this process is a complete, Linux-capable SoC, whose top-level architecture is illustrated in Figure \ref{fig:rocket_soc}. This diagram encapsulates the full-stack integration central to this thesis, depicting the system from the processor core and accelerator down to the specific peripheral IP cores and their connections to the physical hardware on the FPGA board.
 
-\begin{figure}{ht}
+\begin{figure}[h!]
   \centering
   \includegraphics[width=\textwidth]{VC707_ImplementedRocket.pdf}
   \caption{The implemented Rocket SoC with Gemmini on the VC707 FPGA board. The Rocket Core is connected to a 16x16 Gemmini systolic array, and various peripherals are integrated via AXI interfaces.}
@@ -20,13 +20,13 @@ The \texttt{RocketTile} communicates with the rest of the system through the coh
 
 To create a fully functional, Linux-capable computing platform, a rich set of peripherals is integrated via the \texttt{PeripheryBus}. Similar to the memory interface, a \texttt{TL to AXI Slave bridge} connects the \texttt{TileLink} bus to a set of \texttt{AXI}-based peripheral controllers. These include an \texttt{AXI SD Card Controller} to enable booting from an SD card, a \texttt{UART} controller for console I/O, and a complete Ethernet subsystem for network connectivity. These controller IPs, written in \texttt{Verilog}, are then wired to their corresponding physical counterparts on the VC707 board, such as the SD card tray and the RJ45 Ethernet port.
 
-\subsection{The \texttt{Rocket64b1gem16} Configuration}
+\subsection{The \texttt{Rocket64b1gem16jtag} Configuration}
 The comprehensive architecture shown in (Figure \ref{fig:rocket_soc}) is not designed by hand in \texttt{Verilog}, but is programmatically generated from a high-level \texttt{Scala} configuration. As outlined in Chapter \ref{chap:SingleCoreGemminiRiscVSystem}, this generator-based approach allows for rapid architectural exploration and ensures design consistency.
 
-The specific configuration for our SoC is named \texttt{Rocket64b1gem16}. This name concisely describes its key features: a 64-bit Rocket Core (\texttt{Rocket64}), one "big" core (\texttt{b1}), and a 16x16 Gemmini systolic array (\texttt{gem16}). This configuration is defined in \texttt{Scala} using Chipyard's \texttt{Config} classes, which employ a \texttt{mixin-based} approach to compose system components. This powerful paradigm allows features to be incrementally added to a base configuration through a series of traits, each beginning with the \texttt{With...} prefix. The core of the configuration is shown in Listing \ref{lst:rocket64b1gem16_config}.
+The specific configuration for our SoC is named \texttt{Rocket64b1gem16jtag}. This name concisely describes its key features: a 64-bit Rocket Core (\texttt{Rocket64}), one "big" core (\texttt{b1}), and a 16x16 Gemmini systolic array (\texttt{gem16}). This configuration is defined in \texttt{Scala} using Chipyard's \texttt{Config} classes, which employ a \texttt{mixin-based} approach to compose system components. This powerful paradigm allows features to be incrementally added to a base configuration through a series of traits, each beginning with the \texttt{With...} prefix. The core of the configuration is shown in Listing \ref{lst:Rocket64b1gem16jtag_config}.
 
-\begin{lstlisting}[language=Scala, caption={The \texttt{Rocket64b1gem16} configuration class.}, label=lst:rocket64b1gem16_config]
-class Rocket64b1gem16 extends Config(
+\begin{lstlisting}[language=Scala, caption={The \texttt{Rocket64b1gem16jtag} configuration class.}, label=lst:Rocket64b1gem16jtag_config]
+class Rocket64b1gem16jtag extends Config(
   new WithGemmini(16, 64) ++
   new WithInclusiveCache  ++
   new WithNBreakpoints(8) ++
@@ -35,12 +35,12 @@ class Rocket64b1gem16 extends Config(
   new WithExtMemSize(0x380000000L) ++
   new WithNExtTopInterrupts(8) ++
   new WithDTS("freechips,rocketchip-vivado", Nil) ++
-  new WithDebugSBA ++
+  new WithDebugSBA        ++
+  new WithJtagDTM         ++
   new WithEdgeDataBits(64) ++
   new WithCoherentBusTopology ++
   new WithoutTLMonitors ++
   new BaseConfig)
-\end{lstlisting}
 
 The \texttt{WithGemmini(16, 64)} trait is the most critical for this work. It instructs the generator to instantiate the Gemmini accelerator with a specific set of hardware parameters derived from the defaultConfig within the Gemmini generator source code. The generated accelerator is a sophisticated system in its own right, comprising several key hardware blocks:
 
@@ -61,6 +61,14 @@ The \texttt{WithGemmini(16, 64)} trait is the most critical for this work. It in
 This Scala configuration is then consumed by the Chipyard generator-based framework to produce the concrete hardware implementation. The resulting top-level architecture of the SoC, as deployed on the Xilinx VC707 FPGA, is illustrated in Figure \ref{fig:rocket_soc}.
 
 \section{Gemmini Integration via RoCC}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{Gemmini_Configuration_onSoC.pdf}
+  \caption{Gemmini Configuration on Rocket64b1gem16jtag SoC.}
+  \label{fig:gemmini_configuration_on_soc}
+\end{figure}
+
 While the RoCC interface provides a clean, standardized gateway for the CPU, it abstracts away a sophisticated internal command and control hierarchy within Gemmini itself. This internal micro-architecture functions as a hardware-based micro-code engine; it is responsible for autonomously unrolling high-level, CISC-like commands received from the CPU into a stream of primitive micro-operations, thereby orchestrating the intricate dataflows and resource management essential for high-performance systolic computation. This section delves into this multi-layered system, detailing the journey of a command from the initial RoCC dispatch to its fully decoupled execution within the accelerator's asynchronous hardware modules.
 
 \subsection{The RoCC Interface}
@@ -80,6 +88,13 @@ class WithGemmini(mesh_size: Int, bus_bits: Int) extends Config((site, here, up)
   case SystemBusKey => up(SystemBusKey).copy(beatBytes = bus_bits/8)
 })
 \end{lstlisting}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Rocket_RoCC_Interface.pdf}
+  \caption{To do: Make caption here, and make reference to this.}
+  \label{fig:rocket_rocc_interface}
+\end{figure}
 
 The consequence of this configuration is that the Gemmini accelerator is assigned a reserved block of custom instruction opcodes. As defined in its internal configuration, Gemmini uses \texttt{OpcodeSet.custom3}. During program execution, when the Rocket Core’s instruction decoder encounters an instruction with an opcode from this set, it recognizes it as a RoCC instruction. Rather than attempting to execute it, the core dispatches the entire instruction—including operands from the processor's register file (\texttt{rs1}, \texttt{rs2}) and the funct field—directly to the Gemmini unit over the dedicated RoCC command channel. The RocketTile hardware then automatically wires the command and response channels between the core and the Gemmini module.
 
@@ -109,49 +124,6 @@ class RoCCInstruction extends Bundle {
 
 The dispatch of this \texttt{RoCCCommand} bundle marks the end of the CPU's direct involvement. However, the dispatched instruction is often not a simple, primitive operation. It can be a high-level, CISC-like command such as \texttt{LOOP\_CONV\_WS}, which instructs the accelerator to perform an entire tiled convolution. This single command triggers a cascade of parallel, asynchronous hardware processes within Gemmini's internal controllers, such as the \texttt{LoopConv} module. These processes include the parallel loading of inputs, weights, and biases; decoupled computation in the systolic array; and the eventual storing of results, all managed autonomously by the accelerator. The CPU remains unaware of this internal complexity, having successfully offloaded the entire high-level task. The subsequent sections will now delve into this internal command processing hierarchy.
 
-\subsection{High-Level Command Unrolling}
-
-Once a \texttt{RoCCCommand} crosses the interface into Gemmini, it is not executed directly by the systolic array. Instead, the CPU often issues high-level, almost CISC-like commands such as \texttt{LOOP\_WS} or \texttt{LOOP\_CONV\_WS}, which encapsulate entire, complex operations. These commands are received by dedicated hardware controllers — \texttt{LoopMatmul} and \texttt{LoopConv} — which act as micro-code engines. Their primary function is to interpret these high-level instructions and "unroll" them into a sequence of simpler, primitive micro-operations that can be dispatched to the underlying hardware units.
-
-The internal architecture of the \texttt{LoopConv} controller, depicted in Figure \ref{fig:loopconv_controller}, provides a clear illustration of this command unrolling process. As the figure shows, a single high-level convolution command is not executed serially. Instead, it triggers three independent, parallel load units (\texttt{LoopConv1dInput}, \texttt{LoopConv1dWeight}, \texttt{LoopConv1dBias}) to begin fetching the necessary tensors concurrently. These load operations are decoupled from the main \texttt{LoopConvExecute} unit, which proceeds only after receiving the necessary data. Furthermore, all these parallel units contend for shared resources, a reality managed by a dedicated 5-to-1 \texttt{Arbiter} that schedules access to the memory interface. This entire process is orchestrated by a \texttt{Loop State Management} block, which takes the initial configuration and manages the state for multiple concurrent loops.
-
-% TO-DO: convert Gemmini_dia1.mmd to pdf
-% \begin{figure}[ht]
-%   \centering
-%   \includegraphics[width=0.8\textwidth]{Images/Gemmini_dia1.pdf}
-%   \caption{Architectural diagram of the \texttt{LoopConv} controller, illustrating the decoupled, parallel hardware units for command unrolling.}
-%   \label{fig:loopconv_controller}
-% \end{figure}
-
-\subsection{Decoupled Execution via Communicating Finite State Machines}
-
-This hardware-based command unrolling is a defining characteristic of a powerful, tightly-integrated co-processor. This design offloads what would otherwise be thousands of CPU instructions—for loop control, address calculation, data dependency checking, and synchronization—into a single accelerator command. By handling this complexity autonomously within its own hardware controllers, Gemmini frees the Rocket Core to perform other tasks, demonstrating a highly efficient division of labor between the general-purpose CPU and the specialized accelerator.
-
-The stream of micro-operations unrolled by the high-level controllers is not fed into a rigid, lock-step pipeline. Instead, Gemmini employs a more sophisticated and powerful paradigm: decoupled execution managed by a set of independent, communicating Finite State Machines (FSMs). This design allows the various stages of a complex operation—loading data, executing computation, and storing results—to proceed concurrently and asynchronously, maximizing hardware utilization.
-
-The internal structure of the \texttt{LoopMatmul} controller exemplifies this architecture. It is composed of several independent hardware modules, including \texttt{LoopMatmulLdA} (for loading matrix A), \texttt{LoopMatmulExecute}, and \texttt{LoopMatmulStC} (for storing the result matrix C). As illustrated in Figure~\ref{fig:loopmatmul_fsm}, each of these modules implements its own FSM, governing its specific task. For example, the \texttt{LoopMatmulLdA} FSM transitions from an \texttt{IDLE} state to a \texttt{Loading} state, where it autonomously handles the address calculations and data transfers for its portion of the matrix.
-
-% TO-DO: convert Gemmini_dia3.mmd to pdf
-% \begin{figure}[ht]
-%   \centering
-%   \includegraphics[width=\textwidth]{Images/Gemmini_dia3.pdf}
-%   \caption{State diagrams for the independent FSMs within the \texttt{LoopMatmul} controller. Each module (Load, Execute, Store) manages its own state, enabling asynchronous, pipelined operation.}
-%   \label{fig:loopmatmul_fsm}
-% \end{figure}
-
-While these modules operate independently, they are coordinated through a lightweight handshake mechanism referred to in the design as iterator synchronization. For instance, the \texttt{LoopMatmulExecute} FSM will not begin computation on a tile of data until it receives a signal that the \texttt{LoopMatmulLdA} and \texttt{LoopMatmulLdB} FSMs have successfully loaded the required operands into the scratchpad. This allows the \texttt{Load} modules to work ahead, fetching data for a future computation (\texttt{tile i+1}) while the \texttt{Execute} module is still busy processing the current one (\texttt{tile i}).
-
-This decoupled architecture is a deliberate and critical design choice for overcoming the "memory wall." The high latency of fetching data from off-chip DRAM is a primary performance bottleneck in any accelerator. By overlapping the long-latency memory operations (Load and Store) with the core computation (Execute), the system effectively hides this latency. This ensures that the systolic array—the most valuable computational resource—is starved for data as infrequently as possible, maximizing its utilization and achieving a throughput that would be unattainable with a simple, rigid pipeline.
-
-\subsection{Resource Management and Arbitration}
-
-The decoupled, parallel architecture described previously, while powerful, creates an inherent engineering challenge: contention for shared hardware resources. With multiple independent Load, Execute, and Store modules operating concurrently, they will inevitably attempt to access the same resources—such as the scratchpad memory ports or the primary DMA engine—at the same time. Gemmini addresses this challenge through a hierarchy of dedicated hardware arbiters.
-
-These arbiters act as traffic controllers for internal data and command pathways. For instance, the \texttt{LoopConv} controller, as shown previously in Figure \ref{fig:loopconv_controller}, features a central 5-to-1 arbiter that serializes requests from the five parallel units before they are dispatched. The \texttt{LoopMatmul} controller employs an even more complex, two-stage arbitration scheme which includes a \texttt{Global 5-Way Arbiter}. This hardware explicitly enforces a fixed-priority policy, granting higher precedence to \texttt{Store} operations to free up internal result buffers, followed by \texttt{Execute} and \texttt{Load} operations. This ensures that the system does not deadlock and that resource access is allocated in a deterministic and efficient manner.
-
-Beyond simply resolving simultaneous requests, the system must also manage its overall load to prevent its internal queues and buffers from overflowing. This is achieved through a feedback mechanism managed by resource utilization counters. These hardware counters track the number of load, store, and execute micro-operations currently in flight. If the number of pending commands in the Re-Order Buffer (ROB) exceeds a hardware-defined threshold, the controller asserts a backpressure signal (e.g., \texttt{rob\_overloaded}) to the upstream FSMs, temporarily stalling them from issuing new commands until resources become available.
-
-The inclusion of explicit hardware for arbitration and backpressure-based flow control is a critical indicator of the design's sophistication. While a simplistic proof-of-concept accelerator might function correctly under ideal, low-load conditions, it would likely fail or deadlock under the high-throughput, concurrent scenarios that this system is designed for. Therefore, the presence of this robust resource management infrastructure proves the maturity of the Gemmini accelerator, demonstrating an architecture designed not just for theoretical correctness but for practical, high-performance operation.
 
 \section{Peripheral Integration}
 
@@ -164,30 +136,32 @@ The SoC includes an AXI SD Card controller, which allows the system to boot from
 
 The SD card is accessed in SD mode, which is a common mode for embedded systems. The controller supports standard SD commands and allows the system to read and write data blocks, making it suitable for booting the operating system and storing user data.
 
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[width=\textwidth]{SD_ModeSD_MultiBlockRead.pdf}
   \caption{SD Mode: Multi-Block Read Operation. \cite{CactusTechnologies_SDCardInterface}}
   \label{fig:sd_mode_multiblock_read}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h!]
   \centering
   \includegraphics[width=\textwidth]{SD_ModeSD_MultiBlockWrite.pdf}
   \caption{SD Mode: Multi-Block Write Operation. \cite{CactusTechnologies_SDCardInterface}}
   \label{fig:sd_mode_multiblock_write}
 \end{figure}
 
+\FloatBarrier
+
 For comparion, here is how the same operation looks in SPI mode, which is another common mode for SD cards. The SPI mode is often used for compatibility with older systems or when a simpler interface is required. The SPI Mode offers lower speed compared to SD mode, but it is simpler to implement and can be used in systems that do not require high-speed data transfer.
 
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[width=\textwidth]{SD_ModeSPI_MultiBlockRead.pdf}
   \caption{SPI Mode: Multi-Block Read Operation. \cite{CactusTechnologies_SDCardInterface}}
   \label{fig:spi_mode_multiblock_read}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[width=\textwidth]{SD_ModeSPI_MultiBlockWrite.pdf}
   \caption{SPI Mode: Multi-Block Write Operation. \cite{CactusTechnologies_SDCardInterface}}
@@ -214,16 +188,10 @@ The Ethernet subsystem is implemented as a hierarchical design with four distinc
   \item \textbf{Physical RJ45 Interface}: The physical layer terminates at the RJ45 connector on the VC707 board.
 \end{enumerate}
 
-
-
-
-
-
 \section{Development Environment}
-The project requires a specific development environment to ensure that all tools, compilers, and dependencies are correctly configured. The primary environment is an Ubuntu 20.04 LTS workstation. The initial setup is automated by the \texttt{Makefile} through the `apt-install` target, which installs essential packages such as a Java Development Kit, device-tree-compiler, and the GCC toolchain for RISC-V.
+The project requires a specific development environment to ensure that all tools, compilers, and dependencies are correctly configured. The primary environment is an Ubuntu 20.04 LTS workstation. 
 
-The complete project, including all submodules for the RISC-V ecosystem components (Chipyard, U-Boot, Linux, OpenSBI), is checked out from the repository. The command `make update-submodules` ensures that all components are at the correct versions required for the build.
-
+The complete project is included with all submodules for the RISC-V ecosystem components (Chipyard, U-Boot, Linux, OpenSBI) which are required for building the SoC and running the operating system.
 
 \section{Software Stack and Build Process}
 To run a complete operating system and user applications, a comprehensive software stack is required. This project utilizes a standard boot flow for embedded Linux systems and automates the entire build process with a \texttt{Makefile}.
@@ -237,37 +205,16 @@ The system boots in several stages:
     \item \textbf{Linux Kernel}: Finally, U-Boot passes control to the Linux kernel. The kernel boots, mounts the root filesystem from the SD card, and starts the user-space services, providing a full Debian environment.
 \end{enumerate}
 
-\section{The Automated Build System}
-The entire implementation, from hardware generation to a bootable Linux image, is orchestrated by a comprehensive \texttt{Makefile}. This build system automates hundreds of steps, ensuring a repeatable and reliable process. The primary command to build the entire system for the target hardware is:
-\begin{verbatim}
-make CONFIG=rocket64b1gem16 BOARD=vc707 bitstream
-\end{verbatim}
-
 \subsection{SoC Hardware Generation}
-The first stage of the build process is to generate the Verilog HDL for the SoC. This is a multi-step process managed by the \texttt{Makefile}:
+The first stage of the build process is to generate the Verilog HDL for the SoC. 
 \begin{enumerate}
-    \item \textbf{Initial Verilog and Device Tree Generation}: The build system invokes the Scala Build Tool (SBT) to compile the Chisel sources using the \texttt{Rocket64b1gem16} configuration. This generates the initial Verilog HDL and a base Device Tree Source (\texttt{.dts}) file, which describes the core SoC components as inferred by Chipyard's diplomacy framework, as described in Chapter 6.
-    \item \textbf{Peripheral Integration}: This generated core is then integrated with several pre-existing, open-source peripheral controllers written in Verilog. These include the AXI UART controller (from the `uart` directory), the AXI SD Card controller (`sdc` directory), and the AXI Ethernet controller (`ethernet` directory), which is based on the Alex Forencich `verilog-ethernet` project.
-
-    \item \textbf{Device Tree Customization}: A crucial step is the creation of the final device tree. The base \texttt{system.dts} is combined with a board-specific overlay, \texttt{board/vc707/bootrom.dts}, which defines the VC707's unique peripherals like the UART, MMC, and Ethernet controllers at their specific memory-mapped addresses. The \texttt{Makefile} then uses `sed` commands to patch this combined file with the correct runtime parameters, such as the main memory size (\texttt{0x40000000}) and the SoC's clock frequency (31.25 MHz for this configuration).
-    \item \textbf{Boot ROM Generation}: The customized device tree is then passed to the boot ROM's own build system. The command `make -C bootrom ... bootrom.img` compiles the C code for the first-stage bootloader and embeds the compiled device tree binary within the final `bootrom.img` file.
+    \item \textbf{Initial Verilog and Device Tree Generation}: The build system invokes the Scala Build Tool (SBT) to compile the Chisel sources using the \texttt{Rocket64b1gem16jtag} configuration. This generates the initial Verilog HDL and a base Device Tree Source (\texttt{.dts}) file, which describes the core SoC components as inferred by Chipyard's diplomacy framework, as described in Chapter 6.
+    \item \textbf{Peripheral Integration}: This generated core is then integrated with several pre-existing, open-source peripheral controllers written in Verilog. These include the AXI UART controller, the AXI SD Card controller, and the AXI Ethernet controller.
+    \item \textbf{Device Tree Customization}: A crucial step is the creation of the final device tree. The base \texttt{system.dts} is combined with a board-specific overlay, \texttt{board/vc707/bootrom.dts}, which defines the VC707's unique peripherals like the UART, MMC, and Ethernet controllers at their specific memory-mapped addresses.
+    \item \textbf{Boot ROM Generation}: The customized device tree is then passed to the boot ROM's own build system, which compiles the C code for the first-stage bootloader and embeds the compiled device tree binary within the final `bootrom.img` file.
     \item \textbf{Final HDL Generation}: With the finalized `bootrom.img` created, SBT is invoked a second time. This run uses the new boot ROM image to produce the final, correct Verilog HDL for the SoC, ensuring the processor's memory map includes the fully configured boot ROM.
 \end{enumerate}
 
-\subsection{Software Stack Compilation}
-With the hardware defined, the \texttt{Makefile} proceeds to build the software stack using a cross-compiler toolchain specified by the `CROSS\_COMPILE\_LINUX` variable.
-\begin{itemize}
-    \item \textbf{Patching}: Before compilation, the build system applies project-specific patches to the Linux kernel and U-Boot source trees. This is handled by targets like `workspace/patch-linux-done`, which apply files from the `patches/` directory to add custom drivers or modify configurations.
-    \item \textbf{U-Boot}: The `u-boot` target builds `u-boot-nodtb.bin`, a version of U-Boot without an embedded device tree, as it will be provided by OpenSBI.
-    \item \textbf{OpenSBI}: The OpenSBI firmware is compiled with the `FW\_PAYLOAD\_PATH` variable pointing to the just-built U-Boot binary. This creates the final second-stage bootloader, \texttt{fw\_payload.elf}, which packages OpenSBI and U-Boot together.
-    \item \textbf{Linux Kernel}: The `linux` target builds the `Image` file, which is the compressed, bootable Linux kernel.
-\end{itemize}
+\section{Gemmini Testing}
+We are going to use the gemmini-rocc-tests (https://github.com/ucb-bar/gemmini-rocc-tests) to test the Gemmini accelerator. The tests are designed to verify the functionality of the Gemmini RoCC interface and the correctness of the accelerator's operations. The tests cover a wide range of scenarios, including basic arithmetic operations, matrix multiplication, convolution, and more complex DNN workloads.
 
-\section{FPGA Deployment and System Boot}
-The final stage of the automated flow is synthesizing the Verilog and deploying the system to the VC707 board.
-\begin{enumerate}
-    \item \textbf{Vivado Project Generation}: The build system does not use a static Vivado project. Instead, it generates a Tcl script, \texttt{workspace/rocket64b1gem16/system-vc707.tcl}, which contains all the settings for the project, including the FPGA part number (`xc7vx485tffg1761-2`).
-    \item \textbf{Bitstream Synthesis}: The \texttt{bitstream} target executes Vivado in batch mode, running the generated Tcl script to create a project, synthesize the Verilog, and run place-and-route to generate the final \texttt{riscv\_wrapper.bit} file.
-    \item \textbf{SD Card Preparation}: A bootable SD card is created using the \texttt{./mk-sd-card} script. This partitions the card and copies over the \texttt{fw\_payload.elf}, the Linux `Image`, and a Debian root filesystem.
-\end{enumerate}
-Once the FPGA is programmed and the SD card is inserted, the system boots into a fully functional Debian environment.

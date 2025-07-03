@@ -1,0 +1,103 @@
+---
+config:
+  theme: redux
+---
+flowchart TD
+    %% CPU Interface
+    CPU[CPU Commands]
+    
+    %% Command Processing Pipeline
+    RawCmdQ[Raw Command Queue]
+    LoopConv[Loop Conv Unroller]
+    LoopMatmul[Loop Matmul Unroller] 
+    UnrolledCmd[Unrolled Command Queue]
+    
+    %% Main Control Components
+    RS[ReservationStation<br/>Command Dispatcher]
+    LoadCtrl[Load Controller]
+    StoreCtrl[Store Controller]
+    ExecCtrl[Execute Controller]
+    
+    %% Memory Subsystem
+    Scratchpad[(Scratchpad Memory<br/>SRAM Banks)]
+    AccMem[(Accumulator Memory<br/>ACC Banks)]
+    
+    %% Execute Controller Internal Components
+    subgraph ExecInternals ["Execute Controller Internals"]
+        MeshCntlQ[mesh_cntl_signals_q<br/>Queue_61]
+        Im2ColReq[Im2Col Request]
+        Im2ColResp[Im2Col Response]
+    end
+    
+    %% Im2Col Processing
+    Im2Col[Im2Col Module<br/>SRAM Controller]
+    SramReadQ[sram_read_signals_q<br/>Queue63]
+    
+    %% Command Transformation
+    TransposeUnroll[TransposePreloadUnroller]
+    MultiHeadQ[MultiHeadedQueue]
+    
+    %% Computational Mesh
+    MeshDelays[MeshWithDelays<br/>Systolic Array]
+    
+    %% Arbiters
+    SramArbiter{SRAM Read Arbiter}
+    
+    %% Data Flow Connections
+    CPU --> RawCmdQ
+    RawCmdQ --> LoopConv
+    LoopConv --> LoopMatmul
+    LoopMatmul --> UnrolledCmd
+    UnrolledCmd --> RS
+    
+    %% Reservation Station to Controllers
+    RS -->|ld commands| LoadCtrl
+    RS -->|st commands| StoreCtrl  
+    RS -->|ex commands| ExecCtrl
+    
+    %% Controller to Memory Connections
+    LoadCtrl <-->|DMA Read| Scratchpad
+    StoreCtrl <-->|DMA Write| Scratchpad
+    ExecCtrl <-->|SRAM R/W| SramArbiter
+    ExecCtrl <-->|ACC R/W| AccMem
+    
+    %% Execute Controller Internal Flow
+    ExecCtrl --> MeshCntlQ
+    MeshCntlQ --> MeshDelays
+    ExecCtrl --> Im2ColReq
+    Im2ColReq --> Im2Col
+    Im2Col --> Im2ColResp
+    Im2ColResp --> ExecCtrl
+    
+    %% Im2Col Data Processing
+    Im2Col --> SramReadQ
+    SramReadQ --> Im2Col
+    Im2Col <-->|SRAM Access| SramArbiter
+    
+    %% SRAM Arbitration
+    SramArbiter <--> Scratchpad
+    
+    %% Command Transformation Components
+    TransposeUnroll <--> MultiHeadQ
+    TransposeUnroll <--> ExecCtrl
+    
+    %% Completion Feedback
+    ExecCtrl -->|completed| RS
+    LoadCtrl -->|completed| RS
+    StoreCtrl -->|completed| RS
+    
+    %% Mesh Output
+    MeshDelays -->|results| ExecCtrl
+    
+    %% Styling for different component types
+    classDef controller fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef memory fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef queue fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef compute fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef arbiter fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    
+    class RS,LoadCtrl,StoreCtrl,ExecCtrl controller
+    class Scratchpad,AccMem memory
+    class RawCmdQ,UnrolledCmd,MeshCntlQ,SramReadQ,MultiHeadQ queue
+    class MeshDelays,Im2Col compute
+    class SramArbiter arbiter
