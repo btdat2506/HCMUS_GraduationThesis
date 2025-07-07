@@ -66,14 +66,21 @@ The \texttt{ExecuteController} ultimately controls the two lowest-level hardware
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{Gemmini_Internal_Mesh.pdf}
-    \caption{The Mesh module, which implements the systolic array of PEs and supports different dataflows (Output Stationary and Weight Stationary).}
+    \includegraphics[width=0.5\textwidth]{Gemmini_Internal_PE_Array.pdf}
+    \caption{The Mesh module.}
     \label{fig:mesh_module}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.9\textwidth]{Gemmini_Internal_Scratchpad.pdf}
+    \includegraphics[width=\textwidth]{Gemmini_Internal_PE.pdf}
+    \caption{PE supports different dataflows (Output Stationary and Weight Stationary).}
+    \label{fig:pe_module}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{Gemmini_Internal_Scratchpad.pdf}
     \caption{The internal structure of the Scratchpad module, showing the various interfaces to the TLB, DMA, and internal memory banks.}
     \label{fig:scratchpad_module}
 \end{figure}

@@ -41,6 +41,7 @@ class Rocket64b1gem16jtag extends Config(
   new WithCoherentBusTopology ++
   new WithoutTLMonitors ++
   new BaseConfig)
+\end{lstlisting}
 
 The \texttt{WithGemmini(16, 64)} trait is the most critical for this work. It instructs the generator to instantiate the Gemmini accelerator with a specific set of hardware parameters derived from the defaultConfig within the Gemmini generator source code. The generated accelerator is a sophisticated system in its own right, comprising several key hardware blocks:
 
@@ -65,7 +66,7 @@ This Scala configuration is then consumed by the Chipyard generator-based framew
 \begin{figure}
   \centering
   \includegraphics[width=0.8\textwidth]{Gemmini_Configuration_onSoC.pdf}
-  \caption{Gemmini Configuration on Rocket64b1gem16jtag SoC.}
+  \caption{Gemmini Configuration on \texttt{Rocket64b1gem16jtag} SoC.}
   \label{fig:gemmini_configuration_on_soc}
 \end{figure}
 
@@ -92,13 +93,13 @@ class WithGemmini(mesh_size: Int, bus_bits: Int) extends Config((site, here, up)
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.8\textwidth]{Rocket_RoCC_Interface.pdf}
-  \caption{To do: Make caption here, and make reference to this.}
+  \caption{Rocket Tile RoCC Interface Architecture with Accelerator Integration. The RoCC interface provides direct communication pathways between the Rocket Core's datapath and the attached accelerator, including command dispatch, memory requests, and response handling channels.}
   \label{fig:rocket_rocc_interface}
 \end{figure}
 
 The consequence of this configuration is that the Gemmini accelerator is assigned a reserved block of custom instruction opcodes. As defined in its internal configuration, Gemmini uses \texttt{OpcodeSet.custom3}. During program execution, when the Rocket Core’s instruction decoder encounters an instruction with an opcode from this set, it recognizes it as a RoCC instruction. Rather than attempting to execute it, the core dispatches the entire instruction—including operands from the processor's register file (\texttt{rs1}, \texttt{rs2}) and the funct field—directly to the Gemmini unit over the dedicated RoCC command channel. The RocketTile hardware then automatically wires the command and response channels between the core and the Gemmini module.
 
-This direct connection demonstrates a successful accelerator integration. It is what distinguishes the RoCC methodology from a standard memory-mapped peripheral, providing the low-latency communication that is a cornerstone of this system's design for high-performance DNN acceleration.
+This direct connection demonstrates a successful accelerator integration. It is what distinguishes the RoCC methodology from a standard memory-mapped peripheral, providing the low-latency communication that is a cornerstone of this system's design for high-performance DNN acceleration. The complete RoCC interface architecture, showing the connection pathways between the Rocket Core and the accelerator, is illustrated in Figure \ref{fig:rocket_rocc_interface}.
 
 Upon recognizing a \texttt{custom3} instruction, the Rocket Core pipeline packages the necessary information into a \texttt{RoCCCommand} bundle. This Chisel data structure, shown in Listing \ref{lst:rocc_command_bundle}, acts as the payload for the interface. It contains the raw instruction bits in the \texttt{inst} field (including the \texttt{funct} sub-field that specifies the particular Gemmini operation), the operand values from the CPU's integer register file in \texttt{rs1} and \texttt{rs2}, and the processor's current status flags.
 
@@ -181,7 +182,7 @@ The Ethernet subsystem is implemented as a hierarchical design with four distinc
 \begin{enumerate}
   \item \textbf{Ethernet DMA Controller}: serves as the primary interface between the RocketChip SoC and the Ethernet MAC layer. Provide functionality for managing data transfers between the SoC and the Ethernet MAC, including packet buffering, flow control, and interrupt handling.
 
-  \item \textbf{SGMII 1Gbps Ethernet MAC}: The MAC (Media Access Control) layer is implemented using the open-source \texttt{eth\_mac\_1g\_fifo} module from the verilog-ethernet \textbf{Cite the repo here} project. This component provides: IEEE 802.3 Compliance, integrated frame-level FIFO Buffering, Frame Processing (Automatic frame padding, FCS generation and checking, and frame validation), AXI4-Stream Interface, Standard GMII Interface (Gigabit Media Independent Interface).
+  \item \textbf{SGMII 1Gbps Ethernet MAC}: The MAC (Media Access Control) layer is implemented using the open-source \texttt{eth\_mac\_1g\_fifo} module from the verilog-ethernet project \cite{verilog-ethernet}. This component provides: IEEE 802.3 Compliance, integrated frame-level FIFO Buffering, Frame Processing (Automatic frame padding, FCS generation and checking, and frame validation), AXI4-Stream Interface, Standard GMII Interface (Gigabit Media Independent Interface).
 
   \item \textbf{SGMII PHY Interface}: implemented using Xilinx's integrated SGMII IP core within the VC707 FPGA. This layer provides: SGMII Protocol (Serial Gigabit Media Independent Interface), Auto-negotiation, Clock Generation (125 MHz clock), Signal Conditioning.
 

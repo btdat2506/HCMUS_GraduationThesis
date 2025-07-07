@@ -1,0 +1,188 @@
+# Gemmini Scratchpad Architecture Diagram
+
+```mermaid
+flowchart TB
+    %% External Interfaces
+    subgraph EXT ["External Interfaces"]
+        DMA_READ[("DMA Read Request")]
+        DMA_WRITE[("DMA Write Request")]
+        EX_READ[("Execute Read")]
+        EX_WRITE[("Execute Write")]
+        TLB_IF[("TLB Interface")]
+        EXT_MEM[("External Memory")]
+    end
+
+    %% DMA Read Path
+    subgraph READ_PATH ["DMA Read Path"]
+        READ_ISSUE_Q[("read_issue_q<br/>Queue")]
+        STREAM_READER[("StreamReader<br/>DMA Engine")]
+        MVIN_SCALE[("VectorScalarMultiplier<br/>mvin_scale")]
+        MVIN_SCALE_ACC[("VectorScalarMultiplier<br/>mvin_scale_acc")]
+        PIXEL_REP[("PixelRepeater<br/>First Layer Opt")]
+        ZERO_WRITER[("ZeroWriter<br/>Zero Generation")]
+        ZERO_PIXEL_REP[("PixelRepeater<br/>Zero Writer")]
+    end
+
+    %% DMA Write Path  
+    subgraph WRITE_PATH ["DMA Write Path"]
+        WRITE_DISPATCH_Q[("write_dispatch_q<br/>Queue")]
+        WRITE_NORM_Q[("write_norm_q<br/>Queue")]
+        WRITE_SCALE_Q[("write_scale_q<br/>Queue")]
+        WRITE_ISSUE_Q[("write_issue_q<br/>Queue")]
+        ACC_NORM[("Normalizer<br/>acc_norm_unit")]
+        ACC_SCALE[("AccumulatorScale<br/>acc_scale_unit")]
+        STREAM_WRITER[("StreamWriter<br/>DMA Engine")]
+    end
+
+    %% Memory Banks
+    subgraph SPAD_BANKS ["Scratchpad Banks"]
+        SPAD_BANK_0[("ScratchpadBank 0<br/>spad_w bits")]
+        SPAD_BANK_1[("ScratchpadBank 1<br/>spad_w bits")]
+        SPAD_BANK_N[("ScratchpadBank N<br/>spad_w bits")]
+        
+        %% Pipeline stages for scratchpad
+        DMA_READ_PIPE_0[("dma_read_pipe 0<br/>Pipeline Queue")]
+        EX_READ_PIPE_0[("ex_read_pipe 0<br/>Pipeline Queue")]
+        DMA_READ_PIPE_1[("dma_read_pipe 1<br/>Pipeline Queue")]
+        EX_READ_PIPE_1[("ex_read_pipe 1<br/>Pipeline Queue")]
+    end
+
+    subgraph ACC_BANKS ["Accumulator Banks"]
+        ACC_MEM_0[("AccumulatorMem 0<br/>acc_w bits")]
+        ACC_MEM_1[("AccumulatorMem 1<br/>acc_w bits")]
+        ACC_MEM_N[("AccumulatorMem N<br/>acc_w bits")]
+        
+        %% Shared accumulator pipeline
+        ACC_ADDERS[("AccPipeShared<br/>acc_adders")]
+    end
+
+    %% TileLink Infrastructure
+    subgraph TILELINK ["TileLink Infrastructure"]
+        XBAR[("TLXbar<br/>Crossbar")]
+        TL_BUFFER_1[("TLBuffer")]
+        TL_BUFFER_2[("TLBuffer")]
+        TL_BUFFER_3[("TLBuffer")]
+        ID_NODE[("TLIdentityNode")]
+    end
+
+    %% External connections
+    DMA_READ --> READ_ISSUE_Q
+    DMA_WRITE --> WRITE_DISPATCH_Q
+    
+    %% Read path flow
+    READ_ISSUE_Q --> STREAM_READER
+    READ_ISSUE_Q --> ZERO_WRITER
+    
+    STREAM_READER --> MVIN_SCALE
+    STREAM_READER --> MVIN_SCALE_ACC
+    
+    MVIN_SCALE --> PIXEL_REP
+    ZERO_WRITER --> ZERO_PIXEL_REP
+    
+    PIXEL_REP --> SPAD_BANK_0
+    PIXEL_REP --> SPAD_BANK_1
+    PIXEL_REP --> ACC_MEM_0
+    PIXEL_REP --> ACC_MEM_1
+    
+    ZERO_PIXEL_REP --> SPAD_BANK_0
+    ZERO_PIXEL_REP --> SPAD_BANK_1
+    ZERO_PIXEL_REP --> ACC_MEM_0
+    ZERO_PIXEL_REP --> ACC_MEM_1
+    
+    MVIN_SCALE_ACC --> ACC_MEM_0
+    MVIN_SCALE_ACC --> ACC_MEM_1
+    
+    %% Write path flow
+    WRITE_DISPATCH_Q --> WRITE_NORM_Q
+    WRITE_NORM_Q --> ACC_NORM
+    ACC_NORM --> WRITE_SCALE_Q
+    WRITE_SCALE_Q --> ACC_SCALE
+    ACC_SCALE --> WRITE_ISSUE_Q
+    
+    %% Memory bank reads for writes
+    SPAD_BANK_0 --> DMA_READ_PIPE_0
+    SPAD_BANK_1 --> DMA_READ_PIPE_1
+    DMA_READ_PIPE_0 --> WRITE_ISSUE_Q
+    DMA_READ_PIPE_1 --> WRITE_ISSUE_Q
+    
+    ACC_MEM_0 --> ACC_SCALE
+    ACC_MEM_1 --> ACC_SCALE
+    
+    WRITE_ISSUE_Q --> STREAM_WRITER
+    
+    %% Execute path connections
+    EX_READ --> SPAD_BANK_0
+    EX_READ --> SPAD_BANK_1
+    EX_READ --> ACC_MEM_0
+    EX_READ --> ACC_MEM_1
+    
+    SPAD_BANK_0 --> EX_READ_PIPE_0
+    SPAD_BANK_1 --> EX_READ_PIPE_1
+    EX_READ_PIPE_0 --> EX_WRITE
+    EX_READ_PIPE_1 --> EX_WRITE
+    
+    EX_WRITE --> SPAD_BANK_0
+    EX_WRITE --> SPAD_BANK_1
+    EX_WRITE --> ACC_MEM_0
+    EX_WRITE --> ACC_MEM_1
+    
+    %% Accumulator adder connections
+    ACC_MEM_0 --> ACC_ADDERS
+    ACC_MEM_1 --> ACC_ADDERS
+    ACC_ADDERS --> ACC_MEM_0
+    ACC_ADDERS --> ACC_MEM_1
+    
+    %% TileLink connections
+    STREAM_READER --> TL_BUFFER_1
+    STREAM_WRITER --> TL_BUFFER_2
+    TL_BUFFER_1 --> XBAR
+    TL_BUFFER_2 --> XBAR
+    XBAR --> ID_NODE
+    ID_NODE --> EXT_MEM
+    
+    %% TLB connections
+    STREAM_READER -.-> TLB_IF
+    STREAM_WRITER -.-> TLB_IF
+    
+    %% Styling
+    classDef memoryBank fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef pipeline fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef dmaEngine fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
+    classDef queue fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef interface fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    classDef tilelink fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    
+    class SPAD_BANK_0,SPAD_BANK_1,SPAD_BANK_N,ACC_MEM_0,ACC_MEM_1,ACC_MEM_N memoryBank
+    class DMA_READ_PIPE_0,DMA_READ_PIPE_1,EX_READ_PIPE_0,EX_READ_PIPE_1,ACC_ADDERS,PIXEL_REP,ZERO_PIXEL_REP pipeline
+    class STREAM_READER,STREAM_WRITER,ZERO_WRITER dmaEngine
+    class READ_ISSUE_Q,WRITE_DISPATCH_Q,WRITE_NORM_Q,WRITE_SCALE_Q,WRITE_ISSUE_Q queue
+    class DMA_READ,DMA_WRITE,EX_READ,EX_WRITE,TLB_IF,EXT_MEM interface
+    class XBAR,TL_BUFFER_1,TL_BUFFER_2,TL_BUFFER_3,ID_NODE tilelink
+    class MVIN_SCALE,MVIN_SCALE_ACC,ACC_NORM,ACC_SCALE pipeline
+```
+
+## Key Components and Data Flow
+
+### **1. DMA Read Path (Memory → Scratchpad/Accumulator)**
+- `read_issue_q` → `StreamReader` → `VectorScalarMultiplier` → `PixelRepeater` → Memory Banks
+- Alternative: `ZeroWriter` for all-zeros data (bypasses memory read)
+
+### **2. DMA Write Path (Scratchpad/Accumulator → Memory)**  
+- Memory Banks → Pipeline Queues → `write_dispatch_q` → `write_norm_q` → `Normalizer` → `write_scale_q` → `AccumulatorScale` → `write_issue_q` → `StreamWriter`
+
+### **3. Execute Path (PE ↔ Memory Banks)**
+- Direct access between Processing Elements and memory banks
+- Separate pipeline stages for DMA vs Execute access
+
+### **4. Key Missing Components from Original Diagram**
+- **AccumulatorScale unit**: Critical for scaling and activation functions
+- **Normalizer unit**: Handles normalization operations  
+- **Multiple queue pipeline stages**: Essential for proper data flow control
+- **Pipeline stages**: `dma_read_pipe`, `ex_read_pipe` for response buffering
+- **AccPipeShared**: Shared accumulation arithmetic units
+
+### **5. Memory Bank Architecture**
+- **ScratchpadBank**: Stores input data (inputType width)
+- **AccumulatorMem**: Stores partial sums and results (accType width)  
+- **Dual-ported access**: DMA and Execute paths can access simultaneously
+- **Bank-interleaved addressing**: Data distributed across multiple banks
