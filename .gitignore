@@ -8,9 +8,9 @@ docs/txt_forAIStudio
 # ===================================================================
 
 # 1. Final Output
-*.pdf
-!Images/**/*.pdf
-!References/**/*.pdf
+# *.pdf
+# !Images/**/*.pdf
+# !References/**/*.pdf
 
 # 2. LaTeX Auxiliary and Log Files
 *.aux
