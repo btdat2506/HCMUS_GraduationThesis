@@ -11,324 +11,244 @@ While Chapter \ref{chap:gemmini_overview} described the conceptual architecture 
     \label{fig:gemmini_internal_modules}
 \end{figure}
 
+Figure~\ref{fig:gemmini_internal_modules} serves as a high-level architectural blueprint for the entire Gemmini accelerator. The journey of a command begins when a \texttt{RoCCCommand} is dispatched from the \texttt{RocketCore} and arrives at the \textbf{RoCC Interface}. The command first enters the \textbf{Command Processing} block, where it is enqueued before being passed to the \textbf{Loop Controllers}. Here, the two-level command-unrolling hierarchy (\texttt{LoopConv} and \texttt{LoopMatmul}) autonomously translates the high-level instruction into a stream of simpler, tiled micro-operations. These primitive commands are then staged in the \textbf{ReservationStation}, which acts as a central dispatch hub.
+
+From the Reservation Station, commands are issued to the three independent \textbf{Execution Controllers}, which manage the core decoupled operations of the accelerator. The \texttt{LoadController} and \texttt{StoreController} orchestrate all data movement with the \textbf{Memory Subsystem}, issuing requests through its \texttt{TileLink Interface} to either the on-chip \texttt{spad} (Scratchpad) or off-chip DRAM. In parallel, the \texttt{ExecuteController} drives the \textbf{Compute Pipeline}, managing the optional \texttt{Im2Col} unit and issuing commands to the systolic \texttt{mesh} and the post-processing \texttt{accumulator \& scaler}. This entire process is supported by system-level services, such as the \textbf{FrontendTLB}, which handles virtual memory address translation via the \texttt{io.ptw} port.
+
+This decoupled, multi-stage architecture is the key to Gemmini's performance, allowing long-latency memory operations to be overlapped with high-throughput computation. The subsequent sections will now explore each of these major blocks in detail.
+
 \section{The Command-Unrolling Hierarchy}
 \label{sec:command_unrolling}
 
-A custom \texttt{RoCC} instruction sent from the Rocket core is not executed directly by the systolic array. Instead, it triggers a complex sequence of events within the Gemmini accelerator's internal controller modules. The overall structure of the generated hardware, is shown in Figure~\ref{fig:gemmini_internal_modules}. This section details the key components of this internal pipeline.
+A custom \texttt{RoCC} instruction sent from the Rocket core is not a simple command executed directly by the systolic array. Instead, it is a high-level, almost CISC-like directive, such as \texttt{LOOP\_WS} or \texttt{LOOP\_CONV\_WS}, that can encapsulate an entire deep learning layer computation. The fundamental design principle of Gemmini is to offload the immense complexity of interpreting this command from the CPU into a dedicated, multi-level hardware hierarchy.
 
+This hardware-based command unrolling is a defining characteristic of a powerful, tightly-integrated co-processor. It autonomously handles tasks that would otherwise require thousands of CPU cycles—such as loop control, address calculation, and data dependency checking—freeing the host processor for other work. This section details the two primary levels of this unrolling hierarchy: \texttt{LoopConv} and \texttt{LoopMatmul}.
 
-\subsection{Command Unrolling and Buffering for Decoupled Execution via LoopConv and LoopMatmul}
-
-This hardware-based command unrolling is a defining characteristic of a powerful, tightly-integrated co-processor. This design offloads what would otherwise be thousands of CPU instructions—for loop control, address calculation, data dependency checking, and synchronization—into a single accelerator command. By handling this complexity autonomously within its own hardware controllers, Gemmini frees the Rocket Core to perform other tasks, demonstrating a highly efficient division of labor between the general-purpose CPU and the specialized accelerator.
-
-The stream of micro-operations unrolled by the high-level controllers is not fed into a rigid, lock-step pipeline. Instead, Gemmini employs a more sophisticated and powerful paradigm: decoupled execution managed by a set of independent, communicating Finite State Machines (FSMs). This design allows the various stages of a complex operation—loading data, executing computation, and storing results—to proceed concurrently and asynchronously, maximizing hardware utilization.
-
-The initial \texttt{RoCC} instructions received from the CPU are often "complex" commands that encapsulate entire loops (e.g., `loop\_matmul`). As shown in Figure~\ref{fig:command_unrollers}, modules like \texttt{LoopMatmul} and \texttt{LoopConv} are responsible for unrolling these high-level tasks into a stream of simpler, primitive micro-operations for loading, storing, and executing on tiled sub-matrices. These primitive commands are then buffered in a queue before being sent to a central dispatcher.
-
-Due to convolution operations inherently require two levels of decomposition to be efficiently executed on the systolic array hardware, the interface between \texttt{LoopConv} and \texttt{LoopMatmul} reflects a fundamental architectural principle: hierarchical loop unrolling. 
-
-Once a \texttt{RoCCCommand} crosses the interface into Gemmini, it is not executed directly by the systolic array. Instead, the CPU often issues high-level, almost CISC-like commands such as \texttt{LOOP\_WS} or \texttt{LOOP\_CONV\_WS}, which encapsulate entire, complex operations. These commands are received by dedicated hardware controllers — \texttt{LoopMatmul} and \texttt{LoopConv} — which act as micro-code engines. Their primary function is to interpret these high-level instructions and "unroll" them into a sequence of simpler, primitive micro-operations that can be dispatched to the underlying hardware units.
-
-At the first level, \texttt{LoopConv} decomposes high-level convolution operations into a sequence of matrix multiplication primitives. This transformation handles the complex six-dimensional loop structure inherent in convolutions, including batch dimensions, input/output channels, and spatial dimensions. At the second level, \texttt{LoopMatmul} further breaks down these matrix multiplication operations into smaller tiles that can be efficiently processed by the systolic array's fixed dimensions.
-
-This hierarchical approach ensures that the complex nested loop structures of convolution operations are systematically reduced to primitive operations that can be directly executed by the underlying hardware. The \texttt{LoopMatmul} module thus acts as an intermediary controller, translating matrix-level operations into the tile-based computations required by the systolic array architecture.
-
-% \begin{figure}[h!]
-%     \centering
-%     \begin{subfigure}[b]{0.9\textwidth}
-%         \centering
-%         \includegraphics[width=\textwidth]{Gemmini_Internal_LoopConv.pdf}
-%         \caption{LoopConv module}
-%         \label{fig:loop_conv}
-%     \end{subfigure}
-%     \vspace{1em}
-%     \begin{subfigure}[b]{\textwidth}
-%         \centering
-%         \includegraphics[width=\textwidth]{Gemmini_Internal_LoopMatmul.pdf}
-%         \caption{LoopMatmul module}
-%         \label{fig:loop_matmul}
-%     \end{subfigure}
-%     \caption{Gemmini's command unrolling modules (\texttt{LoopConv} and \texttt{LoopMatmul}), which translate high-level commands into a series of primitive operations.}
-%     \label{fig:command_unrollers}
-% \end{figure}
-
-\FloatBarrier
-
-\subsubsection{LoopConv}
+\subsection{Level 1: Convolution Decomposition (\texttt{LoopConv})}
+\label{ssec:loopconv}
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\textwidth]{Gemmini_Internal_LoopConv.pdf}
-    \caption{LoopConv module}
+    \includegraphics[width=0.9\textwidth]{Gemmini_Internal_LoopConv.pdf}
+    \caption{The \texttt{LoopConv} module. This is the first level of the command-unrolling hierarchy, responsible for decomposing a complex convolution operation into a series of matrix multiplication tasks.}
     \label{fig:loop_conv}
 \end{figure}
 
-The LoopConv block is a \textbf{Convolution Loop Unroller}, or in other words, it is the High-Level Command Unrolling module within the Gemmini systolic array accelerator. Usually, convolution operations involve complex nested loops over: Batch dimensions (N), Input/Output channels (C), Spatial dimensions (H, W), and Kernel dimensions (R, S). Without LoopConv, programmers would need to manually implement these 6-7 nested loops, handle data tiling, and manage resource allocation. LoopConv provides a single high-level instruction (for example, \texttt{gemmini\_loop\_conv\_ws} or \texttt{gemmini\_loop\_ws} in C code, ...) that can perform entire convolution operations automatically. 
+The first stage in processing a high-level command is the \texttt{LoopConv} module (Figure~\ref{fig:loop_conv}), which functions as a Convolution Loop Unroller. Convolution operations involve complex, nested loops over batch dimensions (N), input/output channels (C), spatial dimensions (H, W), and kernel dimensions (R, S). Without hardware offloading, a programmer would need to manage this 6 to 7-dimensional loop nest, along with data tiling and resource allocation, in software.
 
-The internal architecture of the \texttt{LoopConv} controller, depicted in Figure \ref{fig:loop_conv}, provides a clear illustration of this command unrolling process. As the figure shows, a single high-level convolution command is not executed serially. Instead, it triggers three independent, parallel load units to begin fetching the necessary tensors concurrently.
+The \texttt{LoopConv} module automates this entire process. It interprets a single high-level instruction (e.g., \texttt{gemmini\_loop\_conv\_ws}) and decomposes the complex convolution into a sequence of simpler matrix multiplication tasks. Its internal architecture is comprised of several parallel hardware units that handle the two distinct phases of the operation: data loading and execution.
 
+First, the data loading phase is handled by three independent, concurrent units:
 \begin{itemize}
     \item \textbf{\texttt{LoopConvLdInput}}: Loads input feature maps from memory.
     \item \textbf{\texttt{LoopConvLdWeight}}: Loads convolution kernel weights from memory.
     \item \textbf{\texttt{LoopConvLdBias}}: Loads bias values from memory.
 \end{itemize}
 
-After the loaded data is fully received, it begins the execution phase.
-
+Once the required data has been fetched, the execution phase begins, managed by two final components:
 \begin{itemize}
-    \item \textbf{\texttt{LoopConvExecute}}: Executes the convolution operation.
-    \item \textbf{\texttt{Arbiter}}: A 5-to-1 arbiter that manages access to the memory interface, ensuring that the three load units and the execute unit do not contend for the same resources simultaneously.
+    \item \textbf{\texttt{LoopConvExecute}}: Executes the convolution operation by passing tasks to the \texttt{LoopMatmul} module.
+    \item \textbf{\texttt{Arbiter}}: A 5-to-1 arbiter that manages access to the memory interface, ensuring that the parallel load and execute units do not create resource contention.
 \end{itemize}
+
+These generated tasks are then passed down to the next level of the command-unrolling hierarchy.
 
 \FloatBarrier
 
-\subsubsection{LoopMatmul}
+\subsection{Level 2: Tiled Matrix Multiplication (\texttt{LoopMatmul})}
+\label{ssec:loopmatmul}
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\textwidth]{Gemmini_Internal_LoopMatmul.pdf}
-    \caption{LoopMatmul module}
+    \includegraphics[width=0.9\textwidth]{Gemmini_Internal_LoopMatmul.pdf}
+    \caption{The \texttt{LoopMatmul} module. This second-level unroller translates matrix multiplication tasks into a stream of smaller, tiled micro-operations for the physical hardware.}
     \label{fig:loop_matmul}
 \end{figure}
 
-The \texttt{LoopMatmul} module serves as the matrix multiplication command unroller within the Gemmini architecture. It receives commands from the \texttt{LoopConv} module and processes five distinct types of operations:
+The \texttt{LoopMatmul} module (Figure~\ref{fig:loop_matmul}) receives the sequence of matrix multiplication jobs from \texttt{LoopConv} and performs the second level of command unrolling. Its primary responsibility is to break these matrix-level operations down into smaller, fixed-size tiles that perfectly match the physical dimensions of the systolic array. This module is effectively a micro-code engine that processes five distinct types of operations—ranging from configuration (\texttt{CONFIG\_CMD}) and memory transfers (\texttt{LOAD3\_CMD}, \texttt{STORE\_CMD}) to the core computational directives (\texttt{PRELOAD\_CMD}, \texttt{COMPUTE\_CMD}). This section delves into the internal architecture and policies that allow it to manage this complexity.
 
+\subsubsection{Internal Architecture and Decoupled Execution}
+
+The internal structure of the \texttt{LoopMatmul} controller is composed of several independent hardware modules, each responsible for a specific part of the execution pipeline:
 \begin{itemize}
-    \item \textbf{LOAD3\_CMD (MVIN)}: Loads data from DRAM to scratchpad memory
-    \item \textbf{STORE\_CMD (MVOUT)}: Stores data from scratchpad memory to DRAM
-    \item \textbf{PRELOAD\_CMD}: Preloads weights into the systolic array
-    \item \textbf{COMPUTE\_CMD}: Executes matrix multiplication operations
-    \item \textbf{CONFIG\_CMD}: Configures the load/store/execute pipeline parameters
+    \item \textbf{\texttt{LoopMatmulLdA}}: Loads matrix A from DRAM to scratchpad memory.
+    \item \textbf{\texttt{LoopMatmulLdB}}: Loads matrix B (weights) from DRAM to scratchpad memory.
+    \item \textbf{\texttt{LoopMatmulLdD}}: Loads bias/accumulator data from DRAM to accumulator memory.
+    \item \textbf{\texttt{LoopMatmulExecute}}: Performs the actual matrix multiplication computation.
+    \item \textbf{\texttt{LoopMatmulStC}}: Stores results from the accumulator back to DRAM.
+    \item \textbf{\texttt{LoopMatmulStCSpad}}: Stores results from the accumulator to scratchpad memory.
 \end{itemize}
 
-The internal structure of the \texttt{LoopMatmul} controller exemplifies this architecture. It is composed of several independent hardware modules:
-\begin{itemize}
-    \item \textbf{\texttt{LoopMatmulLdA}}: Loads matrix A from DRAM to scratchpad memory
-    \item \textbf{\texttt{LoopMatmulLdB}}: Loads matrix B (weights) from DRAM to scratchpad memory
-    \item \textbf{\texttt{LoopMatmulLdD}}: Loads bias/accumulator data from DRAM to accumulator memory
-    \item \textbf{\texttt{LoopMatmulExecute}}: Performs the actual matrix multiplication computation
-    \item \textbf{\texttt{LoopMatmulStC}}: Stores results from accumulator back to DRAM
-    \item \textbf{\texttt{LoopMatmulStCSpad}}: Stores results from accumulator to scratchpad memory
-\end{itemize}
+While these modules operate independently, they are coordinated through a lightweight handshake mechanism referred to in the design as iterator synchronization. For instance, the \texttt{LoopMatmulExecute} unit will not begin computation on a tile of data until it receives a signal that both \texttt{LoopMatmulLdA} and \texttt{LoopMatmulLdB} have successfully loaded the required operands into the scratchpad. This allows the \texttt{Load} modules to work ahead, fetching data for a future computation (\texttt{tile i+1}) while the \texttt{Execute} module is still busy processing the current one (\texttt{tile i}).
 
-While these modules operate independently, they are coordinated through a lightweight handshake mechanism referred to in the design as iterator synchronization. For instance, the \texttt{LoopMatmulExecute} will not begin computation on a tile of data until it receives a signal that the \texttt{LoopMatmulLdA} and \texttt{LoopMatmulLdB} have successfully loaded the required operands into the scratchpad. This allows the \texttt{Load} modules to work ahead, fetching data for a future computation (\texttt{tile i+1}) while the \texttt{Execute} module is still busy processing the current one (\texttt{tile i}).
+This decoupled architecture is a deliberate and critical design choice for overcoming the "memory wall". The high latency of fetching data from off-chip DRAM is a primary performance bottleneck in any accelerator. By overlapping the long-latency memory operations (Load and Store) with the core computation (Execute), the system effectively hides this latency. This ensures that the systolic array—the most valuable computational resource—is starved for data as infrequently as possible, maximizing its utilization and achieving a throughput which would be unattainable with a simple, rigid pipeline.
 
-This decoupled architecture is a deliberate and critical design choice for overcoming the "memory wall". The high latency of fetching data from off-chip DRAM is a primary performance bottleneck in any accelerator. By overlapping the long-latency memory operations (Load and Store) with the core computation (Execute), the system effectively hides this latency. This ensures that the systolic array—the most valuable computational resource—is starved for data as infrequently as possible, maximizing its utilization and achieving a throughput that would be unattainable with a simple, rigid pipeline.
+\subsubsection{Resource Management and Arbitration Priority}
 
-The Arbiter employs a fixed-priority scheduling policy to manage resource contention among the parallel execution units:
-
+The parallel operation of these internal modules inevitably leads to contention for shared resources. To manage this, the \texttt{LoopMatmul} controller employs a hardware arbiter that enforces a fixed-priority scheduling policy. This policy is not arbitrary; it is carefully designed to maintain pipeline flow and prevent deadlocks. The priority scheme is as follows:
 \begin{enumerate}
-    \item \textbf{Highest Priority - Store to DRAM}: Commands from the \texttt{LoopMatmulStC} module receive top priority to prevent accumulator buffer overflow and maintain pipeline flow.
+    \item \textbf{Highest Priority - Store to DRAM}: Commands from the \texttt{LoopMatmulStC} module receive top priority. This is essential to prevent accumulator buffer overflow and free up internal resources for subsequent computations.
     \item \textbf{Execute Operations}: The \texttt{LoopMatmulExecute} module's preload and compute commands receive second priority to keep the systolic array actively computing.
     \item \textbf{Load Bias/Accumulator}: The \texttt{LoopMatmulLdD} module's commands for loading bias data receive third priority.
     \item \textbf{Load Input Matrices}: A weighted sub-arbiter manages requests from \texttt{LoopMatmulLdA} and \texttt{LoopMatmulLdB} modules with fourth priority.
-    \item \textbf{Lowest Priority - Store to Scratchpad}: The \texttt{LoopMatmulStCSpad} module receives lowest priority as scratchpad stores are less critical than DRAM operations.
+    \item \textbf{Lowest Priority - Store to Scratchpad}: The \texttt{LoopMatmulStCSpad} module receives the lowest priority, as scratchpad stores are internal operations that are less critical to overall pipeline progression than DRAM transfers.
 \end{enumerate}
 
-This priority scheme ensures that result data is promptly written to DRAM to free accumulator resources, while maintaining sufficient data throughput to keep the computational units busy.
+This priority scheme ensures that result data is promptly written to DRAM to free accumulator resources, while maintaining sufficient data throughput to keep the computational units busy. The impressive result of this entire hierarchical process is that the \texttt{LoopMatmul} module transforms a single high-level command, like \texttt{LOOP\_WS(matmul 1024x1024)}, into \textbf{thousands} of precisely calculated, optimally ordered, resource-aware hardware operations ready for immediate execution by the back-end controllers.
 
-The impressive result, LoopMatmul transforms a single \texttt{LOOP\_WS(matmul 1024x1024)} command into \textbf{thousands} of precisely calculated, optimally ordered, resource-aware hardware operations ready for immediate execution by the controllers.
 \FloatBarrier
 
-\subsection{Reservation Station and Execution Control}
+%
+% SECTION 2: DECOUPLED EXECUTION
+%
+\section{Decoupled Execution and Resource Management}
+\label{sec:decoupled_execution}
 
-LoopMatmul provides ReservationStation with:
-
-\begin{itemize}
-    \item \textbf{Optimally Sequenced Commands}: Thousands of individual operations from high-level matrix specifications
-    \item \textbf{Complete Address Calculation}: DRAM offsets, scratchpad addresses, stride handling
-    \item \textbf{Resource-Aware Flow Control}: Prevents overwhelming downstream controllers
-    \item \textbf{Dependency Management}: Ensures proper ordering without explicit dependencies in ReservationStation
-    \item \textbf{Concurrent Loop Support}: Enables double-buffering for maximum throughput
-    \item \textbf{Attribution Metadata}: Marks commands for proper tracking and debugging
-\end{itemize}
-
-The ReservationStation receives commands from the LoopMatmul:
-\begin{itemize}
-    \item \textbf{LOAD\_CMD}: Load matrix A block (4x4) from DRAM to scratchpad
-    \item \textbf{LOAD2\_CMD}: Load matrix B block (4x4) from DRAM to scratchpad
-    \item \textbf{LOAD3\_CMD}: Load bias (4x4) from DRAM to accumulator
-    \item \textbf{PRELOAD\_CMD}: Preload B matrix into systolic array
-    \item \textbf{COMPUTE\_AND\_FLIP\_CMD}: Perform matrix multiplication A*B
-    \item \textbf{STORE\_CMD}: Store result (4x4) from accumulator to DRAM
-\end{itemize}
-
-The stream of primitive commands is received by the ReservationStation module, which reorders and dispatches them to the appropriate back-end controllers: LoadController, StoreController and and ExecuteController. 
-
-\begin{itemize}
-    \item \textbf{LoadController}: Handles all data loading operations, fetching data from DRAM to the scratchpad memory.
-    \item \textbf{StoreController}: Manages data storage operations, writing results from the scratchpad back to DRAM.
-    \item \textbf{ExecuteController}: Manages the actual computation. It issues commands to the systolic array and orchestrates the movement of data between the scratchpad and the computational units. It also contains logic to manage optional units, such as the hardware \texttt{im2col} unit or data transposer (Figure~\ref{fig:execute_controller}). 
-    \begin{itemize}
-        \item \textbf{Im2Col Module}: Specialized SRAM controller for convolution operations that converts image data into column format for efficient convolution, manages sliding window operations over input data, handles address generation for accessing input feature maps, and provides specialized data access patterns for CNN operations.
-        \item \textbf{Queue (sram\_read\_signals\_q)}: Pipeline synchronization buffer that buffers control signals for SRAM read operations, provides timing alignment between address generation and data availability, and handles pipeline delays in the Im2Col data path.
-        \item \textbf{Queue (mesh\_cntl\_signals\_q)}: Mesh control signal buffer that queues control signals fed into the computational mesh, synchronizes computation control with data arrival timing, and provides pipeline buffering for mesh operations.
-        \item \textbf{MultiHeadedQueue}: Multi-port queue for command buffering that allows multiple commands to be read simultaneously, provides flexible command scheduling and issue capabilities, and supports out-of-order execution patterns.
-        \item \textbf{TransposePreloadUnroller}: Command transformation unit that unrolls complex operations into simpler primitive operations, handles matrix transpose operations for weight-stationary dataflow, and manages preload command sequences for optimal data placement.
-        \item \textbf{MeshWithDelays (Computational Mesh)}: The main systolic array for matrix computations that performs actual matrix multiplication operations, implements systolic array dataflow (input/weight/output stationary), handles multiple simultaneous matrix multiplications, and manages timing and data flow through the PE array.
-    \end{itemize}
-\end{itemize}
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.6\textwidth]{Gemmini_Internal_Load_StoreController.pdf}
-    \caption{The Load and Store Controller module, which manages data movement between the scratchpad and DRAM. Both controllers load the commands from the ReservationStation into the DMACommandTracker, which is connected to the DMA read and write interfaces of the scratchpad  memory.}
-    \label{fig:load_store_controller}
-\end{figure}
+The stream of primitive micro-operations generated by the command-unrolling hierarchy is not fed into a rigid, lock-step pipeline. Instead, Gemmini employs a more sophisticated and powerful paradigm: decoupled execution. This design allows the various stages of a complex operation—loading data, executing computation, and storing results—to proceed concurrently and asynchronously, managed by a central dispatch hub and a set of independent back-end controllers.
 
 \begin{figure}[h!]
     \centering
+    \begin{subfigure}[t]{0.55\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Gemmini_Internal_Load_StoreController.pdf}
+        \caption{The Load and Store Controllers manage data movement between scratchpad and DRAM via a DMA tracker.}
+        \label{fig:load_store_controller}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Gemmini_Internal_SRAM_Im2Col.pdf}
+        \caption{Im2Col module (an SRAM Controller)}
+        \label{fig:im2col_module}
+    \end{subfigure}
+    \hfill
     \begin{subfigure}[b]{\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Gemmini_Internal_ExecuteController.pdf}
-        \caption{ExecuteController module}
-        \label{fig:loop_matmul}
+        \caption{The Execute Controller, which issues commands to the systolic array (\texttt{Mesh}) and \texttt{im2col} units.}
+        \label{fig:execute_controller}
     \end{subfigure}
-    \vspace{1em}
-    \begin{subfigure}[b]{0.47\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Gemmini_Internal_SRAM_Im2Col.pdf}
-        \caption{SRAM controllers: Im2Col module}
-        \label{fig:loop_conv}
-    \end{subfigure}
-    \caption{The \texttt{ExecuteController} module and its associated SRAM control interfaces.}
-    \label{fig:execute_controller}
+    \caption{The primary back-end controllers that receive commands from the Reservation Station.}
+    \label{fig:backend_controllers_overview}
 \end{figure}
+
+\subsection{The Reservation Station: A Central Dispatch Hub}
+\label{ssec:reservation_station}
+
+At the heart of the decoupled back-end is the Reservation Station. It receives a stream of commands from the \texttt{LoopMatmul} module that are far more than simple instructions; they are complete, resource-aware directives. These directives include optimally sequenced commands, complete address calculations for DRAM and scratchpad, resource-aware flow control to prevent buffer overflows, and attribution metadata for debugging. The Reservation Station's primary role is to act as a central orchestrator, managing data dependencies and dispatching these directives to the appropriate hardware units.
+
+This enables a form of out-of-order execution, where a command can be dispatched as soon as its required data and hardware resources are available. The primitive commands it dispatches correspond to the fundamental actions of the accelerator pipeline, including loading data (\texttt{LOAD\_CMD}, \texttt{LOAD2\_CMD}, \texttt{LOAD3\_CMD}), preloading weights into the array (\texttt{PRELOAD\_CMD}), initiating the core computation (\texttt{COMPUTE\_AND\_FLIP\_CMD}), and writing results back to memory (\texttt{STORE\_CMD}).
+
+\subsection{Back-End Controllers: Load, Store, and Execute}
+\label{ssec:backend_controllers}
+
+From the Reservation Station, primitive commands are dispatched to one of three specialized, independently operating back-end controllers. 
+
+\begin{itemize}
+    \item \textbf{\texttt{LoadController}}: Handles all data loading operations, fetching data from DRAM to the scratchpad memory.
+    \item \textbf{\texttt{StoreController}}: Manages data storage operations, writing results from the scratchpad back to DRAM.
+    \item \textbf{\texttt{ExecuteController}}: Orchestrates the actual computation, issuing commands to the systolic array and managing on-the-fly data transformations.
+\end{itemize}
+
+The \texttt{LoadController} and \texttt{StoreController} (Figure~\ref{fig:load_store_controller}) are focused exclusively on managing the high-latency operations of the memory hierarchy. The \texttt{ExecuteController} (Figure~\ref{fig:execute_controller}), however, contains a sophisticated collection of its own internal hardware modules, including the systolic array mesh itself, an \texttt{im2col} unit (Figure \ref{fig:im2col_module}), and various queues for command buffering. (A detailed breakdown of the \texttt{ExecuteController}'s internal sub-modules is provided in Appendix \ref{app:execute_controller_modules}).
+
+This clear division of labor, orchestrated by the Reservation Station, is the cornerstone of the accelerator's performance. It allows long-latency memory operations and intense computation to overlap, effectively hiding the "memory wall" and ensuring the valuable systolic array is kept maximally utilized.
 
 \FloatBarrier
 
-\subsection{Scratchpad: the Local Memory Subsystem}
 
-The Scratchpad (Figure~\ref{fig:scratchpad_module}) implements the on-chip memory, containing the SRAM banks and logic for interfacing with the DMA engine and the systolic array's accumulator. It serves as the central data hub of the matrix multiplication accelerator, acting as a high-speed, local memory subsystem that bridges the gap between external DRAM and the compute units. 
+%
+% SECTION 3: THE PHYSICAL HARDWARE
+%
+\section{The Physical Hardware: Compute and Memory}
+\label{sec:physical_hardware}
 
-Far more than simple storage, the Scratchpad implements a sophisticated data movement engine with integrated processing capabilities, dual data paths, and complex arbitration logic, enabling the high-throughput, low-latency data access patterns essential for efficient matrix computation. Its design demonstrates the critical importance of specialized memory subsystems in achieving peak performance in domain-specific accelerators.
+The control-flow mechanisms described above orchestrate the work performed by the two foundational hardware components of the accelerator: the compute engine that performs the mathematical operations, and the memory subsystem that feeds it.
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=\textwidth]{Gemmini_Internal_Scratchpad.pdf}
-    \caption{The internal structure of the Scratchpad module, showing the various interfaces to the TLB, DMA, and internal memory banks.}
-    \label{fig:scratchpad_module}
-\end{figure}
+\subsection{The Processing Element (PE) and Distributed Arithmetic}
+\label{ssec:pe_and_mac}
 
-% \begin{itemize}
-%     \item \textbf{Banked Memory Organization}: Multiple SRAM banks enable parallel access patterns and concurrent operations across memory regions
-%     \item \textbf{Integrated Processing}: Built-in data transformation units (scaling, normalization, activation functions) reduce CPU overhead
-%     \item \textbf{Dual-Path Architecture}: Separate interfaces for DMA operations and direct PE access eliminate memory contention
-%     \item \textbf{Performance Optimization}: Latency hiding through prefetching, data reuse maximization, and sophisticated flow control mechanisms
-% \end{itemize}
-
-The Scratchpad sits at the heart of the Gemmini data flow architecture. There's two primary interfaces that the Scratchpad exposes to work with the rest of the system:
-\begin{itemize}
-    \item \textbf{External Memory Interface}: Via TileLink and DMA for bulk data transfers with DRAM
-    \item \textbf{Compute Unit Interface}: Direct access for the systolic array and accumulator units
-\end{itemize}
-
-The Scratchpad's internal architecture reveals its complexity as a data processing subsystem rather than passive storage. The key components include:
-
-\begin{itemize}
-    \item \textbf{Memory Banks}: 
-    \begin{itemize}
-        \item \texttt{ScratchpadBank (spad\_mems\_*)}: Multiple SRAM banks storing input data (weights, activations) for the systolic array, enabling parallel access patterns
-        \item \texttt{AccumulatorMem (acc\_mems\_*)}: Specialized banks storing partial sums and accumulation results, with integrated support for activation functions and scaling operations
-    \end{itemize}
-    
-    \item \textbf{DMA Engines}: \texttt{StreamReader} and \texttt{StreamWriter} for data transfers between external memory and internal banks
-    
-    \item \textbf{Integrated Data Processing Units}: Built-in data transformation units to reduce CPU overhead
-    \begin{itemize}
-        \item \texttt{VectorScalarMultiplier (vsm/vsm\_1)}: Applies scaling operations to data during movement, with separate scalers for scratchpad and accumulator data paths
-        \item \texttt{PixelRepeater}: Handles pixel repetition optimizations for first-layer convolution operations
-        \item \texttt{AccumulatorScale unit (acc\_scale\_unit)}: Critical component applying scaling and activation functions to accumulator data before memory writes
-        \item \texttt{Normalizer unit (acc\_norm\_unit)}: Performs normalization operations on accumulator data
-        \item \texttt{ZeroWriter}: Generates zero data when the \texttt{all\_zeros} flag is set, avoiding unnecessary memory reads
-    \end{itemize}
-    
-    \item \textbf{Pipeline Infrastructure}: Built with multiple queue stages to ensure smooth data flow and prevent pipeline stalls.
-    
-\end{itemize}
-
-\FloatBarrier
-
-\subsection{Mesh: the Systolic Array}
-The Mesh (Figure~\ref{fig:mesh_module}) is the direct hardware implementation of the systolic array, containing the grid of PEs. 
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.5\textwidth]{Gemmini_Internal_PE_Array.pdf}
-    \caption{The Mesh module flow.}
-    \label{fig:mesh_module}
-\end{figure}
-
-\begin{figure}[h!]
-    \centering
-    \begin{subfigure}[t]{0.45\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{Gemmini_Internal_Mesh_4x4.pdf}
-        \caption{Mesh 4x4, 4 meshRows and 4 meshCols, made up 16 Tiles. Each Tile has 1 PE. }
-        \label{fig:mesh_configurations_4x4}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[t]{0.45\textwidth}
-        \centering
-        \includegraphics[width=\linewidth]{Gemmini_Internal_Mesh_2x2.pdf}
-        \caption{Mesh 2x2, 2 meshRows and 2 meshCols, made up 4 Tiles. Each Tile has 4 PE.}
-        \label{fig:mesh_configurations_2x2}
-    \end{subfigure}
-    \caption{Different Mesh configurations, while maintaining the same total number of 16 PEs.}
-    \label{fig:mesh_configurations}
-\end{figure}
+The fundamental building block of Gemmini's compute engine is the \textbf{Processing Element (PE)}. Each PE is a self-contained unit capable of performing a Multiply-Accumulate (MAC) operation, which is the core computation of a neural network. As shown in Figure~\ref{fig:pe_dataflows}, the PE is designed with the flexibility to support different dataflow strategies, such as Weight Stationary (WS) and Output Stationary (OS), allowing it to be optimized for different layer types.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{Gemmini_Internal_PE.pdf}
-    \caption{PE supports different dataflows (Output Stationary and Weight Stationary).}
-    \label{fig:pe_module}
+    \caption{A single Processing Element (PE), the fundamental compute unit. It contains a Multiply-Accumulate (MAC) unit and the necessary logic to support multiple dataflows, such as Output Stationary and Weight Stationary.}
+    \label{fig:pe_dataflows}
 \end{figure}
+
+A critical design choice in Gemmini is its approach to floating-point arithmetic. Gemmini avoids using a traditional, centralized Floating Point Unit (FPU). Instead, it implements a \textbf{distributed floating-point architecture} where arithmetic capabilities are embedded within every single PE. This is achieved through a powerful abstraction layer known as the \texttt{Arithmetic.scala} typeclass, which provides a full suite of IEEE 754-compliant operations by leveraging the Berkeley HardFloat library. The MAC unit at the heart of each PE (Figure~\ref{fig:mac_module}) utilizes this typeclass, effectively making every PE a specialized FPU. This design transforms the systolic array into a massively parallel floating-point computation engine, tailor-made for the demands of modern DNNs.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\textwidth]{Gemmini_Internal_MAC.pdf}
-    \caption{MAC module, or Multiply-Accumulate unit, performs the core computation in the systolic array.}
+    \caption{The Multiply-Accumulate (MAC) unit architecture. It is implemented using the \texttt{Arithmetic.scala} typeclass, which provides a suite of operations and supports multiple data types, including integers and IEEE 754 floating-point numbers.}
     \label{fig:mac_module}
 \end{figure}
 
-\section{The RoCC Interface that controls Gemmini}
-\label{sec:gemmini_rocc_interface}
+\subsection{The Tile and The Mesh: A Tale of Two Hierarchies}
+\label{ssec:tile_and_mesh}
 
-The Gemmini accelerator is controlled through a custom \texttt{RoCC} interface, which allows the Rocket Core to issue commands and receive results. This interface is designed to be flexible and efficient, enabling high-throughput data transfers and command execution.
+Individual PEs are not placed directly into a single large array. Instead, they are organized into a two-level hierarchy of \textbf{Tiles} and a \textbf{Mesh} (Figure~\ref{fig:mesh_configurations}). The design decision of how registers are used at each level is central to the entire accelerator's performance.
 
+\subsubsection{The Tile: A Combinational Block of PEs}
+A Tile is a two-dimensional array of PEs. The defining characteristic of a Tile is that it is \textbf{purely combinational}, meaning there are no pipeline registers between the PEs within a single Tile. This design choice, evident in the hardware generation code where PE inputs are connected directly, is made to minimize local latency and reduce the area and power overhead of registers. Grouping PEs into a combinational Tile allows for efficient broadcasting of input values to multiple PEs, promoting local data reuse.
 
+\subsubsection{The Mesh: A Pipelined Systolic Array of Tiles}
+The Mesh is a two-dimensional array of Tiles. Unlike the combinational logic within a Tile, the Mesh is \textbf{explicitly pipelined}, with shift registers placed between each Tile. This is the key that creates the systolic behavior of the entire array. These registers create the "systolic heartbeat," allowing waves of data to flow across the array in a controlled, rhythmic fashion. This pipelining between Tiles is what enables high throughput and scalability, as it breaks up long combinational paths and allows every Tile in the array to be actively computing on a different piece of data simultaneously.
 
-\subsection{Resource Management and Arbitration}
+\subsection{Architectural Trade-offs in Mesh Configuration}
+\label{ssec:mesh_config_tradeoffs}
 
-The decoupled, parallel architecture described previously, while powerful, creates an inherent engineering challenge: contention for shared hardware resources. With multiple independent Load, Execute, and Store modules operating concurrently, they will inevitably attempt to access the same resources—such as the scratchpad memory ports or the primary DMA engine—at the same time. Gemmini addresses this challenge through a hierarchy of dedicated hardware arbiters.
+The Gemmini generator allows for configuring the hierarchy of the Mesh, offering a classic architectural trade-off between latency and clock frequency. For a system with a fixed number of PEs (e.g., 256), one can choose between having many small tiles or a few large tiles, as shown in Figure~\ref{fig:mesh_configurations}.
 
-These arbiters act as traffic controllers for internal data and command pathways. For instance, the \texttt{LoopConv} controller, as shown previously in Figure \ref{fig:loopconv_controller}, features a central 5-to-1 arbiter that serializes requests from the five parallel units before they are dispatched. The \texttt{LoopMatmul} controller employs an even more complex, two-stage arbitration scheme which includes a \texttt{Global 5-Way Arbiter}. This hardware explicitly enforces a fixed-priority policy, granting higher precedence to \texttt{Store} operations to free up internal result buffers, followed by \texttt{Execute} and \texttt{Load} operations. This ensures that the system does not deadlock and that resource access is allocated in a deterministic and efficient manner.
+\begin{itemize}
+    \item \textbf{Many Small Tiles (e.g., a 16x16 mesh of 1x1-PE tiles):} This configuration maximizes the number of pipeline stages. The combinational logic path within each stage is very short (just a single PE), which allows for a \textbf{higher maximum clock frequency}. However, it takes more clock cycles for a single piece of data to traverse the entire array, resulting in \textbf{higher pipeline latency}. This configuration is pipeline-optimized.
 
-Beyond simply resolving simultaneous requests, the system must also manage its overall load to prevent its internal queues and buffers from overflowing. This is achieved through a feedback mechanism managed by resource utilization counters. These hardware counters track the number of load, store, and execute micro-operations currently in flight. If the number of pending commands in the Re-Order Buffer (ROB) exceeds a hardware-defined threshold, the controller asserts a backpressure signal (e.g., \texttt{rob\_overloaded}) to the upstream FSMs, temporarily stalling them from issuing new commands until resources become available.
+    \item \textbf{Few Large Tiles (e.g., a 4x4 mesh of 4x4-PE tiles):} This configuration has fewer, deeper pipeline stages. The combinational path within each stage is much longer (passing through multiple PEs), which limits the \textbf{maximum clock frequency}. However, an operation can pass through the entire array in fewer clock cycles, leading to \textbf{lower pipeline latency}. This configuration is throughput-optimized for batch processing.
+\end{itemize}
 
-The inclusion of explicit hardware for arbitration and backpressure-based flow control is a critical indicator of the design's sophistication. While a simplistic proof-of-concept accelerator might function correctly under ideal, low-load conditions, it would likely fail or deadlock under the high-throughput, concurrent scenarios that this system is designed for. Therefore, the presence of this robust resource management infrastructure proves the maturity of the Gemmini accelerator, demonstrating an architecture designed not just for theoretical correctness but for practical, high-performance operation.
+The default configurations for Gemmini typically favor smaller (1x1) tiles, representing a design sweet spot that prioritizes high-frequency operation, which is often easier to implement and validate in a final ASIC or FPGA design.
 
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Gemmini_Internal_Mesh_4x4.pdf}
+        \caption{A 4x4 mesh of 1x1-PE tiles. This configuration has 16 tiles and a deep pipeline, favoring a higher clock frequency.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Gemmini_Internal_Mesh_2x2.pdf}
+        \caption{A 2x2 mesh of 2x2-PE tiles. This configuration has only 4 tiles and a shallower pipeline, favoring lower latency at the cost of clock speed.}
+    \end{subfigure}
+    \caption{Different Mesh configurations, illustrating the trade-off between the number of tiles and the number of PEs per tile, while maintaining the same total number of 16 PEs.}
+    \label{fig:mesh_configurations}
+\end{figure}
 
-\section{The Multi-Level Programming Model}
-\label{sec:gemmini_programming_model}
+\subsection{The Scratchpad: An Intelligent Memory Subsystem}
+\label{ssec:scratchpad}
 
-To cater to different user needs, from application developers to hardware architects, Gemmini supports a multi-level programming model. This stack provides layers of abstraction, allowing users to work at a level appropriate for their task, from direct hardware control to high-level framework integration.
+The Scratchpad (Figure~\ref{fig:scratchpad_module}) implements Gemmini's on-chip memory system, serving as the central data hub that bridges the gap between high-latency external DRAM and the high-throughput systolic array. Far more than simple storage, the Scratchpad is a sophisticated data movement engine with integrated processing capabilities, dual data paths, and complex arbitration logic, enabling the high-throughput, low-latency data access patterns essential for efficient matrix computation. Its design demonstrates the critical importance of specialized memory subsystems in achieving peak performance in domain-specific accelerators.
 
-\subsection{Low-Level: Gemmini ISA}
-At the lowest level, Gemmini is controlled by its custom RoCC instruction set. These instructions are typically wrapped in C preprocessor macros for easier use from C/C++ code. The instruction set includes primitive commands like \texttt{mvin} (move data in), \texttt{mvout} (move data out), \texttt{preload} (load data into the PE array), and \texttt{compute}. It also features more "complex" instructions like \texttt{loop\_matmul} that abstract away the manual tiling and scheduling of primitive commands, offloading the loop control to hardware state machines \cite{Genc2022GemminiMLSys}.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{Gemmini_Internal_Scratchpad.pdf}
+    \caption{The internal structure of the Scratchpad module, an intelligent memory subsystem with integrated DMA engines and data processing units that serves the systolic array.}
+    \label{fig:scratchpad_module}
+\end{figure}
 
-\subsection{Mid-Level: Hand-Tuned C Library}
-To abstract the complexities of direct ISA programming, Gemmini provides a C library (typically accessed via \texttt{gemmini.h}). This library offers functions for common DNN operations, such as \texttt{tiled\_matmul} and \texttt{tiled\_conv}. These functions implement optimized heuristics for loop tiling and data movement to maximize scratchpad utilization based on the specific hardware parameters of the generated Gemmini instance.
+The Scratchpad exposes two primary interfaces to the rest of the system: an \textbf{External Memory Interface} that connects to DRAM via the TileLink bus and DMA engines, and a \textbf{Compute Unit Interface} that provides direct, low-latency access for the systolic array.
 
-\subsection{High-Level: Compiler Support (Conceptual)}
-The Gemmini ecosystem is designed to support higher-level compilation flows. This involves tools that can take DNN models described in standard frameworks like ONNX (Open Neural Network Exchange) and compile them down to Gemmini instructions, either by calling the mid-level C library or by directly generating low-level ISA calls. This further simplifies the deployment of DNNs on Gemmini-accelerated SoCs.
+Internally, its architecture is founded on a set of specialized \textbf{Memory Banks}. Multiple \texttt{ScratchpadBank}s store input data like weights and activations, with their banked structure enabling the parallel access patterns necessary for feeding the array. In parallel, dedicated \texttt{AccumulatorMem} banks store the higher-precision partial sums generated during computation, featuring integrated hardware to support activation functions and scaling operations.
 
-% \section{Gemmini Configuration in This Thesis}
-% \label{sec:gemmini_configuration}
+Data movement between these internal banks and external memory is managed by dedicated \textbf{DMA Engines}, the \texttt{StreamReader} and \texttt{StreamWriter}. Critically, the Scratchpad contains several \textbf{Integrated Data Processing Units} that operate on data as it moves, a key design choice that significantly reduces CPU overhead. These units perform a range of on-the-fly transformations, including scaling for quantization, pixel repetition for convolution optimizations, and applying activation functions. (A detailed breakdown of these processing units is provided in \textbf{Appendix~\ref{app:scratchpad_units}}).
 
-% The Gemmini accelerator integrated into the SoC for this thesis is based on a specific configuration suitable for the target AI applications and FPGA resource constraints. Within the Chipyard framework, this configuration is defined in a Scala configuration file. 
+Ultimately, the sophisticated architecture of the Scratchpad—with its combination of banked memory, integrated data processing, and dedicated DMA engines—is a direct and powerful answer to the "memory wall" problem. It is an active, intelligent subsystem engineered not just to store data, but to transform and deliver it, ensuring the massively parallel Mesh is constantly supplied with operands and enabling the high-throughput computation that is the central goal of this work.
 
-% \todo[inline]{Specify the key parameters for your Gemmini instance here. For example: The instance was configured with a 16x16 systolic array using 8-bit integer data types for inputs and weights, and a 32-bit integer accumulator. The scratchpad was configured with 256KB of capacity and the accumulator memory with 64KB. The Weight Stationary (WS) dataflow was selected, and the hardware \texttt{im2col} unit was included to offload this pre-processing step from the host CPU. These parameters were chosen to balance performance for target DNN workloads with the resource constraints of the target FPGA. The detailed performance implications of these choices will be explored in subsequent chapters.}
+\section{Chapter Summary}
 
-% The integration follows the standard \texttt{RoCC} methodology provided by Chipyard, ensuring that Gemmini coexists with the Rocket Core, shares the system memory hierarchy, and can be programmed using custom RISC-V instructions dispatched to its \texttt{RoCC} slot.
+This chapter has provided a deep dive into the internal architecture of the Gemmini accelerator, tracing the path of a command from the RoCC interface to the physical compute units. We began by examining the two-level command-unrolling hierarchy, where high-level directives are translated into primitive micro-operations by the \texttt{LoopConv} and \texttt{LoopMatmul} modules. We then analyzed the decoupled execution model, orchestrated by the central Reservation Station, which allows for the concurrent operation of Load, Store, and Execute controllers to hide memory latency. Finally, we explored the physical hardware, including the distributed arithmetic in the Processing Elements and the configurable tile-and-mesh hierarchy of the systolic array. 
+
+This detailed analysis of Gemmini's internal architecture completes the theoretical and design-level exploration of our system. The subsequent chapter transitions from this architectural blueprint to practice, documenting the complete implementation process—from SoC configuration and hardware generation to the final system deployment and testing on the target FPGA platform.

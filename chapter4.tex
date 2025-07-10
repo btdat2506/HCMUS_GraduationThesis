@@ -26,13 +26,22 @@ This bottleneck is not just about latency; it is fundamentally about energy. As 
 
 In his seminal 1982 paper, H.T. Kung proposed a novel architectural paradigm designed specifically to address the memory wall: the \textbf{systolic array} \cite{kung1982systolic}. The architecture is named by analogy to the human circulatory system. Just as the heart rhythmically pumps blood to the body's cells, in a systolic system, memory "pumps" data through a regular grid of simple Processing Elements (PEs).
 
-The core principle is to \textbf{maximize the number of computations performed for each data item fetched from memory}. Instead of fetching an operand, using it once in a central ALU, and then discarding it (the conventional approach), a systolic array passes an operand from one PE to the next in a pipelined fashion. At each step of its journey, the data element participates in another computation. This structure, illustrated conceptually in Figure \ref{fig:conventional_vs_systolic}, amortizes the high cost of the initial memory access over dozens or even hundreds of useful operations.
+The core principle is to \textbf{maximize the number of computations performed for each data item fetched from memory}. Figure~\ref{fig:conventional_vs_systolic} provides a powerful conceptual comparison. In a conventional architecture, each operand must be fetched from memory for a single operation in the PE, making the system bottlenecked by memory bandwidth. In contrast, the systolic approach creates a pipeline of PEs. A single data element is fetched and then passed from one PE to the next, participating in a new computation at each step. This data reuse allows the systolic architecture to achieve significantly higher throughput with the exact same memory bandwidth.
 
-\begin{figure}[htbp]
+\begin{figure}[h]
     \centering
-    \includegraphics[width=0.9\textwidth]{SystolicArray_Kung1982.pdf} 
+    \includegraphics[width=0.8\textwidth]{SystolicArray_Kung1982.pdf} 
     \caption[Conventional vs. Systolic Processing]{A conceptual comparison of a conventional von Neumann architecture and a systolic architecture. The conventional approach (top) is bottlenecked by the memory bus. The systolic approach (bottom) uses an array of PEs to achieve high throughput with the same memory bandwidth by reusing data internally. Adapted from the presentation of Kung's work \cite{kung1982systolic}.}
     \label{fig:conventional_vs_systolic}
+\end{figure}
+
+While Kung's original comparison work laid the theoretical foundation and illustrated the benefit, the mechanism for achieving this data reuse is elegant in its own right. As shown in Figure~\ref{fig:systolic_principle}, modern systolic arrays implement this principle for matrix multiplication by feeding input operands from two matrices (A and B) into the array from orthogonal sides. The values from matrix A flow horizontally, while the values from matrix B flow vertically. As these data wavefronts intersect at each clock cycle, every PE in the grid performs a Multiply-Accumulate (MAC) operation in parallel. The result is a massively parallel computation structure that amortizes the high energy cost of a single memory access over dozens or even hundreds of useful arithmetic operations, providing a direct architectural solution to the data movement bottleneck.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth]{Gemmini_Internal_PE_Array.pdf}
+    \caption{The fundamental principle of a systolic array for matrix multiplication. Input matrix A flows horizontally, while input matrix B flows vertically. This rhythmic dataflow allows for massive parallelism and data reuse.}
+    \label{fig:systolic_principle}
 \end{figure}
 
 \section{Case Studies in Modern Systolic Design}
@@ -78,37 +87,18 @@ The design choices made in architectures like the TPU and NVDLA can be formally 
 \end{itemize}
 These strategies, visually contrasted in Figure \ref{fig:dataflow_taxonomy} and \ref{fig:dataflow_comparison}, represent a fundamental trade-off in accelerator design. The choice of dataflow directly impacts which types of data reuse, shown in Figure \ref{fig:dnn_reuse}, are most effectively exploited.
 
-\begin{figure}[htbp]
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.9\textwidth]{EfficientDNN_DataReuse.pdf} 
     \caption[Data Reuse Opportunities in DNNs]{The three primary forms of data reuse in convolutional layers: convolutional, filter, and input reuse. \cite{sze2020efficient}.}
     \label{fig:dnn_reuse}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.9\textwidth]{EfficientDNN_ModernDataflow.pdf} 
-    \caption[Taxonomy of Common DNN Dataflows]{A visual comparison of Weight Stationary (left) and Output Stationary (right) dataflows. \cite{sze2020efficient}.}
+    \caption[Taxonomy of Common DNN Dataflows]{A visual comparison of Weight, Output and Input Stationary dataflows. \cite{sze2020efficient}.}
     \label{fig:dataflow_taxonomy}
-\end{figure}
-
-\begin{figure}[htbp]
-    \centering
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Gemmini_compute_os.pdf}
-        \caption{Output Stationary (OS)}
-        \label{fig:os_dataflow}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{Gemmini_compute_ws.pdf}
-        \caption{Weight Stationary (WS)}
-        \label{fig:ws_dataflow}
-    \end{subfigure}
-    \caption[Comparison of OS and WS Dataflows]{A visual comparison of the two primary dataflows supported by Gemmini. (a) In the \textbf{Output Stationary} dataflow, the result matrix C remains stationary in the PEs to accumulate partial sums. (b) In the \textbf{Weight Stationary} dataflow, the weight matrix B is preloaded and remains stationary in the PEs to maximize weight reuse. The choice between these strategies represents a fundamental trade-off in accelerator design. Source: \cite{gemini-dac}.}
-    \label{fig:dataflow_comparison}
 \end{figure}
 
 \FloatBarrier
@@ -129,12 +119,32 @@ Crucially, as a generator written in Chisel, Gemmini is not a single, fixed hard
 
 Therefore, for the objectives of this thesis—to implement and evaluate a custom accelerator within a realistic SoC environment—Gemmini provides the ideal platform. It combines the computational power of a systolic array with the verifiability of a full-stack, open-source framework, enabling a rigorous and holistic analysis.
 
-\begin{figure}[htbp]
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.9\textwidth]{Gemmini_SystolicNVDLA.pdf} 
     \caption[Architectural Flexibility of the Gemmini Generator]{The design space enabled by the Gemmini generator, allowing it to produce a wide variety of spatial array structures, from systolic (TPU-like) to parallel vector engines (NVDLA-like). Source: \cite{gemini-dac}.}
     \label{fig:gemmini_flexibility}
 \end{figure}
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Gemmini_compute_os.pdf}
+        \caption{Output Stationary (OS)}
+        \label{fig:os_dataflow}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Gemmini_compute_ws.pdf}
+        \caption{Weight Stationary (WS)}
+        \label{fig:ws_dataflow}
+    \end{subfigure}
+    \caption[Comparison of OS and WS Dataflows]{A visual comparison of the two primary dataflows supported by Gemmini. (a) In the \textbf{Output Stationary} dataflow, the result matrix C remains stationary in the PEs to accumulate partial sums. (b) In the \textbf{Weight Stationary} dataflow, the weight matrix B is preloaded and remains stationary in the PEs to maximize weight reuse. The choice between these strategies represents a fundamental trade-off in accelerator design. Source: \cite{gemini-dac}.}
+    \label{fig:dataflow_comparison}
+\end{figure}
+
 
 \FloatBarrier
 

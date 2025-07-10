@@ -1,16 +1,52 @@
 \appendix
 \renewcommand{\thechapter}{B} % Set Appendix Chapter Label to B
 
-\chapter{MỘT SỐ LỖI THƯỜNG GẶP}
-\label{Appendix2}
+\chapter{Detailed Processing Units}
 
-Phần này bao gồm một số lỗi thường gặp và cách khắc phục trong quá trình triển khai và gỡ lỗi hệ thống Nios V với DMA.
+\section{ExecuteController Sub-Modules}
+\label{app:execute_controller_modules}
 
-\section{Lỗi Tạo BSP hoặc Biên dịch Ứng dụng}
-\label{sec:trouble_bsp_app}
+The \texttt{ExecuteController} is a complex module that contains several specialized hardware units to manage the core computation and data transformation pipeline. The primary sub-modules include:
 
-Một lỗi phổ biến khi chạy lệnh \texttt{niosv-app} là báo không tìm thấy tệp hoặc thư mục nguồn.
 \begin{itemize}
-    \item \textbf{Nguyên nhân:} Đường dẫn đến thư mục \texttt{app}, \texttt{bsp}, hoặc tệp mã nguồn C (\texttt{-s=...}) không chính xác so với vị trí hiện tại (hoặc không tồn tại) của Nios V Shell. 
-    \item \textbf{Khắc phục:} Đảm bảo đã \texttt{cd} vào thư mục gốc của dự án Quartus (\texttt{DMANiosVIntern}) trước khi chạy lệnh \texttt{niosv-app}. Kiểm tra lại các đường dẫn tương đối (\texttt{software/app}, \texttt{software/bsp}) trong lệnh. Tên tệp mã nguồn C trong thư mục \texttt{app} phải khớp với tên được chỉ định bởi tham số \texttt{-s}.
+    \item \textbf{Im2Col Module}: A specialized SRAM controller for convolution operations that converts image data into column format for efficient convolution. It manages sliding window operations over input data, handles address generation for accessing input feature maps, and provides specialized data access patterns for CNN operations.
+    
+    \item \textbf{Queue (sram\_read\_signals\_q)}: A pipeline synchronization buffer that buffers control signals for SRAM read operations, provides timing alignment between address generation and data availability, and handles pipeline delays in the Im2Col data path.
+    
+    \item \textbf{Queue (mesh\_cntl\_signals\_q)}: A mesh control signal buffer that queues control signals fed into the computational mesh. It synchronizes computation control with data arrival timing and provides pipeline buffering for mesh operations.
+    
+    \item \textbf{MultiHeadedQueue}: A multi-port queue for command buffering that allows multiple commands to be read simultaneously. This provides flexible command scheduling and issue capabilities, and is essential for supporting out-of-order execution patterns.
+    
+    \item \textbf{TransposePreloadUnroller}: A command transformation unit that unrolls complex operations into simpler primitive operations, handles matrix transpose operations for the weight-stationary dataflow, and manages preload command sequences for optimal data placement.
+    
+    \item \textbf{MeshWithDelays (Computational Mesh)}: The main systolic array for matrix computations that performs the actual matrix multiplication operations. It implements the systolic array dataflow (input/weight/output stationary), handles multiple simultaneous matrix multiplications, and manages timing and data flow through the PE array.
 \end{itemize}
+
+\textbf{ExecuteController}: Manages the actual computation. It issues commands to the systolic array and orchestrates the movement of data between the scratchpad and the computational units. It also contains logic to manage optional units, such as the hardware \texttt{im2col} unit or data transposer (Figure~\ref{fig:execute_controller}). 
+\begin{itemize}
+    \item \textbf{Im2Col Module}: Specialized SRAM controller for convolution operations that converts image data into column format for efficient convolution, manages sliding window operations over input data, handles address generation for accessing input feature maps, and provides specialized data access patterns for CNN operations.
+    \item \textbf{Queue (sram\_read\_signals\_q)}: Pipeline synchronization buffer that buffers control signals for SRAM read operations, provides timing alignment between address generation and data availability, and handles pipeline delays in the Im2Col data path.
+    \item \textbf{Queue (mesh\_cntl\_signals\_q)}: Mesh control signal buffer that queues control signals fed into the computational mesh, synchronizes computation control with data arrival timing, and provides pipeline buffering for mesh operations.
+    \item \textbf{MultiHeadedQueue}: Multi-port queue for command buffering that allows multiple commands to be read simultaneously, provides flexible command scheduling and issue capabilities, and supports out-of-order execution patterns.
+    \item \textbf{TransposePreloadUnroller}: Command transformation unit that unrolls complex operations into simpler primitive operations, handles matrix transpose operations for weight-stationary dataflow, and manages preload command sequences for optimal data placement.
+    \item \textbf{MeshWithDelays (Computational Mesh)}: The main systolic array for matrix computations that performs actual matrix multiplication operations, implements systolic array dataflow (input/weight/output stationary), handles multiple simultaneous matrix multiplications, and manages timing and data flow through the PE array.
+\end{itemize}
+
+\section{Scratchpad Integrated Processing Units}
+\label{app:scratchpad_units}
+
+The Gemmini Scratchpad contains several hardware units that process data on-the-fly as it is moved to or from memory, offloading these tasks from the host CPU. The primary units include:
+
+\begin{itemize}
+    \item \textbf{\texttt{VectorScalarMultiplier (vsm/vsm\_1)}}: Applies scaling operations to data during movement, with separate scalers for scratchpad and accumulator data paths. This is essential for handling quantized data types.
+    
+    \item \textbf{\texttt{PixelRepeater}}: Handles pixel repetition optimizations for first-layer convolution operations, reducing memory bandwidth for specific layer types.
+    
+    \item \textbf{\texttt{AccumulatorScale unit (acc\_scale\_unit)}}: A critical component that applies scaling and activation functions (e.g., ReLU) to accumulator data before it is written back to memory.
+    
+    \item \textbf{\texttt{Normalizer unit (acc\_norm\_unit)}}: Performs normalization operations on accumulator data.
+    
+    \item \textbf{\texttt{ZeroWriter}}: Generates zero data when the \texttt{all\_zeros} flag is set, avoiding unnecessary memory reads and saving power.
+\end{itemize}
+
+This combined approach makes your section far more professional and effective. It tells a powerful story in the main chapter and provides the exhaustive proof in the appendix, showcasing both your communication skills and your technical depth.

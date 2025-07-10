@@ -104,6 +104,24 @@ This integration uses a decoupled access-execute model, as illustrated conceptua
 \subsection{Virtual Memory Support}
 To operate correctly under a full-featured operating system like Linux, an accelerator's DMA engine must be able to translate virtual memory addresses into physical addresses. Gemmini is designed with this "full-stack" capability. It can be configured to share the host CPU's Page Table Walker (PTW) to perform its own address translations, and it includes its own local Translation Lookaside Buffer (TLB) to cache these translations and reduce latency.
 
+%
+% SECTION 4: THE SOFTWARE INTERFACE
+%
+\section{The Multi-Level Programming Model}
+\label{sec:gemmini_programming_model}
+
+To cater to different user needs, from application developers to hardware architects, Gemmini supports a multi-level programming model. This stack provides layers of abstraction, allowing users to work at a level appropriate for their task, from direct hardware control to high-level framework integration.
+
+\subsection{Low-Level: Gemmini ISA}
+At the lowest level, Gemmini is controlled by its custom RoCC instruction set. These instructions are typically wrapped in C preprocessor macros for easier use from C/C++ code. The instruction set includes primitive commands like \texttt{mvin} (move data in), \texttt{mvout} (move data out), \texttt{preload} (load data into the PE array), and \texttt{compute}. It also features more "complex" instructions like \texttt{loop\_matmul} that abstract away the manual tiling and scheduling of primitive commands, offloading the loop control to hardware state machines \cite{Genc2022GemminiMLSys}.
+
+\subsection{Mid-Level: Hand-Tuned C Library}
+To abstract the complexities of direct ISA programming, Gemmini provides a C library (typically accessed via \texttt{gemmini.h}). This library offers functions for common DNN operations, such as \texttt{tiled\_matmul} and \texttt{tiled\_conv}. These functions implement optimized heuristics for loop tiling and data movement to maximize scratchpad utilization based on the specific hardware parameters of the generated Gemmini instance.
+
+\subsection{High-Level: Compiler Support (Conceptual)}
+The Gemmini ecosystem is designed to support higher-level compilation flows. This involves tools that can take DNN models described in standard frameworks like ONNX (Open Neural Network Exchange) and compile them down to Gemmini instructions, either by calling the mid-level C library or by directly generating low-level ISA calls. This further simplifies the deployment of DNNs on Gemmini-accelerated SoCs.
+
+
 \section{Summary}
 \label{sec:gemmini_overview_summary}
 In summary, Gemmini is a sophisticated, highly configurable DNN accelerator generator that embodies the principles of systolic computation. Its key architectural features include a powerful systolic array, a specialized on-chip memory hierarchy, and a tightly-coupled integration with a host processor via the \texttt{RoCC} interface, including support for system-level features like virtual memory. This design enables the high-performance execution of DNN workloads within a full-stack, system-level context. 

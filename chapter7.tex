@@ -74,7 +74,7 @@ While the RoCC interface provides a clean, standardized gateway for the CPU, it 
 
 \subsection{The RoCC Interface}
 
-The primary conduit for communication between the Rocket Core and the Gemmini accelerator is the RoCC interface. This is a standardized feature of the Rocket Chip generator that allows for the tight coupling of co-processors. As part of this standard, the RISC-V ISA reserves four instruction opcode spaces for custom extensions. The Gemmini accelerator is assigned the \texttt{custom3} opcode space, which corresponds to the binary value \texttt{0b1111011}. When the Rocket Core's instruction decoder encounters this specific opcode, it forgoes standard execution and instead initiates a dispatch to the attached RoCC unit.
+The primary conduit for communication between the Rocket Core and the Gemmini accelerator is the RoCC interface (Figure~\ref{fig:rocket_rocc_interface}). This is a standardized feature of the Rocket Chip generator that allows for the tight coupling of co-processors. As part of this standard, the RISC-V ISA reserves four instruction opcode spaces for custom extensions. The Gemmini accelerator is assigned the \texttt{custom3} opcode space, which corresponds to the binary value \texttt{0b1111011}. When the Rocket Core's instruction decoder encounters this specific opcode, it forgoes standard execution and instead initiates a dispatch to the attached RoCC unit.
 
 \begin{lstlisting}[language=Scala, caption={The \texttt{WithGemmini} configuration trait, which instantiates the accelerator as a RoCC device.}, label=lst:withgemmini]
 class WithGemmini(mesh_size: Int, bus_bits: Int) extends Config((site, here, up) => {
@@ -90,47 +90,23 @@ class WithGemmini(mesh_size: Int, bus_bits: Int) extends Config((site, here, up)
 })
 \end{lstlisting}
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=0.8\textwidth]{Rocket_RoCC_Interface.pdf}
-  \caption{Rocket Tile RoCC Interface Architecture with Accelerator Integration. The RoCC interface provides direct communication pathways between the Rocket Core's datapath and the attached accelerator, including command dispatch, memory requests, and response handling channels.}
-  \label{fig:rocket_rocc_interface}
-\end{figure}
-
 The consequence of this configuration is that the Gemmini accelerator is assigned a reserved block of custom instruction opcodes. As defined in its internal configuration, Gemmini uses \texttt{OpcodeSet.custom3}. During program execution, when the Rocket Core’s instruction decoder encounters an instruction with an opcode from this set, it recognizes it as a RoCC instruction. Rather than attempting to execute it, the core dispatches the entire instruction—including operands from the processor's register file (\texttt{rs1}, \texttt{rs2}) and the funct field—directly to the Gemmini unit over the dedicated RoCC command channel. The RocketTile hardware then automatically wires the command and response channels between the core and the Gemmini module.
 
 This direct connection demonstrates a successful accelerator integration. It is what distinguishes the RoCC methodology from a standard memory-mapped peripheral, providing the low-latency communication that is a cornerstone of this system's design for high-performance DNN acceleration. The complete RoCC interface architecture, showing the connection pathways between the Rocket Core and the accelerator, is illustrated in Figure \ref{fig:rocket_rocc_interface}.
 
-Upon recognizing a \texttt{custom3} instruction, the Rocket Core pipeline packages the necessary information into a \texttt{RoCCCommand} bundle. This Chisel data structure, shown in Listing \ref{lst:rocc_command_bundle}, acts as the payload for the interface. It contains the raw instruction bits in the \texttt{inst} field (including the \texttt{funct} sub-field that specifies the particular Gemmini operation), the operand values from the CPU's integer register file in \texttt{rs1} and \texttt{rs2}, and the processor's current status flags.
-
-\begin{lstlisting}[language=Scala, caption={The \texttt{RoCCCommand} Chisel Bundle, which defines the interface between the Rocket Core and the Gemmini accelerator.}, label=lst:rocc_command_bundle]
-class RoCCCommand(implicit p: Parameters) extends CoreBundle()(p) {
-  val inst = new RoCCInstruction    // Instruction encoding
-  val rs1 = Bits(xLen.W)           // Source register 1 data
-  val rs2 = Bits(xLen.W)           // Source register 2 data
-  val status = new MStatus         // Processor status
-}
-
-class RoCCInstruction extends Bundle {
-  val funct = Bits(7.W)            // Function code (specifies Gemmini operation)
-  val rs2 = Bits(5.W)              // Source register 2 address
-  val rs1 = Bits(5.W)              // Source register 1 address
-  val xd = Bool()                  // Destination register valid
-  val xs1 = Bool()                 // Source register 1 valid
-  val xs2 = Bool()                 // Source register 2 valid
-  val rd = Bits(5.W)               // Destination register address
-  val opcode = Bits(7.W)           // Opcode (e.g., custom3 = 0b1111011)
-}
-\end{lstlisting}
-
-The dispatch of this \texttt{RoCCCommand} bundle marks the end of the CPU's direct involvement. However, the dispatched instruction is often not a simple, primitive operation. It can be a high-level, CISC-like command such as \texttt{LOOP\_CONV\_WS}, which instructs the accelerator to perform an entire tiled convolution. This single command triggers a cascade of parallel, asynchronous hardware processes within Gemmini's internal controllers, such as the \texttt{LoopConv} module. These processes include the parallel loading of inputs, weights, and biases; decoupled computation in the systolic array; and the eventual storing of results, all managed autonomously by the accelerator. The CPU remains unaware of this internal complexity, having successfully offloaded the entire high-level task. The subsequent sections will now delve into this internal command processing hierarchy.
-
-
 \section{Peripheral Integration}
 
-The peripherals of the SoC are integrated firstly by having an controller, which is created by IP blocks (using Verilog). These controller are the middle-man for translating the AXI bus transactions from the Rocket Core to the specific peripheral protocols. The peripherals include ...
+To create a fully functional, Linux-capable computing platform, the core SoC must be integrated with a rich set of I/O peripherals for storage, networking, and user interaction. This section details the architecture and integration of these essential components. Unlike the Chisel-generated processor core which uses the \texttt{TileLink} protocol, most peripherals are integrated as pre-existing, open-source Verilog IP blocks that use the industry-standard \texttt{AXI4} protocol.
 
-To operate these peripherals, the Operating Systems (barebone or Linux) will has a driver for each peripheral. The driver will interact with the controller, which in turn communicates with the peripheral hardware. The drivers are typically implemented in C and are part of the Linux kernel or the bare-metal runtime environment.
+This creates a heterogeneous bus environment, which is managed by the Chipyard framework's diplomacy-generated protocol bridges. As shown in the overall system diagram (Figure \ref{fig:rocket_soc}), peripherals are not attached to the main coherent \texttt{SystemBus}. Instead, they connect to a dedicated, AXI4-based \texttt{PeripheryBus}. A specialized \textbf{TileLink to AXI4 Bridge} is automatically instantiated by the framework to handle all communication between the CPU and this peripheral bus, managing protocol translation, address decoding, and data width conversion.
+
+Each peripheral is managed by a dedicated controller IP that acts as a middleman, translating high-level AXI bus transactions from the Rocket Core into the specific low-level protocols required by the hardware (e.g., SD command sequences or Ethernet MAC framing). For the system software to utilize these components, a corresponding driver must be present in the operating system. This driver interacts with the controller’s memory-mapped registers to initiate data transfers and handle interrupts. The following subsections will briefly describe the implementation of the key peripherals integrated into this design: the SD Card controller, the UART controller, and the Ethernet subsystem, among others.
+
+\subsection{DDR Memory: High-Bandwidth Main Memory}
+
+The SoC's main memory system is built around a high-performance DDR3 SDRAM interface, which is essential for providing the capacity and bandwidth required to run a full Linux operating system and handle the large data sets of DNN workloads. The implementation does not use a custom controller but instead leverages the industry-standard \textbf{Xilinx Memory Interface Generator (MIG) 7-Series IP core}. This is a common and robust design practice that ensures reliable, high-frequency memory operation.
+
+A key architectural feature of this design is its scalability. While the processor and system bus are designed with a \textbf{34-bit address width, capable of accessing up to 16 GiB of memory}, the current physical implementation on the VC707 board uses a 1 GiB SODIMM. The AXI SmartConnect bridge, instantiated by Chipyard, automatically handles the address translation between the large logical address space and the smaller physical memory map. This demonstrates a forward-looking design, allowing for future memory expansion with minimal changes to the core SoC architecture.
 
 \subsection{SD Card: AXI SD Card Controller and SD Mode}
 The SoC includes an AXI SD Card controller, which allows the system to boot from an SD card. This controller is integrated into the system using the Chipyard framework's diplomacy mechanism, which automatically wires up the necessary AXI interfaces.
@@ -172,6 +148,14 @@ For comparion, here is how the same operation looks in SPI mode, which is anothe
 
 \subsection{UART: AXI UART Controller}
 
+To provide essential console I/O for debugging and user interaction with the operating system, the SoC integrates a robust UART controller. This component is not a generic library IP but a custom-designed Verilog module tailored for this system, demonstrating the ability to integrate bespoke hardware into the Chipyard flow.
+
+The controller is connected to the \texttt{PeripheryBus} via an AXI4-Lite interface, making it a memory-mapped peripheral accessible by the Rocket Core. Architecturally, it is designed for high-performance, reliable communication and includes several key hardware features:
+\begin{itemize}
+    \item \textbf{FIFO Buffering:} The controller features independent 16-entry transmit (TX) and receive (RX) FIFOs. These hardware buffers are crucial for preventing data loss at high baud rates, as they decouple the CPU from the byte-by-byte management of the serial link by allowing it to read and write data in bursts.
+    \item \textbf{Hardware Flow Control:} Full RTS/CTS hardware flow control is implemented, allowing the UART to automatically signal its readiness to receive data and to pause transmission if the remote device is not ready. This is essential for preventing buffer overruns in high-throughput scenarios.
+    \item \textbf{Interrupt Generation:} The controller can generate interrupts to the CPU based on configurable events, such as the receive FIFO reaching a certain threshold. This enables efficient, interrupt-driven I/O handling in the Linux kernel, rather than relying on inefficient polling.
+\end{itemize}
 
 \subsection{Ethernet: AXI Ethernet Controller}
 
@@ -188,6 +172,16 @@ The Ethernet subsystem is implemented as a hierarchical design with four distinc
 
   \item \textbf{Physical RJ45 Interface}: The physical layer terminates at the RJ45 connector on the VC707 board.
 \end{enumerate}
+
+\subsection{System Monitoring: XADC and Fan Control}
+
+To ensure operational stability and manage thermal output, the SoC integrates a dedicated system monitoring and fan control subsystem. This demonstrates a hybrid design approach, combining vendor IP with custom control logic for a robust, real-world solution. The subsystem consists of two primary components:
+
+\begin{itemize}
+    \item \textbf{Xilinx XADC IP Core:} The on-chip Xilinx Analog-to-Digital Converter (XADC) is used for real-time monitoring of the FPGA's internal temperature and critical supply voltages (VCCINT, VCCAUX). This IP is configured to operate in a continuous sampling mode and is connected to the system via an AXI4-Lite interface.
+    
+    \item \textbf{Custom Fan Controller:} A custom-designed Verilog module provides PWM-based control for the chassis fan. Crucially, this module is directly connected to the XADC's hardware thermal alarm pin. This creates an autonomous, hardware-based safety mechanism: if the die temperature exceeds a predefined threshold (e.g., 60°C), the alarm triggers an emergency override, forcing the fan to 100\% duty cycle, independent of any software control.
+\end{itemize}
 
 \section{Development Environment}
 The project requires a specific development environment to ensure that all tools, compilers, and dependencies are correctly configured. The primary environment is an Ubuntu 20.04 LTS workstation. 
@@ -219,3 +213,4 @@ The first stage of the build process is to generate the Verilog HDL for the SoC.
 \section{Gemmini Testing}
 We are going to use the gemmini-rocc-tests (https://github.com/ucb-bar/gemmini-rocc-tests) to test the Gemmini accelerator. The tests are designed to verify the functionality of the Gemmini RoCC interface and the correctness of the accelerator's operations. The tests cover a wide range of scenarios, including basic arithmetic operations, matrix multiplication, convolution, and more complex DNN workloads.
 
+With the hardware and software stack fully implemented and the testing methodology defined, the system is now ready for validation and evaluation. The following chapter presents the culminating results of this work, analyzing the hardware resource utilization of the final design, validating the full-stack software deployment, and, most critically, quantifying the performance impact of the Gemmini accelerator.

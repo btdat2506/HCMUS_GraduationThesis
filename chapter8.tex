@@ -53,12 +53,12 @@ As shown in Figure \ref{fig:utilization_summary_detailed}, the complete, Linux-c
 
 To isolate the resource cost of the Gemmini accelerator itself, a hierarchical utilization analysis was performed. Figure \ref{fig:utilization_hierarchical_gemmini} shows that the Gemmini module (`riscv\_tile/riscv\_tile/Queue\_Gemmini`) consumes 180,142 LUTs. This represents approximately 73.5\% of the logic within the `riscv\_tile` and underscores the fact that the specialized accelerator is, by far, the largest single component in the processor tile, dwarfing the RISC-V core itself. This trade-off of silicon area for specialized performance is the central premise of hardware acceleration.
 
-\begin{figure}[h!]
-\centering
-\includegraphics[width=\textwidth]{Images/Results/DeviceView}
-\caption{Device View of the implemented design on the FPGA fabric.}
-\label{fig:device_view}
-\end{figure}
+% \begin{figure}[h!]
+% \centering
+% \includegraphics[width=\textwidth]{Images/Results/DeviceView}
+% \caption{Device View of the implemented design on the FPGA fabric.}
+% \label{fig:device_view}
+% \end{figure}
 
 \begin{figure}[h!]
 \centering
@@ -67,12 +67,12 @@ To isolate the resource cost of the Gemmini accelerator itself, a hierarchical u
 \label{fig:utilization_summary_detailed}
 \end{figure}
 
-\begin{figure}[h!]
-\centering
-\includegraphics[width=\textwidth]{Images/Results/Utilization_Hierarchical.png}
-\caption{Hierarchical Utilization, showing the breakdown of resources by major system modules.}
-\label{fig:utilization_hierarchical}
-\end{figure}
+% \begin{figure}[h!]
+% \centering
+% \includegraphics[width=\textwidth]{Images/Results/Utilization_Hierarchical.png}
+% \caption{Hierarchical Utilization, showing the breakdown of resources by major system modules.}
+% \label{fig:utilization_hierarchical}
+% \end{figure}
 
 \begin{figure}[h!]
 \centering
@@ -88,26 +88,26 @@ Power analysis, performed by Vivado based on the placed-and-routed design and si
 
 The power summary in Figure \ref{fig:power_summary} reports a \textbf{Total On-Chip Power of 3.856W}. A key observation is the breakdown between static and dynamic power. Dynamic power, consumed by switching logic, accounts for 3.309W (86\% of the total), while static power is only 0.237W (6\%). This is characteristic of a high-performance digital design where power consumption is dominated by computational activity rather than leakage. The report identifies that the most significant contributors to dynamic power are Clocks, Signals, and I/O, which is expected for a large, high-frequency SoC with multiple external interfaces. The power hierarchical report (Figure \ref{fig:power_hierarchical_gemmini}) further shows that the Gemmini module contributes significantly to the overall power budget, consistent with its large area and high level of computational activity.
 
-\begin{figure}[h!]
-\centering
-\includegraphics[width=\textwidth]{Images/Results/Power_Settings.png}
-\caption{Power analysis settings.}
-\label{fig:power_settings}
-\end{figure}
+% \begin{figure}[h!]
+% \centering
+% \includegraphics[width=\textwidth]{Images/Results/Power_Settings.png}
+% \caption{Power analysis settings.}
+% \label{fig:power_settings}
+% \end{figure}
 
-\begin{figure}[h!]
-\centering
-\includegraphics[width=\textwidth]{Images/Results/Power_Summary.png}
-\caption{Post-implementation on-chip power summary.}
-\label{fig:power_summary}
-\end{figure}
+% \begin{figure}[h!]
+% \centering
+% \includegraphics[width=\textwidth]{Images/Results/Power_Summary.png}
+% \caption{Post-implementation on-chip power summary.}
+% \label{fig:power_summary}
+% \end{figure}
 
-\begin{figure}[h!]
-\centering
-\includegraphics[width=\textwidth]{Images/Results/Power_Hierarchical.png}
-\caption{Hierarchical power report for the entire system.}
-\label{fig:power_hierarchical}
-\end{figure}
+% \begin{figure}[h!]
+% \centering
+% \includegraphics[width=\textwidth]{Images/Results/Power_Hierarchical.png}
+% \caption{Hierarchical power report for the entire system.}
+% \label{fig:power_hierarchical}
+% \end{figure}
 
 \begin{figure}[h!]
 \centering
@@ -230,3 +230,5 @@ Flatten weights...
 Gemmini conv...
 Gemmini conv took 2600 cycles
 \end{lstlisting}
+
+This quantitative result, demonstrating a nearly 1000-fold performance increase, serves as the ultimate validation for the entire thesis. The successful implementation of a full-stack, Linux-capable SoC, combined with the profound performance gains from the specialized Gemmini accelerator, empirically confirms our central hypothesis. The final chapter will now conclude this thesis by summarizing these achievements, discussing their broader impact and limitations, and outlining promising directions for future research.

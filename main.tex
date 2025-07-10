@@ -193,11 +193,12 @@
 % ========================================================================================= %
 % CHÚ Ý: Thông tin chung về KLTN - sinh viên điền vào đây để tự động update các trang khác  %
 % ========================================================================================= %
+\newcommand{\tenSV}{Bùi~Thành~Đạt} % Dấu ~ là khoảng trắng không được tách (các chữ nối với nhau bằng dấu ~ sẽ nằm cùng 1 dòng
 \newcommand{\displayTenSV}[1]{#1} % Dấu ~ là khoảng trắng không được tách (các chữ nối với nhau bằng dấu ~ sẽ nằm cùng 1 dòng
 \newcommand{\tenKL}{Open-Source~RISC-V~SoC~Implementation with~DNN~Acceleration:~A~Chipyard~Framework~Study with~FPGA~Prototyping} % Chú ý dấu ~ trong tên khóa luận
-\newcommand{\tenGVHD}{TS.~Huỳnh~Hữu~Thuận}
+\newcommand{\tenGVHD}{Huynh~Huu~Thuan,~Ph.D.}
 \newcommand{\tenBM}{}
-\newcommand{\locationdateauto}[1]{Tp. #1, tháng \ifnum\month<10 0\fi\the\month/\the\year}
+\newcommand{\locationdateauto}[1]{#1, \ifnum\month<10 0\fi\the\month/\the\year}
 \begin{document}
 
 \input{Title/title.tex}
@@ -222,7 +223,7 @@
 % Mục lục, danh sách hình, danh sách bảng
 \cleardoublepage
 \phantomsection
-\addcontentsline{toc}{chapter}{MỤC LỤC}
+% \addcontentsline{toc}{chapter}{MỤC LỤC}
 \tableofcontents
 % Danh sách chữ viết tắt
 \printglossary[type=\acronymtype,
@@ -269,15 +270,18 @@
 \cleardoublepage
 \newpage
 \phantomsection
-\addcontentsline{toc}{chapter}{DANH MỤC CÔNG TRÌNH CỦA TÁC GIẢ}
+% \addcontentsline{toc}{chapter}{DANH MỤC CÔNG TRÌNH CỦA TÁC GIẢ}
+\addcontentsline{toc}{chapter}{LIST OF PUBLICATIONS}
 \include{Appendix/publish}
 
 % In tài liệu tham khảo
 \cleardoublepage
 \newpage
 \phantomsection
-\addcontentsline{toc}{chapter}{TÀI LIỆU THAM KHẢO}
-\printbibheading[title={TÀI LIỆU THAM KHẢO}]
+% \addcontentsline{toc}{chapter}{TÀI LIỆU THAM KHẢO}
+% \printbibheading[title={TÀI LIỆU THAM KHẢO}]
+\addcontentsline{toc}{chapter}{BIBLIOGRAPHY}
+\printbibheading[title={BIBLIOGRAPHY}]
 
 % \printbibliography[heading=subbibliography, title={Tiếng Việt}, keyword=Viet, resetnumbers=true]
 
@@ -285,7 +289,7 @@
 %\DeclareNameAlias{default}{last-first}
 
 % \printbibliography[heading=subbibliography, title={Tiếng Anh}, notkeyword=Viet, resetnumbers=true] 
-\printbibliography[heading=subbibliography, resetnumbers=true]
+\printbibliography[heading=none, resetnumbers=true]
 % \printbibliography 
 % ===================================================================== %
 % CHÚ Ý: phải gán lại resetnumbers=số tài liệu tham khảo tiếng Việt + 1 %
@@ -293,7 +297,7 @@
 
 % Phần phụ lục
 % \include{Appendix/appendix1}
-% \include{Appendix/appendix2}
+\include{Appendix/appendix2}
 
 
 
