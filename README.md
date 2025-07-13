@@ -1,5 +1,23 @@
 # HCMUS FETEL Graduation Thesis Report
 
+---
+### To-do:
+
+- Fix the abstract (958x)
+
+Do all the Appendix
+
+
+- Write about the VC707 board
+- Replace the Im2Col image in Chapter 6
+- Do we need to give a note at what Decoupled interface is?
+
+- Rewrite Chapter 1
+	+ Survey alternative frameworks.
+	+ Put BOOM core (in Chap2) to here if needed.
+---
+
+
 To build the latex pdf file, run the following code block in the terminal at the repository directory:
 
 ```powershell

@@ -1,6 +1,6 @@
 % !TeX root = main.tex
 \chapter{Architectural Foundations of DNN Acceleration}
-\label{ch:foundations}
+\label{chap:dnn_foundations}
 
 % Chapter Introduction
 The efficient execution of Deep Neural Networks (DNNs) presents one of the most significant challenges and opportunities in modern computer architecture. While today's general-purpose CPUs are highly optimized for a wide range of tasks, their fundamental design principles are often mismatched with the unique computational and data movement patterns of large-scale neural networks. This chapter will establish the foundational concepts that motivate the need for specialized hardware. We will begin by exploring the core problem---the immense cost of data movement---and then introduce the classic architectural paradigm designed to solve it: the systolic array. Finally, we will examine how this timeless principle is embodied in state-of-the-art industrial accelerators, providing the necessary context to understand the design of the Gemmini accelerator, which is the central subject of this thesis.

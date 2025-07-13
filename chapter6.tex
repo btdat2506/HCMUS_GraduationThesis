@@ -90,7 +90,7 @@ The parallel operation of these internal modules inevitably leads to contention 
     \item \textbf{Highest Priority - Store to DRAM}: Commands from the \texttt{LoopMatmulStC} module receive top priority. This is essential to prevent accumulator buffer overflow and free up internal resources for subsequent computations.
     \item \textbf{Execute Operations}: The \texttt{LoopMatmulExecute} module's preload and compute commands receive second priority to keep the systolic array actively computing.
     \item \textbf{Load Bias/Accumulator}: The \texttt{LoopMatmulLdD} module's commands for loading bias data receive third priority.
-    \item \textbf{Load Input Matrices}: A weighted sub-arbiter manages requests from \texttt{LoopMatmulLdA} and \texttt{LoopMatmulLdB} modules with fourth priority.
+    \item \textbf{Load Input Matrices}: A weighted sub-arbiter manages requests from \texttt{Loop\allowbreak MatmulLdA} and \texttt{LoopMatmulLdB} modules with fourth priority.
     \item \textbf{Lowest Priority - Store to Scratchpad}: The \texttt{LoopMatmulStCSpad} module receives the lowest priority, as scratchpad stores are internal operations that are less critical to overall pipeline progression than DRAM transfers.
 \end{enumerate}
 
@@ -150,7 +150,7 @@ From the Reservation Station, primitive commands are dispatched to one of three 
     \item \textbf{\texttt{ExecuteController}}: Orchestrates the actual computation, issuing commands to the systolic array and managing on-the-fly data transformations.
 \end{itemize}
 
-The \texttt{LoadController} and \texttt{StoreController} (Figure~\ref{fig:load_store_controller}) are focused exclusively on managing the high-latency operations of the memory hierarchy. The \texttt{ExecuteController} (Figure~\ref{fig:execute_controller}), however, contains a sophisticated collection of its own internal hardware modules, including the systolic array mesh itself, an \texttt{im2col} unit (Figure \ref{fig:im2col_module}), and various queues for command buffering. (A detailed breakdown of the \texttt{ExecuteController}'s internal sub-modules is provided in Appendix \ref{app:execute_controller_modules}).
+The \texttt{LoadController} and \texttt{StoreController} (Figure~\ref{fig:load_store_controller}) are focused exclusively on managing the high-latency operations of the memory hierarchy. The \texttt{Execute\allowbreak Controller} (Figure~\ref{fig:execute_controller}), however, contains a sophisticated collection of its own internal hardware modules, including the systolic array mesh itself, an \texttt{im2col} unit (Figure \ref{fig:im2col_module}), and various queues for command buffering. (A detailed breakdown of the \texttt{ExecuteController}'s internal sub-modules is provided in Appendix \ref{app:execute_controller_modules}).
 
 This clear division of labor, orchestrated by the Reservation Station, is the cornerstone of the accelerator's performance. It allows long-latency memory operations and intense computation to overlap, effectively hiding the "memory wall" and ensuring the valuable systolic array is kept maximally utilized.
 
@@ -197,20 +197,7 @@ A Tile is a two-dimensional array of PEs. The defining characteristic of a Tile 
 \subsubsection{The Mesh: A Pipelined Systolic Array of Tiles}
 The Mesh is a two-dimensional array of Tiles. Unlike the combinational logic within a Tile, the Mesh is \textbf{explicitly pipelined}, with shift registers placed between each Tile. This is the key that creates the systolic behavior of the entire array. These registers create the "systolic heartbeat," allowing waves of data to flow across the array in a controlled, rhythmic fashion. This pipelining between Tiles is what enables high throughput and scalability, as it breaks up long combinational paths and allows every Tile in the array to be actively computing on a different piece of data simultaneously.
 
-\subsection{Architectural Trade-offs in Mesh Configuration}
-\label{ssec:mesh_config_tradeoffs}
-
-The Gemmini generator allows for configuring the hierarchy of the Mesh, offering a classic architectural trade-off between latency and clock frequency. For a system with a fixed number of PEs (e.g., 256), one can choose between having many small tiles or a few large tiles, as shown in Figure~\ref{fig:mesh_configurations}.
-
-\begin{itemize}
-    \item \textbf{Many Small Tiles (e.g., a 16x16 mesh of 1x1-PE tiles):} This configuration maximizes the number of pipeline stages. The combinational logic path within each stage is very short (just a single PE), which allows for a \textbf{higher maximum clock frequency}. However, it takes more clock cycles for a single piece of data to traverse the entire array, resulting in \textbf{higher pipeline latency}. This configuration is pipeline-optimized.
-
-    \item \textbf{Few Large Tiles (e.g., a 4x4 mesh of 4x4-PE tiles):} This configuration has fewer, deeper pipeline stages. The combinational path within each stage is much longer (passing through multiple PEs), which limits the \textbf{maximum clock frequency}. However, an operation can pass through the entire array in fewer clock cycles, leading to \textbf{lower pipeline latency}. This configuration is throughput-optimized for batch processing.
-\end{itemize}
-
-The default configurations for Gemmini typically favor smaller (1x1) tiles, representing a design sweet spot that prioritizes high-frequency operation, which is often easier to implement and validate in a final ASIC or FPGA design.
-
-\begin{figure}[htbp]
+\begin{figure}[h]
     \centering
     \begin{subfigure}[t]{0.45\textwidth}
         \centering
@@ -227,10 +214,21 @@ The default configurations for Gemmini typically favor smaller (1x1) tiles, repr
     \label{fig:mesh_configurations}
 \end{figure}
 
+\subsection{Architectural Trade-offs in Mesh Configuration}
+\label{ssec:mesh_config_tradeoffs}
+
+The Gemmini generator allows for configuring the hierarchy of the Mesh, offering a classic architectural trade-off between latency and clock frequency. For a system with a fixed number of PEs (e.g., 256), one can choose between having many small tiles or a few large tiles, as shown in Figure~\ref{fig:mesh_configurations}.
+
+\begin{itemize}
+    \item \textbf{Many Small Tiles (e.g., a 16x16 mesh of 1x1-PE tiles):} This configuration maximizes the number of pipeline stages. The combinational logic path within each stage is very short (just a single PE), which allows for a \textbf{higher maximum clock frequency}. However, it takes more clock cycles for a single piece of data to traverse the entire array, resulting in \textbf{higher pipeline latency}. This configuration is pipeline-optimized.
+
+    \item \textbf{Few Large Tiles (e.g., a 4x4 mesh of 4x4-PE tiles):} This configuration has fewer, deeper pipeline stages. The combinational path within each stage is much longer (passing through multiple PEs), which limits the \textbf{maximum clock frequency}. However, an operation can pass through the entire array in fewer clock cycles, leading to \textbf{lower pipeline latency}. This configuration is throughput-optimized for batch processing.
+\end{itemize}
+
+The default configurations for Gemmini typically favor smaller (1x1) tiles, representing a design sweet spot that prioritizes high-frequency operation, which is often easier to implement and validate in a final ASIC or FPGA design.
+
 \subsection{The Scratchpad: An Intelligent Memory Subsystem}
 \label{ssec:scratchpad}
-
-The Scratchpad (Figure~\ref{fig:scratchpad_module}) implements Gemmini's on-chip memory system, serving as the central data hub that bridges the gap between high-latency external DRAM and the high-throughput systolic array. Far more than simple storage, the Scratchpad is a sophisticated data movement engine with integrated processing capabilities, dual data paths, and complex arbitration logic, enabling the high-throughput, low-latency data access patterns essential for efficient matrix computation. Its design demonstrates the critical importance of specialized memory subsystems in achieving peak performance in domain-specific accelerators.
 
 \begin{figure}[h!]
     \centering
@@ -238,6 +236,8 @@ The Scratchpad (Figure~\ref{fig:scratchpad_module}) implements Gemmini's on-chip
     \caption{The internal structure of the Scratchpad module, an intelligent memory subsystem with integrated DMA engines and data processing units that serves the systolic array.}
     \label{fig:scratchpad_module}
 \end{figure}
+
+The Scratchpad (Figure~\ref{fig:scratchpad_module}) implements Gemmini's on-chip memory system, serving as the central data hub that bridges the gap between high-latency external DRAM and the high-throughput systolic array. Far more than simple storage, the Scratchpad is a sophisticated data movement engine with integrated processing capabilities, dual data paths, and complex arbitration logic, enabling the high-throughput, low-latency data access patterns essential for efficient matrix computation. Its design demonstrates the critical importance of specialized memory subsystems in achieving peak performance in domain-specific accelerators.
 
 The Scratchpad exposes two primary interfaces to the rest of the system: an \textbf{External Memory Interface} that connects to DRAM via the TileLink bus and DMA engines, and a \textbf{Compute Unit Interface} that provides direct, low-latency access for the systolic array.
 

@@ -100,7 +100,7 @@ When implemented, each Rocket core is combined with L1 data and instruction cach
     \label{fig:rocket_tile_structure}
 \end{figure}
 
-Due to the object-oriented nature of Chisel, the language used for its design, Rocket itself is written from object classes that can be defined and reconfigured according to implementation needs, such as \texttt{WithNBigCore()}, \texttt{WithNMedCore()}, \texttt{WithNSmallCore()}, and \texttt{WithNTinyCore()}. Additionally, instead of implementing the Rocket core, the BOOM core can also be integrated in its place, and many other peripherals can be integrated into a Tile unit.
+Due to the object-oriented nature of Chisel, the language used for its design, Rocket itself is written from object classes that can be defined and reconfigured according to implementation needs, such as \texttt{WithNBigCore()}, \texttt{WithNMedCore()}, \texttt{WithN\allowbreak SmallCore()}, and \texttt{WithNTinyCore()}. Additionally, instead of implementing the Rocket core, the BOOM core can also be integrated in its place, and many other peripherals can be integrated into a Tile unit.
 
 
 \section{Rocket Chip SoC Structure}
@@ -267,93 +267,122 @@ To minimize design complexity for MMIO peripherals, the Rocket Chip architecture
 % To minimize design complexity, the Rocket Chip architecture provides the "regmap" interface, which allows for the automatic generation of much of the necessary linking logic. Instead of manually writing management nodes and register-exposing logic, designers can easily use TLRegisterRouter or create a LazyModule and initialize TLRegisterNode to integrate the device into the system. The simplest way to create an MMIO peripheral device is to use a configuration class like TLRegisterRouter, or AXI4RegisterRouter if choosing to use the AXI4 bus. This abstracts the details of the interconnect protocol with the peripheral bus (PBUS) and provides a convenient interface for defining memory-mapped registers. Since TileLink is the official protocol used in SoCs based on Rocket Chip and Chipyard, designing MMIO peripheral devices typically focuses on integration with this protocol, ensuring consistency and efficiency throughout the system.
 
 \subsection{The RoCC Interface: A Hardware Co-Design Methodology}
+\label{sec:rocc_interface}
 
-The primary conduit for communication between the Rocket Core and the Gemmini accelerator is the RoCC (Rocket Custom Coprocessor) interface. This is not merely an external bus; it is a deep, co-design methodology that fundamentally alters the CPU's own hardware pipeline. When the \texttt{WithGemmini} trait is active, the Chipyard generator does more than just instantiate the accelerator—it injects specific logic into the Rocket Core's decoder, pipeline control, and hazard units. This section examines the specific code-level modifications that enable this tight coupling.
+The primary conduit for communication between the Rocket Core and the Gemmini accelerator is the RoCC (Rocket Custom Coprocessor) interface. This interface, however, is not merely an external bus; it is a profound hardware \textbf{co-design methodology} that fundamentally alters the CPU's own pipeline. When the \texttt{WithGemmini} trait is active in the SoC configuration, the Chipyard generator does more than just instantiate the accelerator; it injects specific logic directly into the Rocket Core's decoder, hazard unit, and writeback stage.
 
-\begin{figure}[h]
+The architectural philosophy of the RoCC interface is designed for high-throughput, decoupled accelerators. As it is were found in prior work by Pala, the interface's high-latency profile for CPU-to-accelerator register reads makes it best suited for offloading large, autonomous tasks rather than for frequent, small operations that require constant communication between CPU and accelerator \cite{pala_master_thesis}. Gemmini, which operates on large data streams for DNN computation, is a canonical example of this intended use case.
+
+This section will trace the lifecycle of a RoCC instruction to demonstrate how these code-level modifications create a tightly-coupled, low-latency communication channel that is essential for high-performance acceleration.
+
+\begin{figure}[h!]
   \centering
-  \includegraphics[width=0.8\textwidth]{Rocket_RoCC_Interface.pdf}
+  \includegraphics[width=0.75\textwidth]{Rocket_RoCC_Interfaces.pdf}
   \caption{Rocket Tile RoCC Interface Architecture with Accelerator Integration. The RoCC interface provides direct communication pathways between the Rocket Core's datapath and the attached accelerator, including command dispatch, memory requests, and response handling channels.}
   \label{fig:rocket_rocc_interface}
 \end{figure}
 
+
+% \subsubsection{The RoCC Command and Response Interfaces}
+
+% \begin{figure}[h!]
+%     \centering
+%     \includegraphics[width=0.6\textwidth]{Rocket_RoCC_Interfaces_cmdresp.pdf}
+%     \caption{The RoCC Command and Response Interfaces. This figure illustrates the communication pathways for command dispatch and response handling between the Rocket Core and the RoCC accelerator. (Adapted from the \texttt{RoCCInstruction} bundle).}
+%     \label{fig:rocc_cmdresp}
+% \end{figure}
+
+\subsubsection{The RoCC Instruction Format}
+The entire co-design process is initiated by a specific instruction format recognized by the CPU. The RISC-V ISA reserves four major opcodes for custom extensions, and the Gemmini accelerator is assigned the \texttt{custom3} opcode space. Any instruction using this opcode follows the R-type format, modified for RoCC communication as shown in Figure~\ref{fig:rocc_format}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{Rocket_RoCC_Instruction.pdf}
+    \caption{The RoCC Instruction Format. The \texttt{opcode} field is set to \texttt{custom3} (0b1111011). The \texttt{funct7} field specifies the Gemmini-specific operation, while the \texttt{xd}, \texttt{xs1}, and \texttt{xs2} bits act as control signals for the hardware interface.}
+    \label{fig:rocc_format}
+\end{figure}
+
+The fields in this instruction format are critical for orchestrating the hardware interaction:
+\begin{itemize}
+    \item \textbf{\texttt{opcode}}: Identifies the instruction as a RoCC command, directing it away from the standard execution units.
+    \item \textbf{\texttt{funct7}}: This 7-bit field is passed directly to Gemmini, which uses it to select the specific operation to perform (e.g., \texttt{LOOP\_CONV\_WS}, \texttt{CONFIG\_LOAD}).
+    \item \textbf{\texttt{xd, xs1, xs2}}: These single-bit fields are essential hardware control signals. They function as "valid" bits for the register operands. \texttt{xs1} and \texttt{xs2} signal that valid data is present on the \texttt{rs1} and \texttt{rs2} busses, while \texttt{xd} signals that the CPU expects a result for the destination register \texttt{rd} and must stall until a response arrives.
+\end{itemize}
+
 \subsubsection{Modifying the CPU's Instruction Decoder}
-The integration begins at the earliest stage of the CPU pipeline: instruction decoding. The RISC-V ISA reserves four instruction opcode spaces for custom extensions. The Gemmini accelerator is assigned the \texttt{custom3} opcode space. The effect of this is visible directly in the Rocket Core's main decoder table, which is modified by the generator as shown in Listing \ref{lst:rocc_idecode}.
+For the co-design to function, the CPU must first be taught to recognize the new instruction format. The Chipyard generator achieves this by programmatically modifying the main decoder table in the Rocket Core, as shown in Listing~\ref{lst:decode_mod}.
 
-\begin{lstlisting}[language=Scala, caption={Modification of the Rocket Core's instruction decode table to recognize \texttt{custom3} opcodes. Source: \texttt{rocket-chip/src/main/scala/rocket/IDecode.scala}}, label=lst:rocc_idecode]
-// From IDecode.scala - CPU recognizes custom3 instructions
-CUSTOM3-> List(Y,N,Y,N,N,N,N,N,A2_ZERO,A1_RS1, IMM_X, DW_XPR, ...),
+\begin{lstlisting}[language=Scala, caption={Modification of the Rocket Core's instruction decode table.}, label={lst:decode_mod}, captionpos=b]
+// From rocket-chip/src/main/scala/rocket/IDecode.scala
+CUSTOM3 -> List(Y,N,Y,N,N,N,N,N,A2_ZERO,A1_RS1,IMM_X,DW_XPR,...),
 \end{lstlisting}
+This modification is the first and most critical step. It instructs the decoder that the \texttt{custom3} opcode is a valid instruction that uses the register file (as specified by \texttt{A1\_RS1}) but not the standard ALU. This prevents the CPU from triggering an illegal instruction trap and instead flags the instruction internally as a \texttt{rocc} command, allowing it to propagate down the pipeline for specialized handling, as illustrated in Figure~\ref{fig:rocc_flow}.
 
-This line in the decoder's lookup table instructs the hardware that any instruction with the \texttt{custom3} opcode is a valid instruction that uses the register file (\texttt{A1\_RS1} specifies operand source) but does \textit{not} use the standard ALU. This prevents the CPU from treating it as an illegal instruction. Instead, it is flagged internally as a \texttt{rocc} command, which propagates down the pipeline stages.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]{Rocket_RoCC_Flow.pdf}
+    \caption{Diagram illustrating the RoCC co-design and control flow. (1) A RoCC instruction is recognized at the Decode stage. (2) At the Writeback stage, the \texttt{RoCCCommand} is dispatched to Gemmini over a \texttt{ready/valid} channel. (3) A \texttt{busy} signal provides back-pressure to the CPU's Hazard Unit, stalling the pipeline. (4) The \texttt{resp} path provides a privileged write-back directly to the Register File.}
+    \label{fig:rocc_flow}
+\end{figure}
 
-\subsubsection{Pipeline Integration and Command Dispatch}
-Once an instruction is flagged as a RoCC command, the CPU pipeline is modified to dispatch it via a dedicated interface in the final writeback stage. Instead of performing a standard register write, the hardware packages the necessary context into a \texttt{RoCCCommand} bundle (Listing \ref{lst:rocc_command_bundle}). The code in Listing \ref{lst:rocc_dispatch} shows this dispatch logic.
+\subsubsection{Pipeline Integration and Hazard Management}
+The tight coupling between the CPU and Gemmini necessitates new hardware interlocks to manage pipeline hazards. These interlocks are injected directly into the CPU's control logic. If Gemmini is busy and cannot accept a new command, it exerts \textbf{back-pressure} on the CPU. The hardware logic shown in Listing~\ref{lst:stall_logic} generates a stall signal that freezes the CPU pipeline until the accelerator is ready.
 
-\begin{lstlisting}[language=Scala, caption={RoCC command dispatch logic in the Rocket Core's writeback stage. Source: \texttt{rocket-chip/src/main/scala/rocket/RocketCore.scala}}, label=lst:rocc_dispatch]
-// RoCC command dispatch in the writeback (wb) stage
-io.rocc.cmd.valid := wb_reg_valid && wb_ctrl.rocc && !replay_wb_common
-io.rocc.cmd.bits.inst := wb_reg_inst
-io.rocc.cmd.bits.rs1 := wb_reg_wdata
-io.rocc.cmd.bits.rs2 := mem_reg_rs2
-io.rocc.cmd.bits.status := csr.io.status
+\begin{lstlisting}[language=Scala, caption={RoCC-specific stall logic in the Rocket Core.}, label={lst:stall_logic}, captionpos=b]
+// Source: rocket-chip/src/main/scala/rocket/RocketCore.scala
+
+// Stall decode if RoCC is not ready for a new command
+val rocc_blocked = Reg(Bool())
+rocc_blocked := !wb_xcpt && !io.rocc.cmd.ready && 
+                (io.rocc.cmd.valid || rocc_blocked)
+
+// Replay the instruction in the writeback stage
+val replay_wb_rocc = wb_reg_valid && wb_ctrl.rocc && 
+                     !io.rocc.cmd.ready
 \end{lstlisting}
+This logic provides definitive proof of a hardware co-design. The \texttt{replay\_wb\_rocc} signal physically stalls the CPU pipeline if a command is in the writeback stage and Gemmini is not ready (\texttt{!io.rocc.cmd.ready}). Furthermore, the \texttt{rocc\_blocked} register freezes the pipeline at the decode stage if a new RoCC instruction arrives while the accelerator is already busy. The CPU's progression is now physically dependent on the state of the accelerator.
 
-This Chisel code generates hardware where the \texttt{io.rocc.cmd.valid} signal is asserted only when a valid RoCC instruction reaches the writeback (`wb`) stage. Simultaneously, the hardware populates the \texttt{RoCCCommand} bundle with the instruction itself (\texttt{wb\_reg\_inst}), data from the CPU's register file (\texttt{wb\_reg\_wdata}, \texttt{mem\_reg\_rs2}), and the processor's status register. This direct, low-latency pathway from the CPU's internal pipeline registers to the accelerator interface is the defining feature of the RoCC's high-performance design.
+\subsubsection{The Privileged Response Path}
+Finally, the RoCC interface provides a privileged, low-latency path for the accelerator to write results back into the CPU's register file. This is arbitrated with other internal units, as shown in Listing~\ref{lst:resp_path}.
 
-\subsubsection{Hazard Management and Pipeline Stalls}
-This tight integration requires new pipeline stall logic to handle hazards. The generator modifies the CPU's control unit to stall the pipeline if the accelerator is not ready to accept a command. This is shown in Listing \ref{lst:rocc_stall}.
-
-\begin{lstlisting}[language=Scala, caption={RoCC-specific stall and replay logic in the Rocket Core. Source: \texttt{rocket-chip/src/main/scala/rocket/RocketCore.scala}}, label=lst:rocc_stall]
-// Logic to determine if a command in the writeback stage needs to be replayed
-val replay_wb_rocc = wb_reg_valid && wb_ctrl.rocc && !io.rocc.cmd.ready
-
-// Add the RoCC stall condition to the main pipeline control stall signal
-val ctrl_stalld = id_ctrl.rocc && io.rocc.busy || ...
-\end{lstlisting}
-
-The first line, \texttt{replay\_wb\_rocc}, generates hardware that detects if a RoCC command is in the writeback stage but the accelerator's command queue is full (\texttt{!io.rocc.cmd.ready}). If this condition is met, the entire pipeline is stalled, and the instruction is "replayed" until the accelerator is ready. The second line adds a condition to the main pipeline stall signal (\texttt{ctrl\_stalld}) that freezes instruction dispatch if a RoCC instruction is decoded in the ID stage while the accelerator is already busy processing a previous command (\texttt{io.rocc.busy}). These hardware interlocks are essential for correct synchronization.
-
-\subsubsection{Data Response Path}
-Finally, the RoCC interface provides a direct path for the accelerator to write results back into the CPU's register file. This is arbitrated with other units like the divider.
-
-\begin{lstlisting}[language=Scala, caption={RoCC response handling in the Rocket Core, writing directly to the register file port. Source: \texttt{rocket-chip/src/main/scala/rocket/RocketCore.scala}}, label=lst:rocc_response]
-// Response arbitration with other units
+\begin{lstlisting}[language=Scala, caption={RoCC response handling in the Rocket Core.}, label={lst:resp_path}, captionpos=b]
+// Source: rocket-chip/src/main/scala/rocket/RocketCore.scala
 when (io.rocc.resp.fire) {
-  div.io.resp.ready := false.B  // Disable div response when RoCC responds
+  div.io.resp.ready := false.B // Disable div response
   ll_wdata := io.rocc.resp.bits.data
   ll_waddr := io.rocc.resp.bits.rd
   ll_wen := true.B
 }
 \end{lstlisting}
+When the Gemmini accelerator has a result, the hardware routes the response data (\texttt{io.rocc.resp.bits.data}) directly to the register file's write port (\texttt{ll\_wdata}) and asserts the write enable signal (\texttt{ll\_wen}). This is a privileged write path that completely bypasses the memory system, a feature impossible to achieve with a standard peripheral.
 
-As shown in Listing \ref{lst:rocc_response}, when the accelerator's response is valid (\texttt{io.rocc.resp.fire}), the hardware routes the response data (\texttt{io.rocc.resp.bits.data}) directly to the register file's write data port (\texttt{ll\_wdata}) and asserts the write enable signal (\texttt{ll\_wen}). This demonstrates a privileged, low-latency write path that completely bypasses the memory system, a feature impossible to achieve with a standard memory-mapped peripheral.
+\subsubsection{The RoCC Memory Interface}
+Beyond the command interface, the RoCC protocol provides a privileged, high-bandwidth connection directly to the CPU's L1 Data Cache, shown in Figure~\ref{fig:rocc_mem_iface_asym}. This is a key advantage over a standard memory-mapped peripheral, which would suffer from the higher latency of the L2 cache and system bus.
 
-\subsubsection{RoCC Command Bundle}
-Upon recognizing a \texttt{custom3} instruction, the Rocket Core pipeline packages the necessary information into a \texttt{RoCCCommand} bundle. This Chisel data structure, shown in Listing \ref{lst:rocc_command_bundle}, acts as the payload for the interface. It contains the raw instruction bits in the \texttt{inst} field (including the \texttt{funct} sub-field that specifies the particular Gemmini operation), the operand values from the CPU's integer register file in \texttt{rs1} and \texttt{rs2}, and the processor's current status flags.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.6\textwidth]{Rocket_RoCC_Interfaces_mem.pdf}
+    \caption{The asymmetrical RoCC memory interface. The request channel (\texttt{mem\_req}) uses a full \texttt{ready/valid} handshake, while the response channel (\texttt{mem\_resp}) is a simpler \texttt{valid}-only interface.}
+    \label{fig:rocc_mem_iface_asym}
+\end{figure}
 
-\begin{lstlisting}[language=Scala, caption={The \texttt{RoCCCommand} Chisel Bundle, which defines the interface between the Rocket Core and the Gemmini accelerator.}, label=lst:rocc_command_bundle]
-class RoCCCommand(implicit p: Parameters) extends CoreBundle()(p) {
-  val inst = new RoCCInstruction    // Instruction encoding
-  val rs1 = Bits(xLen.W)           // Source register 1 data
-  val rs2 = Bits(xLen.W)           // Source register 2 data
-  val status = new MStatus         // Processor status
-}
+Critically, this interface is asymmetrical. The request channel from Gemmini to the L1D\$ (\texttt{mem\_req}) is a full \texttt{Decoupled} interface, allowing Gemmini to wait if the cache is busy. However, the response channel from the L1D\$ to Gemmini (\texttt{mem\_resp}) has only a \texttt{valid} signal. This is a deliberate design choice: the accelerator cannot apply back-pressure to the L1D\$ and must accept memory responses immediately to prevent stalling the main CPU pipeline. This nuance highlights the deeply integrated nature of the memory co-design. As confirmed by the timing analysis in Figures \ref{fig:rocc_mem_timing_single} and \ref{fig:rocc_mem_timing_multiple}, this interface exhibits a two-cycle latency and a maximum throughput of 50\%, performance characteristics that must be considered when designing and scheduling operations for the accelerator
 
-class RoCCInstruction extends Bundle {
-  val funct = Bits(7.W)            // Function code (specifies Gemmini operation)
-  val rs2 = Bits(5.W)              // Source register 2 address
-  val rs1 = Bits(5.W)              // Source register 1 address
-  val xd = Bool()                  // Destination register valid
-  val xs1 = Bool()                 // Source register 1 valid
-  val xs2 = Bool()                 // Source register 2 valid
-  val rd = Bits(5.W)               // Destination register address
-  val opcode = Bits(7.W)           // Opcode (e.g., custom3 = 0b1111011)
-}
-\end{lstlisting}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Rocket_RoCC_MemSignals_Single.pdf}
+    \caption{Timing diagram for a single RoCC memory request. The diagram demonstrates the two-cycle latency of the memory interface, as the \texttt{mem\_resp\_valid} signal is asserted two clock cycles after the \texttt{mem\_req\_valid} signal. Note the absence of a \texttt{mem\_resp\_ready} signal, confirming the asymmetrical nature of the interface. \cite{pala_master_thesis}}
+    \label{fig:rocc_mem_timing_single}
+\end{figure}
 
-The dispatch of this \texttt{RoCCCommand} bundle marks the end of the CPU's direct involvement. However, the dispatched instruction is often not a simple, primitive operation. It can be a high-level, CISC-like command such as \texttt{LOOP\_CONV\_WS}, which instructs the accelerator to perform an entire tiled convolution. This single command triggers a cascade of parallel, asynchronous hardware processes within Gemmini's internal controllers, such as the \texttt{LoopConv} module. These processes include the parallel loading of inputs, weights, and biases; decoupled computation in the systolic array; and the eventual storing of results, all managed autonomously by the accelerator. The CPU remains unaware of this internal complexity, having successfully offloaded the entire high-level task. The subsequent sections will now delve into this internal command processing hierarchy.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{Rocket_RoCC_MemSignals_Multiple.pdf}
+    \caption{Timing diagram for consecutive RoCC memory requests. This illustrates the 50\% maximum throughput of the interface. The L1D\$ can accept two back-to-back requests but then requires a one-cycle pause before accepting the next two, a critical performance characteristic for data-intensive accelerators. \cite{pala_master_thesis}}
+    \label{fig:rocc_mem_timing_multiple}
+\end{figure}
 
-In summary, these code-level modifications demonstrate that RoCC integration is a profound act of hardware co-design. It reconfigures the CPU's instruction decoder, enhances its pipeline stall logic, and creates specialized pathways for low-latency data and control exchange, proving the tight coupling that is essential for high-performance acceleration.
+\subsubsection{Conclusion}
+In summary, the RoCC integration is a profound act of hardware co-design, proven by the evidence from the hardware generator. The process modifies the CPU's instruction decoder, injects new stall conditions into the core hazard unit, provides a privileged response path to the register file, and grants direct, arbitrated access to the L1 cache. These code-level modifications create the tightly-coupled, high-performance link necessary to realize the performance uplift for DNN workloads, which will be quantified in Chapter \ref{chap:results}. 
 
-With the hardware co-design methodology of the RoCC interface established as the mechanism for integrating our accelerator, it is now necessary to understand why such specialized hardware is required in the first place. The next chapter will explore the architectural foundations of Deep Neural Network (DNN) acceleration, examining the core computational challenges and design principles that motivate the architecture of accelerators like Gemmini.
+With the hardware co-design methodology now established as the mechanism for integrating our accelerator, the next chapter will explore the architectural foundations of Deep Neural Network (DNN) acceleration to understand why such specialized hardware like Gemmini is required in the first place. The complete, detailed definitions of the RoCC hardware interface bundles are provided in Appendix \ref{app:rocc_interfaces} for reference.

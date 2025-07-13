@@ -94,7 +94,7 @@ Figure \ref{fig:rv32i_instructions} details all instructions in the RV32I base i
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.9\textwidth]{RV32I_BaseInstructionSet.pdf}
+    \includegraphics[width=0.95\textwidth]{RV32I_BaseInstructionSet.pdf}
     % \fbox{Placeholder for RV32I Instruction List Diagram}
     \caption{Instructions in the RV32I base instruction set. \cite{riscv:manual:user:2024}}
     \label{fig:rv32i_instructions}
@@ -160,8 +160,9 @@ As mentioned, a goal of RISC-V is to support implementations requiring more feat
 
 \begin{table}[h!]
     \centering
-    \caption{Development status of extended RISC-V instruction sets. Source \cite{riscv:manual:user:2024}}
+    \caption{Development status of extended RISC-V instruction sets. \cite{riscv:manual:user:2024}}
     \label{tab:extension_status}
+\resizebox{\textwidth}{!}{%
     \begin{tabular}{llll}
     \toprule
     \textbf{Instruction Set} & \textbf{Function Description} & \textbf{Version} & \textbf{Status} \\
@@ -177,6 +178,7 @@ As mentioned, a goal of RISC-V is to support implementations requiring more feat
     Ztso & Total Store Ordering instruction set & 1.0 & Approved \\
     \bottomrule
     \end{tabular}
+}
 \end{table}
 
 Table \ref{tab:extension_status} above clearly lists the standard extension sets developed and published by RISC-V International. It can be seen that many instruction sets have been ratified and can be used in designs. When implemented, architectures supporting the RV32I base instruction set (or RV64I depending on the architecture) combined with the standard extensions M, A, F, D, Zicsr, and Zifencei are often summarized and referred to as the RV32G (or RV64G) instruction set, named for its general-purpose utility.

@@ -1,23 +1,40 @@
 \chapter*{LIST OF PUBLICATIONS}
-\label{Appendix1}
+\label{app:listofpublications}
 
-\begin{enumerate}
-    \item Nguyen, NH., Dang, TP., Bui, TD., Hoang, TT., Pham, CK., Huynh, HT. (2024). Designing and
-    Implementing a 2D Integer DCT Hardware Accelerator Fully Compatible with Versatile Video Coding. In:
-    Gervasi, O., Murgante, B., Garau, C., Taniar, D., C. Rocha, A.M.A., Faginas Lago, M.N. (eds) Computational
-    Science and Its Applications – ICCSA 2024 Workshops. ICCSA 2024. Lecture Notes in Computer Science,
-    vol 14815. Springer, Cham. doi: 10.1007/978-3-031-65154-0\_7
+% This command tells LaTeX to include *every* entry from your .bib file,
+% even if you haven't cited it in the text. This is perfect for a publication list.
+% \nocite{*}
 
-    \item Nguyen, NH., Dang, TP., Tran, TK., Bui, TD., Hoang, TT. and Huynh, HT., "A Configurable 2D-Integer
-    DCT Hardware Accelerator Compatible with H.266 Standard based on RISC-V Architecture," 2024 7th
-    International Seminar on Research of Information Technology and Intelligent Systems (ISRITI), Yogyakarta,
-    Indonesia, 2024, pp. 894-899, doi: 10.1109/ISRITI64779.2024.10963564.
+% This command tells LaTeX WHICH style to use for formatting.
+% IEEEtran is excellent for engineering. 'plain' or 'unsrt' are other options.
+% \bibliographystyle{IEEEtran}
 
-    \item Huynh, TMT., Tran, TK., Bui, TD., Pham, CK., and Huynh, HT. (2025). An Efficient Algorithm Compatible
-    with Low-performance Hardware for AI Edge Devices in Arrhythmia Prediction. Presented at the 5th
-    International Conference on Intelligent Systems & Networks (ICISN 2025), March 22, 2025.
+% This command tells LaTeX WHICH .bib file to use for the data.
+% Note there is no ".bib" extension here.
+% \bibliography{References/mypublications}
 
-    \item Phan, DH., Huynh, TMT., Tran, TK., Bui, TD., Phan, CK., and Huynh, HT. (2025). Efficient AI Model and
-    Hardware Architecture Based on CNN for Arrhythmia Prediction. Presented at the 2025 10th IEEE International
-    Conference on Integrated Circuits, Design, and Verification (ICDV 2025).
-\end{enumerate}
+\begin{refsection}
+    \nocite{*}
+    \newrefcontext[labelprefix=P, sorting=ynt]
+    \AtNextBibliography{\setmaxbibnames{999}}
+    \printbibliography[heading=none, keyword=lop, maxnames=99, resetnumbers=true]
+\end{refsection}
+
+% \begin{enumerate}
+%     \item Nguyen, NH., Dang, TP., Bui, TD., Hoang, TT., Pham, CK., Huynh, HT. (2024). Designing and
+%     Implementing a 2D Integer DCT Hardware Accelerator Fully Compatible with Versatile Video Coding. In:
+%     Gervasi, O., Murgante, B., Garau, C., Taniar, D., C. Rocha, A.M.A., Faginas Lago, M.N. (eds) Computational
+%     Science and Its Applications - ICCSA 2024 Workshops. ICCSA 2024. Lecture Notes in Computer Science,
+%     vol 14815. Springer, Cham. doi: 10.1007/978-3-031-65154-0\_7
+
+%     \item Nguyen, NH., Dang, TP., Tran, TK., Bui, TD., Hoang, TT. and Huynh, HT., "A Configurable 2D-Integer
+%     DCT Hardware Accelerator Compatible with H.266 Standard based on RISC-V Architecture," 2024 7th
+%     International Seminar on Research of Information Technology and Intelligent Systems (ISRITI), Yogyakarta,
+%     Indonesia, 2024, pp. 894-899, doi: 10.1109/ISRITI64779.2024.10963564.
+
+%     \item Huynh, TMT., Tran, TK., Bui, TD., Pham, CK., and Huynh, HT. (2025). An Efficient Algorithm Compatible
+%     with Low-performance Hardware for AI Edge Devices in Arrhythmia Prediction. 5th International Conference on Intelligent Systems & Networks (ICISN 2025), March 22, 2025.
+
+%     \item Phan, DH., Huynh, TMT., Tran, TK., Bui, TD., Phan, CK., and Huynh, HT. (2025). Efficient AI Model and
+%     Hardware Architecture Based on CNN for Arrhythmia Prediction. 2025 10th IEEE International Conference on Integrated Circuits, Design, and Verification (ICDV 2025).
+% \end{enumerate}

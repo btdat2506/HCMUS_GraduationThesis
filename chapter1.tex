@@ -2,6 +2,9 @@
 % !TEX encoding = UTF-8 Unicode
 % Ensure this file is saved with UTF-8 encoding
 
+% Problem Statement, Background, and Motivation
+% The need for research
+
 \chapter{Introduction}
 \label{Chapter1}
 
@@ -17,7 +20,23 @@ As CESLAB envisions a future centered on chip prototyping and semiconductor fabr
 
 The emergence of the RISC-V instruction set architecture has fundamentally changed the landscape of processor design and SoC development, offering a pathway to address these limitations. As an open-source ISA, RISC-V eliminates the barriers imposed by proprietary architectures, providing unprecedented flexibility for customization and modification. More importantly, this openness has catalyzed the development of comprehensive design ecosystems that support the entire SoC development flow, from high-level specification through FPGA prototyping to final VLSI implementation and chip fabrication.
 
-\section{The Chipyard Framework and Full-Stack Integration}
+\section{A Survey of Modern Open-Source SoC Frameworks}
+
+To address the limitations of our previous proprietary toolchain and select a platform aligned with CESLAB's strategic goal of VLSI development, we conducted a survey of prominent open-source System-on-Chip (SoC) design frameworks. The landscape is rich with powerful, mature options, each with a distinct design philosophy and target application domain. Key alternatives considered include the LiteX, PULP, and OpenTitan platforms.
+
+\subsection{LiteX: The Flexible SoC Builder}
+
+LiteX is a versatile framework that utilizes Migen, a Python-based hardware description language, to facilitate the rapid construction of custom SoCs \cite{litex_github,litex_paper}. Its primary strength lies in its flexibility, offering a vast library of general-purpose IP and support for over 150 FPGA boards from a wide range of vendors \cite{litex_boards_repo}. While LiteX provides an exceptional environment for rapid FPGA prototyping and experimentation, its toolchain is not inherently optimized for a direct, end-to-end VLSI design flow in the same way as other frameworks. For our laboratory's specific goal of a seamless transition from FPGA prototyping to ASIC implementation, LiteX presented a less direct path.
+
+\subsection{PULP Platform: The Low-Power Parallel Computing Specialist}
+
+The PULP (Parallel Ultra-Low-Power) Platform, developed at ETH Zurich, is a leader in energy-efficient, parallel computing for edge AI and IoT applications \cite{pulp_platform_org}. The platform is built around a family of highly-optimized RISC-V cores and has been validated through an impressive 51 silicon tape-outs, demonstrating its maturity and industrial relevance \cite{pulp_implementation}. However, the entire PULP architecture is meticulously optimized for its specific domain of ultra-low-power, multi-core data processing. Our project required a general-purpose SoC architecture capable of integrating a large, tightly-coupled, memory-intensive DNN accelerator, a different architectural paradigm than PULP's primary focus.
+
+\subsection{OpenTitan: The Security-First Root of Trust}
+
+OpenTitan is a high-profile, open-source project managed by lowRISC to create a transparent and verifiable silicon "root of trust" (RoT) \cite{opentitan_org}. The framework, backed by a coalition including Google, provides a comprehensive suite of security-hardened IP, such as cryptographic accelerators and secure boot managers, built around the Ibex RISC-V core \cite{opentitan_github}. While OpenTitan represents a landmark achievement in open-source hardware security, its purpose is highly specialized. It is engineered to provide verifiable security, not high-performance computation. As our thesis is focused on DNN acceleration research, the OpenTitan framework was not a suitable foundation.
+
+\section{Chipyard: the framework with Full-Stack Integration Capability}
 
 Among the various RISC-V SoC design frameworks, Chipyard has emerged as the most comprehensive and mature solution for academic research and industrial VLSI development. Developed at UC Berkeley, Chipyard provides a complete, open-source SoC design environment that spans from high-level hardware generators written in Chisel to full VLSI implementation flows optimized for ASIC fabrication. This end-to-end capability is precisely what CESLAB requires to transition from FPGA-based prototyping to actual chip development.
 
@@ -29,12 +48,23 @@ A key innovation of Chipyard is its emphasis on \textit{full-stack integration}.
 
 The framework includes the Gemmini accelerator generator, an open-source DNN accelerator specifically designed for systolic array-based matrix computations. Gemmini embodies the principles of efficient DNN acceleration through its configurable systolic array architecture, which maximizes data reuse and minimizes the costly movement of data between computational units and external memory—a fundamental challenge known as the "memory wall" in computer architecture.
 
+\section{Core Selection within Chipyard: A Comparison of Rocket and BOOM}
+
+A key advantage of the Chipyard framework is that it is a generator capable of instantiating different processor cores. This presented a critical design choice for our system: selecting the CPU core that best aligned with the project's objectives. The two primary candidates developed at UC Berkeley and available within Chipyard are the Rocket Core and the Berkeley Out-of-Order Machine (BOOM).
+
+\begin{itemize}
+    \item The Rocket Core is a mature, stable, and widely-used 5-stage, single-issue, in-order processor core. It is highly configurable and provides a solid foundation for general-purpose computing, capable of booting full operating systems like Linux. Its relative simplicity and extensive documentation make it a reliable and robust choice for systems where the primary focus is on integrating other components, such as custom accelerators \cite{asanovic2016rocketchip}.
+    \item The Berkeley Out-of-Order Machine (BOOM) is a synthesizable, parameterized, out-of-order RISC-V core designed for high-performance applications \cite{celio2016boom_spec, celio_phdthesis_2018boom}. It features a much more complex microarchitecture than Rocket, with a deeper pipeline and sophisticated hardware for dynamic scheduling, register renaming, and speculative execution. BOOM is designed to compete with high-performance commercial cores, targeting performance levels suitable for desktop or server-class applications \cite{zhao2020sonicboom_ieee}.
+\end{itemize}
+
+For this thesis, the Rocket Core was undoubtedly the correct choice. While BOOM offers superior standalone CPU performance, our project's primary goal was to design an SoC, integrate, and evaluate a specialized DNN accelerator (Gemmini). The vast majority of the performance uplift for our target workload was expected to come from the accelerator, not the host CPU. Therefore, the selection criteria for the CPU core prioritized stability, reliability, and ease of integration over raw CPU performance.
+
 \section{Research Objectives and Contributions}
 
 This thesis aims to demonstrate the capabilities of the Chipyard framework through the implementation of a practical RISC-V SoC that integrates a Rocket processor core with the Gemmini DNN accelerator, while establishing a comprehensive foundation for CESLAB's transition toward chip prototyping and VLSI-based development. The specific objectives of this work include:
 
 \begin{enumerate}
-    \item \textbf{Framework Evaluation and Migration}: Comprehensively evaluate the Chipyard framework as a replacement for Intel Quartus-based design flows, specifically assessing its VLSI capabilities, modern interconnect support (TileLink/AXI4), and suitability for ASIC development workflows.
+    \item \textbf{Framework Evaluation and Migration}: Comprehensively evaluate the Chipyard framework as a replacement for Intel Quartus-based design flows, specifically assessing its VLSI capabilities, modern interconnect support \allowbreak(Tile\allowbreak Link/AXI4), and suitability for ASIC development workflows.
     
     \item \textbf{System Architecture Design}: Develop a comprehensive understanding of the Chipyard framework and utilize it to configure a custom SoC featuring a 64-bit Rocket core coupled with a 16×16 Gemmini systolic array accelerator (Rocket64b1gem16jtag configuration), demonstrating the framework's flexibility and configurability.
     
@@ -61,23 +91,23 @@ Most critically, the full-stack nature of this implementation provides valuable 
 
 \section{Thesis Structure and Organization}
 
-This thesis is organized into eight chapters that systematically present the theoretical foundations, implementation details, and evaluation results of our RISC-V SoC with Gemmini accelerator:
+This thesis is organized into nine chapters that systematically present the foundational argument, technical background, design, implementation, and evaluation of the RISC-V SoC with a Gemmini DNN accelerator.
 
-\textbf{Chapter 2: RISC-V Microprocessor Instruction Set Architecture} provides a comprehensive overview of the RISC-V ISA, focusing on the RV32I base instruction set and its advantages as an open-source architecture. This chapter establishes the theoretical foundation for understanding the processor core used in our SoC implementation.
+\textbf{Chapter 2: RISC-V Microprocessor Instruction Set Architecture} provides the necessary technical background for this thesis. It begins with a comprehensive overview of the RISC-V ISA and its key architectural features. It then presents a detailed description of the Chipyard SoC design framework, the central development platform used in this work.
 
-\textbf{Chapter 3: A Single-Core with Gemmini RoCC Accelerator RISC-V Processor System} introduces the system architecture and design methodology using the Chipyard framework. It details the compilation and elaboration flow, the role of Chisel/Scala in hardware design, and the overall system construction approach.
+\textbf{Chapter 3: A Single-Core with Gemmini RoCC Accelerator RISC-V Processor System} introduces the specific architecture of the system designed and implemented in this project. It details the high-level system structure, the role of Chisel/Scala in hardware design, and the overall methodology for constructing our custom SoC within the Chipyard framework.
 
 \textbf{Chapter 4: Architectural Foundations of DNN Acceleration} explores the fundamental challenges of Deep Neural Network acceleration, including the memory wall problem and the principles of systolic array architectures. This chapter provides the theoretical context for understanding why specialized accelerators like Gemmini are necessary for efficient DNN computation.
 
-\textbf{Chapter 5: The Gemmini DNN Accelerator: An Architectural Overview} presents a detailed analysis of the Gemmini accelerator architecture, including its systolic compute engine, memory hierarchy, and integration model within the SoC framework.
+\textbf{Chapter 5: The Gemmini DNN Accelerator: An Architectural Overview} presents a detailed analysis of the Gemmini accelerator's high-level architecture, including its systolic compute engine, memory hierarchy, and integration model within the SoC framework.
 
-\textbf{Chapter 6: Gemmini's Internal Architecture and Programming Model} delves into the internal implementation details of Gemmini, examining its command and control flow, instruction processing pipeline, and programming interfaces that enable efficient DNN acceleration.
+\textbf{Chapter 6: Gemmini's Internal Architecture and Programming Model} performs a deeper dive into the microarchitectural details of Gemmini. It examines the internal command and control flow, the instruction processing pipeline that enables efficient DNN computation.
 
-\textbf{Chapter 7: System Implementation and Testing} documents the complete implementation process, from SoC configuration and hardware generation to FPGA deployment and system validation. This chapter provides practical insights into the entire development workflow and demonstrates the successful integration of all system components.
+\textbf{Chapter 7: System Implementation and Testing} documents the complete implementation process, from SoC configuration, integration of all system components, and hardware generation to FPGA deployment and system validation. This chapter provides practical insights into the entire development workflow and demonstrates the full-stack, open-source design process.
 
-\textbf{Chapter 8: Conclusion and Future Work} summarizes the achievements of this work, evaluates the success of the implementation against the stated objectives, and outlines potential directions for future research and development.
+\textbf{Chapter 8: Implementation Results and Discussion} presents the results of the project. It includes an analysis of hardware resource utilization, validates the successful boot of a full Linux operating system, and provides a quantitative performance evaluation of the Gemmini accelerator compared to a software-only implementation.
+
+\textbf{Chapter 9: Conclusion and Future Work} summarizes the key achievements of this thesis, evaluates the success of the implementation against the stated objectives, acknowledges the limitations of this work, and outlines potential directions for future research and development.
 
 This structured approach ensures a comprehensive understanding of both the theoretical principles underlying modern SoC design and the practical challenges involved in implementing complex, multi-component systems using open-source tools and methodologies.
 
-% Problem Statement, Background, and Motivation
-% The need for research

@@ -21,6 +21,8 @@ The \texttt{RocketTile} communicates with the rest of the system through the coh
 To create a fully functional, Linux-capable computing platform, a rich set of peripherals is integrated via the \texttt{PeripheryBus}. Similar to the memory interface, a \texttt{TL to AXI Slave bridge} connects the \texttt{TileLink} bus to a set of \texttt{AXI}-based peripheral controllers. These include an \texttt{AXI SD Card Controller} to enable booting from an SD card, a \texttt{UART} controller for console I/O, and a complete Ethernet subsystem for network connectivity. These controller IPs, written in \texttt{Verilog}, are then wired to their corresponding physical counterparts on the VC707 board, such as the SD card tray and the RJ45 Ethernet port.
 
 \subsection{The \texttt{Rocket64b1gem16jtag} Configuration}
+\label{sec:rocket64b1gem16jtag_config}
+
 The comprehensive architecture shown in (Figure \ref{fig:rocket_soc}) is not designed by hand in \texttt{Verilog}, but is programmatically generated from a high-level \texttt{Scala} configuration. As outlined in Chapter \ref{chap:SingleCoreGemminiRiscVSystem}, this generator-based approach allows for rapid architectural exploration and ensures design consistency.
 
 The specific configuration for our SoC is named \texttt{Rocket64b1gem16jtag}. This name concisely describes its key features: a 64-bit Rocket Core (\texttt{Rocket64}), one "big" core (\texttt{b1}), and a 16x16 Gemmini systolic array (\texttt{gem16}). This configuration is defined in \texttt{Scala} using Chipyard's \texttt{Config} classes, which employ a \texttt{mixin-based} approach to compose system components. This powerful paradigm allows features to be incrementally added to a base configuration through a series of traits, each beginning with the \texttt{With...} prefix. The core of the configuration is shown in Listing \ref{lst:Rocket64b1gem16jtag_config}.
@@ -62,6 +64,7 @@ The \texttt{WithGemmini(16, 64)} trait is the most critical for this work. It in
 This Scala configuration is then consumed by the Chipyard generator-based framework to produce the concrete hardware implementation. The resulting top-level architecture of the SoC, as deployed on the Xilinx VC707 FPGA, is illustrated in Figure \ref{fig:rocket_soc}.
 
 \section{Gemmini Integration via RoCC}
+\label{sec:gemmini_rocc_integration}
 
 \begin{figure}
   \centering
@@ -203,7 +206,7 @@ The system boots in several stages:
 \subsection{SoC Hardware Generation}
 The first stage of the build process is to generate the Verilog HDL for the SoC. 
 \begin{enumerate}
-    \item \textbf{Initial Verilog and Device Tree Generation}: The build system invokes the Scala Build Tool (SBT) to compile the Chisel sources using the \texttt{Rocket64b1gem16jtag} configuration. This generates the initial Verilog HDL and a base Device Tree Source (\texttt{.dts}) file, which describes the core SoC components as inferred by Chipyard's diplomacy framework, as described in Chapter 6.
+    \item \textbf{Initial Verilog and Device Tree Generation}: The build system invokes the Scala Build Tool (SBT) to compile the Chisel sources using the \texttt{Rocket\allowbreak 64b1gem16jtag} configuration. This generates the initial Verilog HDL and a base Device Tree Source (\texttt{.dts}) file, which describes the core SoC components as inferred by Chipyard's diplomacy framework, as described in Chapter 6.
     \item \textbf{Peripheral Integration}: This generated core is then integrated with several pre-existing, open-source peripheral controllers written in Verilog. These include the AXI UART controller, the AXI SD Card controller, and the AXI Ethernet controller.
     \item \textbf{Device Tree Customization}: A crucial step is the creation of the final device tree. The base \texttt{system.dts} is combined with a board-specific overlay, \texttt{board/vc707/bootrom.dts}, which defines the VC707's unique peripherals like the UART, MMC, and Ethernet controllers at their specific memory-mapped addresses.
     \item \textbf{Boot ROM Generation}: The customized device tree is then passed to the boot ROM's own build system, which compiles the C code for the first-stage bootloader and embeds the compiled device tree binary within the final `bootrom.img` file.

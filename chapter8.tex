@@ -95,12 +95,12 @@ The power summary in Figure \ref{fig:power_summary} reports a \textbf{Total On-C
 % \label{fig:power_settings}
 % \end{figure}
 
-% \begin{figure}[h!]
-% \centering
-% \includegraphics[width=\textwidth]{Images/Results/Power_Summary.png}
-% \caption{Post-implementation on-chip power summary.}
-% \label{fig:power_summary}
-% \end{figure}
+\begin{figure}[h!]
+   \centering
+   \includegraphics[width=\textwidth]{Images/Results/Power_Summary.png}
+   \caption{Post-implementation on-chip power summary.}
+   \label{fig:power_summary}
+\end{figure}
 
 % \begin{figure}[h!]
 % \centering
@@ -110,10 +110,10 @@ The power summary in Figure \ref{fig:power_summary} reports a \textbf{Total On-C
 % \end{figure}
 
 \begin{figure}[h!]
-\centering
-\includegraphics[width=\textwidth]{Images/Results/Power_Hierarchical_Gemmini.png}
-\caption{Hierarchical power report for the Gemmini accelerator.}
-\label{fig:power_hierarchical_gemmini}
+   \centering
+   \includegraphics[width=\textwidth]{Images/Results/Power_Hierarchical_Gemmini.png}
+   \caption{Hierarchical power report for the Gemmini accelerator.}
+   \label{fig:power_hierarchical_gemmini}
 \end{figure}
 
 \FloatBarrier
@@ -184,51 +184,79 @@ hart isa        : rv64imafdc_zicntr_zicsr_zifencei_zihpm_zca_zcd
 
 \section{Gemmini Accelerator Performance Evaluation}
 \label{sec:gemmini_results}
-With the SoC's correctness and stability confirmed, the final and most important evaluation is to measure the performance benefit of the Gemmini accelerator. The evaluation consists of two parts: verifying its functional correctness and quantifying its performance speedup on a representative workload.
+
+With the SoC's functional correctness and stability validated, the final and most critical evaluation is to quantify the performance benefits of the Gemmini DNN accelerator. The evaluation involved running a comprehensive suite of benchmarks from the \texttt{gemmini-rocc-tests} repository, comparing the cycle counts of software-only implementations on the RISC-V Rocket Core against the hardware-accelerated versions. The results provide a definitive measure of the speedup achieved across various workloads.
 
 \subsection{Functional Correctness}
-To verify that the accelerator works correctly, a test was run that performs a matrix multiplication operation (`In * Identity = Out`) and then compares the resulting `Out` matrix with the original `In` matrix. The test involves a series of memory operations managed by Gemmini: moving data from main memory to the on-chip scratchpad, executing the computation, and moving the result back to main memory.
 
-The console output in Listing \ref{lst:gemmini_correctness} shows the steps of the test. The final line, \textbf{`Input and output matrices are identical, as expected`}, provides conclusive proof that the entire accelerator pipeline is functioning correctly. This includes the RoCC instruction dispatch from the CPU, the DMA transfers managed by Gemmini's internal controllers, the systolic array computation, and the memory coherency with the CPU.
+As a prerequisite for performance evaluation, the functional correctness of the accelerator was verified. All 25 test cases within the benchmark suite, spanning matrix multiplications, convolutions, and full network layers, passed successfully. A representative test, \texttt{tiled\_matmul\_ws}, which multiplies two 512$\times$512 matrices, confirmed that the output matrix from the Gemmini accelerator was bit-perfect identical to the one produced by the pure software implementation. This confirms the correctness of the entire hardware/software co-design, from RoCC instruction dispatch to DMA transfers and the systolic array computation.
 
-\begin{lstlisting}[style=terminalstyle, caption={Verification of the Gemmini accelerator's functional correctness.}, label={lst:gemmini_correctness}]
-debian@debian:~/gemmini/build/bareMetalC$ ./template-linux
-Flush Gemmini TLB of stale virtual addresses
-Initialize our input and output matrices in main memory
-Calculate the scratchpad addresses of all our matrices
-  Note: The scratchpad is "row-addressed", where each address contains one matrix row
-Move "In" matrix from main memory into Gemmini's scratchpad
-Move "Identity" matrix from main memory into Gemmini's scratchpad
-Multiply "In" matrix with "Identity" matrix with a bias of 0
-Move "Out" matrix from Gemmini's scratchpad into main memory
-Fence till Gemmini completes all memory operations
-Check whether "In" and "Out" matrices are identical
-Input and output matrices are identical, as expected
-\end{lstlisting}
+\subsection{Performance Speedup and Analysis}
 
-\subsection{Performance Speedup}
-The primary motivation for this work is to accelerate DNN workloads. To quantify this, a convolution operation was performed twice: once using a C-language implementation running on the RISC-V CPU (software-only), and once using the Gemmini accelerator. The number of clock cycles for each execution was measured.
+The primary motivation for this work was to demonstrate the dramatic performance uplift provided by a specialized hardware accelerator for DNN workloads. The results, summarized in Table~\ref{tab:performance_summary}, unequivocally validate this thesis.
 
-The results, shown in Listing \ref{lst:gemmini_speedup}, are definitive. The software-only implementation required \textbf{2,491,745 cycles} to complete the convolution. The same operation, when offloaded to the Gemmini accelerator, took only \textbf{2,600 cycles}.
+\begin{table}[htbp]
+\centering
+\caption{Summary of Gemmini performance speedup across key operational categories. Detailed results for each test case are provided in Appendix \ref{app:detailed_performance_evaluation_results}.}
+\label{tab:performance_summary}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|c|cc|c|c|}
+\hline
+\multirow{2}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Operation\\ Category\end{tabular}}} & \multicolumn{2}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Execution Time Range \\ (ns)\end{tabular}}} & \multirow{2}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Speedup\\ Range\end{tabular}}} & \multirow{2}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Average\\ Speedup\end{tabular}}} \\ \cline{2-3}
+                                                                                       & \multicolumn{1}{c|}{\textbf{CPU}}                        & \textbf{Gemmini}                       &                                                                                   &                                                                                     \\ \hline
+\begin{tabular}[c]{@{}c@{}}Matrix\\ Multiplication\end{tabular} & \multicolumn{1}{c|}{510M - 4.3B}                   & 12M - 39M                          & 41$\times$ - 353$\times$                               & \textbf{$\sim$180$\times$}                               \\ \hline
+\begin{tabular}[c]{@{}c@{}}Standard\\ Convolution\end{tabular} & \multicolumn{1}{c|}{44.7B - 45.4B}                 & 81M - 84M                          & 532$\times$ - 554$\times$                              & \textbf{$\sim$541$\times$}                               \\ \hline
+\begin{tabular}[c]{@{}c@{}}Transformed\\ Convolution\end{tabular} & \multicolumn{1}{c|}{132B - 169B}                   & 129M - 132M                        & 1,007$\times$ - 1,309$\times$                          & \textbf{$\sim$1,110$\times$}                             \\ \hline
+\begin{tabular}[c]{@{}c@{}}Depthwise\\ Convolution\end{tabular} & \multicolumn{1}{c|}{1.5B}                          & 103M                               & 15$\times$                                              & \textbf{15$\times$}                                      \\ \hline
+\end{tabular}%
+}
+\end{table}
 
-\begin{center}
-\textbf{Speedup = CPU Cycles / Gemmini Cycles = 2,491,745 / 2,600 $\approx$ 958x}
-\end{center}
+The performance gains are profound. While standard convolutions already show a remarkable $\sim$541$\times$ average speedup, the most impressive results come from workloads optimized for the hardware's dataflow. The \texttt{conv\_trans\_weight\_0132} test, which leverages weight tensor transformations to maximize data reuse within the systolic array, achieved a staggering \textbf{1,308-fold speedup} over the software-only implementation.
 
-This result demonstrates a staggering \textbf{958-fold speedup}. This profound performance gain is the direct result of the architectural principles discussed in Chapter 4, namely the massive parallelism of the systolic array and the data reuse it enables, which effectively circumvents the memory wall bottleneck that cripples the general-purpose CPU. This quantitative result serves as the ultimate validation of this thesis's central hypothesis: that a tightly-coupled, specialized hardware accelerator, implemented through a full-stack, open-source methodology, provides a dramatic and essential performance uplift for modern computational workloads.
+\begin{equation}
+\text{Speedup} = \frac{\text{CPU Time}}{\text{Gemmini Time}} = \frac{169,097,846,400}{129,206,400} \approx 1308.7\times
+\end{equation}
 
-\begin{lstlisting}[style=terminalstyle, caption={Cycle counts for a convolution operation on the CPU vs. the Gemmini accelerator.}, label={lst:gemmini_speedup}]
-Input dimensions: 17 by 17
-Output dimensions: 9 by 9
+This result is a powerful demonstration of the principles discussed in Chapter \ref{chap:dnn_foundations}. By architecting the hardware and software to work in concert, we can effectively overcome the Memory Wall bottleneck that cripples general-purpose CPUs on these workloads.
 
-Randomize inputs...
-Randomize weights...
-Randomize bias...
-CPU conv...
-CPU conv took 2491745 cycles
-Flatten weights...
-Gemmini conv...
-Gemmini conv took 2600 cycles
-\end{lstlisting}
+\subsection{Real-World Workload Analysis: MobileNetV1}
 
-This quantitative result, demonstrating a nearly 1000-fold performance increase, serves as the ultimate validation for the entire thesis. The successful implementation of a full-stack, Linux-capable SoC, combined with the profound performance gains from the specialized Gemmini accelerator, empirically confirms our central hypothesis. The final chapter will now conclude this thesis by summarizing these achievements, discussing their broader impact and limitations, and outlining promising directions for future research.
+To evaluate performance on a realistic application, the full MobileNetV1 neural network was executed on the system. The accelerator completed the inference task in \textbf{3.81 billion nanoseconds (3.81 seconds)}. A breakdown of the execution time, shown in Table~\ref{tab:mobilenet_breakdown}, reveals critical insights into the performance characteristics of modern CNNs.
+
+\begin{table}[htbp]
+\centering
+\caption{Cycle breakdown for a single inference pass of MobileNetV1 on the Gemmini accelerator.}
+\label{tab:mobilenet_breakdown}
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{MobileNetV1 Component} & \textbf{Execution Time (ns)} & \textbf{Percentage of Total} \\
+\hline
+Depthwise Convolution & 3,336,960,000 & 87.5\% \\
+\hline
+Matrix Multiplication & 310,441,600 & 8.1\% \\
+\hline
+Standard Convolution & 74,860,800 & 2.0\% \\
+\hline
+Other (ResAdd, etc.) & 92,643,200 & 2.4\% \\
+\hline
+\textbf{Total} & \textbf{3,814,905,600} & \textbf{100\%} \\
+\hline
+\end{tabular}
+\end{table}
+
+Notably, the relatively low-arithmetic-intensity \textbf{Depthwise Convolution} layers dominate the runtime, consuming 87.5\% of the total execution time. This is despite having a lower speedup ($\sim$15$\times$) compared to standard convolutions ($\sim$541$\times$). This analysis highlights that optimizing for the most common layer types is critical for overall application performance.
+
+\subsection{Discussion of Results}
+
+The empirical data reveals several key characteristics of the implemented system:
+
+\begin{itemize}
+\item \textbf{Dataflow is King:} The highest speedups ($>$1000$\times$) were achieved in tests (\texttt{conv\_trans\_*}) where the data was explicitly arranged to match the hardware's preferred weight-stationary dataflow. This confirms that performance is not just about raw compute power, but about the synergy between algorithm and architecture.
+
+\item \textbf{Computational Intensity Matters:} The comparatively low 15$\times$ speedup on depthwise convolutions is expected. These layers have a lower ratio of computation to memory access, making them more memory-bound and limiting the benefits of the systolic array.
+
+\item \textbf{Hardware Utilization:} A performance analysis test (\texttt{tiled\_matmul\_ws\_perf}) revealed that even with high speedup, the peak utilization of the systolic array was only \textbf{2\%}. This suggests that the system is often limited by data movement (memory bandwidth) rather than by computation. This is a common challenge in accelerator design and presents a clear avenue for future research, such as implementing more advanced data prefetching mechanisms or exploring different scratchpad memory architectures.
+\end{itemize}
+
+These quantitative results serve as the ultimate validation of this thesis. They prove that a tightly-coupled, specialized hardware accelerator, implemented through a full-stack, open-source methodology, provides a dramatic and essential performance uplift for modern computational workloads.

@@ -19,6 +19,23 @@
 	defernumbers=true]{biblatex}
 \usepackage[unicode]{hyperref} % Bookmark tiếng Việt
 \addbibresource{References/references.bib}
+\addbibresource{References/mypublications.bib}
+
+\DeclareSourcemap{
+  \maps[datatype=bibtex, overwrite]{
+    \map{
+      \perdatasource{References/mypublications.bib}
+      \step[fieldset=keywords, fieldvalue=lop]
+    }
+  }
+}
+
+\makeatletter
+\newcommand*{\setmaxbibnames}[1]{%
+  \c@maxnames#1\relax
+  \numdef\blx@maxbibnames{#1}%
+}
+\makeatother
 
 \makeatletter
 \def\blx@maxline{77}
@@ -199,6 +216,10 @@
 \newcommand{\tenGVHD}{Huynh~Huu~Thuan,~Ph.D.}
 \newcommand{\tenBM}{}
 \newcommand{\locationdateauto}[1]{#1, \ifnum\month<10 0\fi\the\month/\the\year}
+
+\usepackage{tabularx}
+\usepackage{appendix}
+
 \begin{document}
 
 \input{Title/title.tex}
@@ -295,10 +316,14 @@
 % CHÚ Ý: phải gán lại resetnumbers=số tài liệu tham khảo tiếng Việt + 1 %
 % ===================================================================== %
 
+\renewcommand{\chaptername}{Appendix}
 % Phần phụ lục
-% \include{Appendix/appendix1}
-\include{Appendix/appendix2}
-
-
+\begin{appendices}
+  \include{Appendix/appendix1}
+  \include{Appendix/appendix2}
+  \include{Appendix/appendix3}
+  \include{Appendix/appendix4}
+  \include{Appendix/appendix5}
+\end{appendices}
 
 \end{document}

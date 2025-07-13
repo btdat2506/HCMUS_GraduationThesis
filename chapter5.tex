@@ -7,7 +7,7 @@ As established in the previous chapter, the System-on-Chip (SoC) developed in th
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.6\textwidth]{Gemmini_Logo.pdf}
-    \caption{Gemmini Logo. Source: \cite{gemini-dac}.}
+    \caption{Gemmini Logo. \cite{gemini-dac}.}
     \label{fig:gemmini_logo}
 \end{figure}
 
@@ -25,7 +25,7 @@ As established in the previous chapter, the System-on-Chip (SoC) developed in th
 % \begin{figure}[h!]
 %     \centering
 %     \includegraphics[width=0.9\textwidth]{Gemmini_SystolicNVDLA.pdf} 
-%     \caption[Architectural Flexibility of the Gemmini Generator]{The design space enabled by the Gemmini generator, allowing it to produce a wide variety of spatial array structures. Source: \cite{gemini-dac}.}
+%     \caption[Architectural Flexibility of the Gemmini Generator]{The design space enabled by the Gemmini generator, allowing it to produce a wide variety of spatial array structures. \cite{gemini-dac}.}
 %     \label{fig:gemmini_flexibility}
 % \end{figure}
 
@@ -36,7 +36,7 @@ The Gemmini generator can produce a wide range of accelerator instances based on
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.9\textwidth]{Gemmini_ArchitectureOverview.pdf}
-    \caption{High-level overview of the Gemmini accelerator template integrated with a host CPU and system memory hierarchy. Source: \cite{gemini-dac}.}
+    \caption{High-level overview of the Gemmini accelerator template integrated with a host CPU and system memory hierarchy. \cite{gemini-dac}.}
     \label{fig:gemmini_template}
 \end{figure}
 
@@ -49,7 +49,7 @@ The computational heart of Gemmini is its systolic array, a highly configurable 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{Gemmini_MicroArchitecture.png}
-    \caption[Microarchitecture of Gemmini's Spatial Array]{The two-level hierarchy of Gemmini's spatial array, composed of tiles and Processing Elements (PEs). Source: \cite{gemini-dac}.}
+    \caption[Microarchitecture of Gemmini's Spatial Array]{The two-level hierarchy of Gemmini's spatial array, composed of tiles and Processing Elements (PEs). \cite{gemini-dac}.}
     \label{fig:gemmini_microarch}
 \end{figure}
 
@@ -87,17 +87,17 @@ To feed its high-throughput systolic array, Gemmini includes a specialized on-ch
 \end{itemize}
 
 \section{SoC Integration and System-Level Features}
-\label{sec:gemmini_integration}
+\label{sec:gemmini_soc_integration}
 
 \subsection{The RoCC Coprocessor Interface}
-Gemmini integrates into the Chipyard SoC via the \textbf{Rocket Custom Coprocessor (RoCC)} interface. As a tightly-coupled coprocessor, it receives custom RISC-V instructions dispatched directly by the host Rocket Core's pipeline. This allows for low-latency command and control.
+Gemmini integrates into the Chipyard SoC via the \textbf{Rocket Custom Coprocessor (RoCC)} interface (Section \ref{sec:rocketchip_soc_structure}). As a tightly-coupled coprocessor, it receives custom RISC-V instructions dispatched directly by the host Rocket Core's pipeline. This allows for low-latency command and control.
 
 This integration uses a decoupled access-execute model, as illustrated conceptually in Figure~\ref{fig:decoupled_pipelines}. The host CPU issues three main types of commands to Gemmini: load (from main memory to scratchpad), execute (perform computation on data within the scratchpad), and store (from scratchpad to main memory). These commands are placed into separate hardware queues, allowing Gemmini's internal controller then processes these commands asynchronously, and Gemmini's DMA engine to handle data movement in parallel with the systolic array's computations. This overlapping of communication and computation is crucial for hiding memory latency and maximizing the utilization of the systolic array.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.8\textwidth]{Gemmini_DecoupledAccessExecutePipeline.pdf}
-    \caption{Conceptual view of Gemmini's decoupled access-execute pipelines, managed by separate hardware command queues for Load, Execute, and Store operations. Source: \cite{gemini-dac}.}
+    \caption{Conceptual view of Gemmini's decoupled access-execute pipelines, managed by separate hardware command queues for Load, Execute, and Store operations. \cite{gemini-dac}.}
     \label{fig:decoupled_pipelines}
 \end{figure}
 

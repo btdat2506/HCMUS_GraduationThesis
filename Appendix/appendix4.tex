@@ -1,0 +1,324 @@
+\appendix
+\renewcommand{\thechapter}{D} % Set Appendix Chapter Label to D
+
+\chapter{Time Measuring Methodology}
+\label{app:time_measuring_methodology}
+
+Due to Linux does not support reading CPU cycles directly using the rdcycle instruction, the \texttt{clock\_gettime} function (CLOCK\_MONOTONIC) is used to measure elapsed time in nanoseconds. The following C code snippet demonstrates how to read the CPU cycles using this method:
+
+\begin{lstlisting}[language=C, caption={}, label={lst:}, captionpos=b]
+// From generators/gemmini/software/gemmini-rocc-tests/include/gemmini_testutils.h
+static uint64_t read_cycles() {
+    struct timespec ts;
+    if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0) {
+         perror("clock_gettime failed");
+         return 0;
+    }
+    return (uint64_t)ts.tv_sec * 1000000000ULL + ts.tv_nsec;
+}
+\end{lstlisting}
+
+Exclusive tests were performed to measure the overhead of this method, which was found to be negligible compared to the overall execution time of the tests. 
+
+The result shows that the overhead of using \texttt{clock\_gettime(CLOCK\_MONO\allowbreak TONIC)} is the lowest, around 7.4 μs, while \texttt{gettimeofday} has a similar overhead of around 7.7 μs. The \texttt{clock\_gettime\allowbreak (CLOCK\_\allowbreak PRO\allowbreak CESS\_CPUTIME\_ID)} has a higher overhead of around 26.4 μs, which is expected as it provides more detailed CPU time information.
+
+
+\begin{lstlisting}[language=C, caption={C Code for Timing Test}, label={lst:timing_test}, captionpos=b]
+/*
+ * timing_test.c - Test program to compare clock_gettime() vs gettimeofday()
+ * 
+ * This program tests the timing functions available on Linux and compares
+ * their resolution, accuracy, and overhead.
+ */
+
+#define _POSIX_C_SOURCE 200809L  // Enable POSIX.1-2008 features
+#define _DEFAULT_SOURCE          // Enable additional glibc features
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <sys/time.h>
+#include <unistd.h>
+#include <stdint.h>
+
+// Test how many times we can call each timing function
+#define NUM_ITERATIONS 10000
+
+// Function to get time using clock_gettime(CLOCK_MONOTONIC)
+uint64_t get_monotonic_time_ns() {
+    struct timespec ts;
+    if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0) {
+        perror("clock_gettime failed");
+        return 0;
+    }
+    return (uint64_t)ts.tv_sec * 1000000000ULL + ts.tv_nsec;
+}
+
+// Function to get time using gettimeofday()
+uint64_t get_timeofday_us() {
+    struct timeval tv;
+    if (gettimeofday(&tv, NULL) != 0) {
+        perror("gettimeofday failed");
+        return 0;
+    }
+    return (uint64_t)tv.tv_sec * 1000000ULL + tv.tv_usec;
+}
+
+// Function to get process CPU time
+uint64_t get_process_time_ns() {
+    struct timespec ts;
+    if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts) != 0) {
+        perror("clock_gettime(CLOCK_PROCESS_CPUTIME_ID) failed");
+        return 0;
+    }
+    return (uint64_t)ts.tv_sec * 1000000000ULL + ts.tv_nsec;
+}
+
+void test_timing_resolution() {
+    printf("=== Testing Timing Resolution ===\n\n");
+    
+    // Test clock_gettime resolution
+    struct timespec res;
+    if (clock_getres(CLOCK_MONOTONIC, &res) == 0) {
+        printf("CLOCK_MONOTONIC resolution: %ld.%09ld seconds\n", 
+               res.tv_sec, res.tv_nsec);
+        printf("  = %.1f nanoseconds\n", res.tv_sec * 1e9 + res.tv_nsec);
+    } else {
+        printf("Failed to get CLOCK_MONOTONIC resolution\n");
+    }
+    
+    if (clock_getres(CLOCK_PROCESS_CPUTIME_ID, &res) == 0) {
+        printf("CLOCK_PROCESS_CPUTIME_ID resolution: %ld.%09ld seconds\n", 
+               res.tv_sec, res.tv_nsec);
+        printf("  = %.1f nanoseconds\n", res.tv_sec * 1e9 + res.tv_nsec);
+    } else {
+        printf("Failed to get CLOCK_PROCESS_CPUTIME_ID resolution\n");
+    }
+    
+    printf("gettimeofday() resolution: ~1 microsecond (1000 nanoseconds)\n");
+    printf("\n");
+}
+
+void test_timing_accuracy() {
+    printf("=== Testing Timing Accuracy (Minimal Operation) ===\n\n");
+    
+    uint64_t start, end, elapsed;
+    volatile int dummy = 0;
+    
+    // Test clock_gettime(CLOCK_MONOTONIC)
+    printf("Testing clock_gettime(CLOCK_MONOTONIC):\n");
+    uint64_t min_mono = UINT64_MAX, max_mono = 0, total_mono = 0;
+    
+    for (int i = 0; i < 1000; i++) {
+        start = get_monotonic_time_ns();
+        dummy = dummy + 1;  // Minimal operation
+        end = get_monotonic_time_ns();
+        elapsed = end - start;
+        
+        if (elapsed < min_mono) min_mono = elapsed;
+        if (elapsed > max_mono) max_mono = elapsed;
+        total_mono += elapsed;
+    }
+    
+    printf("  Min time: %lu ns\n", min_mono);
+    printf("  Max time: %lu ns\n", max_mono);
+    printf("  Avg time: %.1f ns\n", (double)total_mono / 1000.0);
+    printf("  Effective resolution: ~%lu ns\n", min_mono);
+    
+    // Test gettimeofday()
+    printf("\nTesting gettimeofday():\n");
+    uint64_t min_gtod = UINT64_MAX, max_gtod = 0, total_gtod = 0;
+    
+    for (int i = 0; i < 1000; i++) {
+        start = get_timeofday_us();
+        dummy = dummy + 1;  // Minimal operation
+        end = get_timeofday_us();
+        elapsed = (end - start) * 1000;  // Convert to nanoseconds
+        
+        if (elapsed < min_gtod) min_gtod = elapsed;
+        if (elapsed > max_gtod) max_gtod = elapsed;
+        total_gtod += elapsed;
+    }
+    
+    printf("  Min time: %lu ns\n", min_gtod);
+    printf("  Max time: %lu ns\n", max_gtod);
+    printf("  Avg time: %.1f ns\n", (double)total_gtod / 1000.0);
+    printf("  Effective resolution: ~%lu ns\n", min_gtod);
+    
+    printf("\n");
+}
+
+void test_timing_overhead() {
+    printf("=== Testing Timing Function Overhead ===\n\n");
+    
+    uint64_t start, end;
+    uint64_t overhead_mono = 0, overhead_gtod = 0, overhead_proc = 0;
+    
+    // Test clock_gettime(CLOCK_MONOTONIC) overhead
+    start = get_monotonic_time_ns();
+    for (int i = 0; i < NUM_ITERATIONS; i++) {
+        get_monotonic_time_ns();
+    }
+    end = get_monotonic_time_ns();
+    overhead_mono = (end - start) / NUM_ITERATIONS;
+    
+    // Test gettimeofday() overhead  
+    start = get_monotonic_time_ns();
+    for (int i = 0; i < NUM_ITERATIONS; i++) {
+        get_timeofday_us();
+    }
+    end = get_monotonic_time_ns();
+    overhead_gtod = (end - start) / NUM_ITERATIONS;
+    
+    // Test clock_gettime(CLOCK_PROCESS_CPUTIME_ID) overhead
+    start = get_monotonic_time_ns();
+    for (int i = 0; i < NUM_ITERATIONS; i++) {
+        get_process_time_ns();
+    }
+    end = get_monotonic_time_ns();
+    overhead_proc = (end - start) / NUM_ITERATIONS;
+    
+    printf("Function call overhead (average over %d calls):\n", NUM_ITERATIONS);
+    printf("  clock_gettime(CLOCK_MONOTONIC):     %lu ns\n", overhead_mono);
+    printf("  gettimeofday():                     %lu ns\n", overhead_gtod);
+    printf("  clock_gettime(CLOCK_PROCESS_CPUTIME): %lu ns\n", overhead_proc);
+    printf("\n");
+}
+
+void test_timing_demo() {
+    printf("=== Practical Timing Example ===\n\n");
+    
+    uint64_t start_mono, end_mono;
+    uint64_t start_gtod, end_gtod;
+    uint64_t start_proc, end_proc;
+    
+    printf("Timing a simple computation (1000 additions):\n");
+    
+    // Time with clock_gettime(CLOCK_MONOTONIC)
+    start_mono = get_monotonic_time_ns();
+    volatile long sum = 0;
+    for (int i = 0; i < 1000; i++) {
+        sum += i;
+    }
+    end_mono = get_monotonic_time_ns();
+    
+    // Time with gettimeofday()
+    start_gtod = get_timeofday_us();
+    sum = 0;
+    for (int i = 0; i < 1000; i++) {
+        sum += i;
+    }
+    end_gtod = get_timeofday_us();
+    
+    // Time with process CPU time
+    start_proc = get_process_time_ns();
+    sum = 0;
+    for (int i = 0; i < 1000; i++) {
+        sum += i;
+    }
+    end_proc = get_process_time_ns();
+    
+    printf("Results:\n");
+    printf("  clock_gettime(CLOCK_MONOTONIC):     %lu ns (%.2f μs)\n", 
+           end_mono - start_mono, (end_mono - start_mono) / 1000.0);
+    printf("  gettimeofday():                     %lu μs (%.2f μs)\n", 
+           end_gtod - start_gtod, (double)(end_gtod - start_gtod));
+    printf("  clock_gettime(CLOCK_PROCESS_CPUTIME): %lu ns (%.2f μs)\n", 
+           end_proc - start_proc, (end_proc - start_proc) / 1000.0);
+    printf("  Sum result: %ld\n", sum);
+    printf("\n");
+}
+
+void show_current_time() {
+    printf("=== Current Time Values ===\n\n");
+    
+    struct timespec ts;
+    struct timeval tv;
+    
+    // Show CLOCK_MONOTONIC
+    if (clock_gettime(CLOCK_MONOTONIC, &ts) == 0) {
+        printf("CLOCK_MONOTONIC: %ld.%09ld seconds\n", ts.tv_sec, ts.tv_nsec);
+    }
+    
+    // Show gettimeofday
+    if (gettimeofday(&tv, NULL) == 0) {
+        printf("gettimeofday():  %ld.%06ld seconds\n", tv.tv_sec, tv.tv_usec);
+    }
+    
+    // Show CLOCK_PROCESS_CPUTIME_ID
+    if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &ts) == 0) {
+        printf("PROCESS_CPUTIME: %ld.%09ld seconds\n", ts.tv_sec, ts.tv_nsec);
+    }
+    
+    printf("\n");
+}
+
+int main() {
+    printf("Linux Timing Functions Test Program\n");
+    printf("====================================\n\n");
+    
+    printf("This program tests the timing functions used in the Gemmini\n");
+    printf("Linux port to replace the rdcycle instruction.\n\n");
+    
+    show_current_time();
+    test_timing_resolution();
+    test_timing_accuracy();
+    test_timing_overhead();
+    test_timing_demo();
+    
+    return 0;
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=bash, caption={Output of Timing Test}, label={lst:timing_test_output}, captionpos=b]
+debian@debian:~$ ./timing_test
+Linux Timing Functions Test Program
+====================================
+
+This program tests the timing functions used in the Gemmini
+Linux port to replace the rdcycle instruction.
+
+=== Current Time Values ===
+
+CLOCK_MONOTONIC: 288.119331000 seconds
+gettimeofday():  1710323247.363538 seconds
+PROCESS_CPUTIME: 0.039620000 seconds
+
+=== Testing Timing Resolution ===
+
+CLOCK_MONOTONIC resolution: 0.000000001 seconds
+  = 1.0 nanoseconds
+CLOCK_PROCESS_CPUTIME_ID resolution: 0.000000001 seconds
+  = 1.0 nanoseconds
+gettimeofday() resolution: ~1 microsecond (1000 nanoseconds)
+
+=== Testing Timing Accuracy (Minimal Operation) ===
+
+Testing clock_gettime(CLOCK_MONOTONIC):
+  Min time: 6000 ns
+  Max time: 133000 ns
+  Avg time: 7505.0 ns
+  Effective resolution: ~6000 ns
+
+Testing gettimeofday():
+  Min time: 7000 ns
+  Max time: 133000 ns
+  Avg time: 8165.0 ns
+  Effective resolution: ~7000 ns
+
+=== Testing Timing Function Overhead ===
+
+Function call overhead (average over 10000 calls):
+  clock_gettime(CLOCK_MONOTONIC):     7393 ns
+  gettimeofday():                     7666 ns
+  clock_gettime(CLOCK_PROCESS_CPUTIME): 26380 ns
+
+=== Practical Timing Example ===
+
+Timing a simple computation (1000 additions):
+Results:
+  clock_gettime(CLOCK_MONOTONIC):     69000 ns (69.00 μs)
+  gettimeofday():                     69 μs (69.00 μs)
+  clock_gettime(CLOCK_PROCESS_CPUTIME): 128000 ns (128.00 μs)
+  Sum result: 499500
+\end{lstlisting}

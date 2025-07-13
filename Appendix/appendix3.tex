@@ -1,0 +1,180 @@
+\appendix
+\renewcommand{\thechapter}{C} % Set Appendix Chapter Label to C
+
+\chapter{RoCC Interface and Gemmini Integration Details}
+\label{app:rocc_implementation_details}
+
+This appendix provides a detailed technical reference for the Rocket Custom Coprocessor (RoCC) interface and its specific implementation for the Gemmini accelerator. The Chisel/Scala code listings below are extracted from the \texttt{rocket-chip} and \texttt{gemmini} generator source files and serve as the ground-truth definition of the hardware interface and its integration with the CPU pipeline.
+
+\section{SoC Configuration and Accelerator Instantiation}
+The integration begins at the SoC configuration level. The Gemmini accelerator is instantiated as a \texttt{LazyRoCC} module and is assigned a specific opcode space for its custom instructions.
+
+\begin{lstlisting}[language=Scala, caption={Gemmini's extension of the \texttt{LazyRoCC} base class, which registers it as a RoCC accelerator within the Chipyard framework.}, label={lst:gemmini_rocc_impl}, captionpos=b]
+// From generators/gemmini/src/main/scala/gemmini/Controller.scala
+class Gemmini[T <: Data : Arithmetic, U <: Data, V <: Data](...)
+  extends LazyRoCC (
+    opcodes = OpcodeSet.custom3, // Assigns Gemmini to the custom3 space
+    nPTWPorts = if (config.use_shared_tlb) 1 else 2
+  ) {
+  override lazy val module = new GemminiModule(this)
+  // ... TileLink node connections
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Scala, caption={Definition of the RISC-V custom opcode spaces available in Rocket Chip.}, label={lst:opcodeset}, captionpos=b]
+// From rocket-chip/src/main/scala/tile/LazyRoCC.scala
+object OpcodeSet {
+  def custom0 = new OpcodeSet(Seq("b0001011".U))
+  def custom1 = new OpcodeSet(Seq("b0101011".U))
+  def custom2 = new OpcodeSet(Seq("b1011011".U))
+  def custom3 = new OpcodeSet(Seq("b1111011".U)) // Used by Gemmini
+}
+\end{lstlisting}
+
+\section{RoCC Hardware Interface Bundles}
+The following Chisel \texttt{Bundle} classes define the physical wires that constitute the complete RoCC interface between the CPU and the accelerator.
+
+\begin{lstlisting}[language=Scala, caption={The top-level hardware bundle for the complete RoCC interface.}, label={lst:roccio_full}, captionpos=b]
+// Source: rocket-chip/src/main/scala/tile/LazyRoCC.scala
+class RoCCIO(val nPTWPorts: Int)(implicit p: Parameters) 
+  extends Bundle {
+  // Command channel from CPU to Accelerator
+  val cmd = Flipped(Decoupled(new RoCCCommand))
+  
+  // Response channel from Accelerator to CPU
+  val resp = Decoupled(new RoCCResponse)
+  
+  // Direct memory interface to the L1 Data Cache
+  val mem = new HellaCacheIO
+  
+  // Page Table Walker interface for virtual memory
+  val ptw = Vec(nPTWPorts, new TLBPTWIO)
+  
+  // Status and Control Signals
+  val busy = Output(Bool())
+  val interrupt = Output(Bool())
+  val exception = Input(Bool()) // Signals an exception from the CPU
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Scala, caption={The \texttt{RoCCCommand} bundle, defining the payload dispatched from the CPU to the accelerator.}, label={lst:rocc_cmd_full}, captionpos=b]
+// Source: rocket-chip/src/main/scala/tile/LazyRoCC.scala
+class RoCCCommand(implicit p: Parameters) extends CoreBundle()(p) {
+  val inst = new RoCCInstruction    // The decoded instruction
+  val rs1 = Bits(xLen.W)           // Data from source register 1
+  val rs2 = Bits(xLen.W)           // Data from source register 2  
+  val status = new MStatus         // Current processor status flags
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Scala, caption={The \texttt{RoCCInstruction} bundle, defining the raw instruction format.}, label={lst:rocc_inst_full}, captionpos=b]
+// Source: rocket-chip/src/main/scala/tile/LazyRoCC.scala
+class RoCCInstruction extends Bundle {
+  val funct = Bits(7.W)   // Function code (specifies Gemmini operation)
+  val rs2 = Bits(5.W)     // Source register 2 address
+  val rs1 = Bits(5.W)     // Source register 1 address
+  val xd = Bool()         // Destination register valid bit
+  val xs1 = Bool()        // Source register 1 valid bit
+  val xs2 = Bool()        // Source register 2 valid bit
+  val rd = Bits(5.W)      // Destination register address
+  val opcode = Bits(7.W)  // Opcode (custom3 for Gemmini)
+}
+\end{lstlisting}
+
+\section{Gemmini Custom Instruction Set}
+The \texttt{funct7} field of a RoCC instruction is passed to the accelerator to specify an operation. Listing~\ref{lst:gemmini_isa_full} shows the definition of the primary commands used by Gemmini. These are high-level directives that can trigger complex sequences within the accelerator.
+
+\begin{lstlisting}[language=Scala, caption={The \texttt{GemminiISA} object, defining the function codes for Gemmini's instructions.}, label={lst:gemmini_isa_full}, captionpos=b]
+// Source: generators/gemmini/src/main/scala/gemmini/GemminiISA.scala
+object GemminiISA {
+  // Basic Operations
+  val CONFIG_CMD = 0.U
+  val LOAD_CMD = 2.U
+  val STORE_CMD = 3.U
+  val COMPUTE_AND_STAY_CMD = 5.U
+  val PRELOAD_CMD = 6.U
+  val FLUSH_CMD = 7.U
+  
+  // Complex, CISC-like loop commands
+  val LOOP_WS = 8.U
+  val LOOP_CONV_WS = 15.U
+  
+  // Configuration sub-commands
+  val CONFIG_EX = 0.U
+  val CONFIG_LOAD = 1.U
+  val CONFIG_STORE = 2.U
+}
+\end{lstlisting}
+
+\section{CPU-Side Pipeline Integration Details}
+The following code snippets from the \texttt{rocket-chip} source demonstrate the deep integration of the RoCC interface within the Rocket Core's five-stage pipeline.
+
+\subsection{Command Processing Flow}
+The CPU pipeline identifies, routes, and dispatches RoCC commands.
+
+\begin{lstlisting}[language=Scala, caption={Instruction Decode stage logic for recognizing RoCC opcodes.}, label={lst:cpu_decode}, captionpos=b]
+// From rocket-chip/src/main/scala/rocket/IDecode.scala
+// The decoder table maps the CUSTOM3 opcode to a control signal profile
+// that uses the register file but not the main ALU.
+CUSTOM3 -> List(Y,N,Y,N,N,N,N,N,A2_ZERO,A1_RS1,IMM_X,DW_XPR,...),
+\end{lstlisting}
+
+\begin{lstlisting}[language=Scala, caption={Command routing from the CPU core to the RoCC accelerator.}, label={lst:cpu_route}, captionpos=b]
+// From rocket-chip/src/main/scala/tile/RocketTile.scala
+// The Rocket Tile routes the command from the core's RoCC port
+// to the command router, which directs it to the correct accelerator.
+if (outer.roccs.size > 0) {
+  cmdRouter.get.io.in <> core.io.rocc.cmd
+  core.io.rocc.resp <> respArb.get.io.out
+  // ... busy and interrupt signal aggregation
+}
+\end{lstlisting}
+
+\subsection{Pipeline Stall and Hazard Management}
+The CPU's hazard unit is modified to stall the pipeline based on the accelerator's status, providing physical evidence of the hardware co-design.
+
+\begin{lstlisting}[language=Scala, caption={RoCC-specific stall and replay logic from the CPU's hazard unit.}, label={lst:cpu_stall}, captionpos=b]
+// From rocket-chip/src/main/scala/rocket/RocketCore.scala
+
+// Stall the Decode stage if RoCC is busy or not ready
+val rocc_blocked = Reg(Bool())
+rocc_blocked := !wb_xcpt && !io.rocc.cmd.ready && 
+                (io.rocc.cmd.valid || rocc_blocked)
+val ctrl_stalld = id_ctrl.rocc && rocc_blocked || ... 
+
+// Replay the instruction in the Writeback stage if the
+// accelerator is not ready to accept the command.
+val replay_wb_rocc = wb_reg_valid && wb_ctrl.rocc && 
+                     !io.rocc.cmd.ready
+\end{lstlisting}
+
+\subsection{Response and Register File Write}
+The RoCC interface has a privileged path to write results directly into the CPU's register file, bypassing the main memory hierarchy.
+
+\begin{lstlisting}[language=Scala, caption={Response arbitration in the Writeback stage.}, label={lst:cpu_resp}, captionpos=b]
+// From rocket-chip/src/main/scala/rocket/RocketCore.scala
+io.rocc.resp.ready := !wb_wxd // CPU is ready for a response if not writing a GPR
+
+when (io.rocc.resp.fire) {
+  // RoCC response takes priority over other units like the divider
+  div.io.resp.ready := false.B 
+  
+  // Route RoCC data directly to the register file write port
+  ll_wdata := io.rocc.resp.bits.data
+  ll_waddr := io.rocc.resp.bits.rd
+  ll_wen := true.B
+}
+\end{lstlisting}
+
+\subsection{Status and Interrupt Handling}
+The CPU and RoCC accelerator coordinate on status and interrupts.
+
+\begin{lstlisting}[language=Scala, caption={Status and interrupt coordination logic.}, label={lst:cpu_status}, captionpos=b]
+// From rocket-chip/src/main/scala/rocket/RocketCore.scala
+io.rocc.cmd.bits.status := csr.io.status // Pass current CPU status to RoCC
+io.rocc.exception := wb_xcpt             // Signal exceptions to RoCC
+
+// From rocket-chip/src/main/scala/rocket/CSR.scala
+// RoCC interrupt is wired into the Machine Interrupt Pending (MIP) register
+mip.rocc := io.rocc_interrupt
+\end{lstlisting}
