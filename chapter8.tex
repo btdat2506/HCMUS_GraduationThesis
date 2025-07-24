@@ -156,10 +156,10 @@ Starting kernel ...
 \end{lstlisting}
 
 \subsection{Debian Linux Environment}
-After booting, the system provides a standard Debian GNU/Linux environment. Listing \ref{lst:linux_env} confirms this by showing a successful login and the output of standard Linux commands. The `uname -a` command verifies the kernel version and the `riscv64` architecture. Critically, the output of `cat /proc/cpuinfo` confirms the processor's identity as `sifive,rocket0` and details its ISA as `rv64imafdc\_...`, matching the design specification. This successful boot to a full-featured OS validates the entire hardware and software co-design process.
+After booting, the system provides a standard \acrlong{debian} environment. Listing \ref{lst:linux_env} confirms this by showing a successful login and the output of standard Linux commands. The `uname -a` command verifies the kernel version and the `riscv64` architecture. Critically, the output of `cat /proc/cpuinfo` confirms the processor's identity as `sifive,rocket0` and details its ISA as `rv64imafdc\_...`, matching the design specification. This successful boot to a full-featured OS validates the entire hardware and software co-design process.
 
 \begin{lstlisting}[style=terminalstyle, caption={Demonstration of a functional Debian Linux environment on the implemented SoC.}, label={lst:linux_env}]
-Debian GNU/Linux trixie/sid debian ttyAU0
+\acrlong{debian} trixie/sid debian ttyAU0
 
 debian login: debian
 Password:
