@@ -8,7 +8,7 @@
 \chapter{Introduction}
 \label{Chapter1}
 
-This thesis presents the design, implementation, and evaluation of a RISC-V System-on-Chip (SoC) featuring a specialized Deep Neural Network (DNN) accelerator, conducted within the Computer Embedded Systems Laboratory (CESLAB) of the University of Science, VNUHCM (HCMUS). This work represents a foundational step in our laboratory's strategic transition to the emerging RISC-V ecosystem and open-source SoC design automation solutions for future chip development and fabrication.
+This thesis presents the design, implementation, and evaluation of a RISC-V \acrfull{soc} featuring a specialized \acrfull{dnn} accelerator, conducted within the \acrfull{ceslab} of the University of Science, VNUHCM (HCMUS). This work represents a foundational step in our laboratory's strategic transition to the emerging RISC-V ecosystem and open-source SoC design automation solutions for future chip development and fabrication.
 
 \section{Background and Motivation}
 
@@ -22,7 +22,7 @@ The emergence of the RISC-V instruction set architecture has fundamentally chang
 
 \section{A Survey of Modern Open-Source SoC Frameworks}
 
-To address the limitations of our previous proprietary toolchain and select a platform aligned with CESLAB's strategic goal of VLSI development, we conducted a survey of prominent open-source System-on-Chip (SoC) design frameworks. The landscape is rich with powerful, mature options, each with a distinct design philosophy and target application domain. Key alternatives considered include the LiteX, PULP, and OpenTitan platforms.
+To address the limitations of our previous proprietary toolchain and select a platform aligned with CESLAB's strategic goal of VLSI development, we conducted a survey of prominent open-source \acrfull{soc} design frameworks. The landscape is rich with powerful, mature options, each with a distinct design philosophy and target application domain. Key alternatives considered include the LiteX, PULP, and OpenTitan platforms.
 
 \subsection{LiteX: The Flexible SoC Builder}
 
@@ -50,11 +50,11 @@ The framework includes the Gemmini accelerator generator, an open-source DNN acc
 
 \section{Core Selection within Chipyard: A Comparison of Rocket and BOOM}
 
-A key advantage of the Chipyard framework is that it is a generator capable of instantiating different processor cores. This presented a critical design choice for our system: selecting the CPU core that best aligned with the project's objectives. The two primary candidates developed at UC Berkeley and available within Chipyard are the Rocket Core and the Berkeley Out-of-Order Machine (BOOM).
+A key advantage of the Chipyard framework is that it is a generator capable of instantiating different processor cores. This presented a critical design choice for our system: selecting the CPU core that best aligned with the project's objectives. The two primary candidates developed at UC Berkeley and available within Chipyard are the Rocket Core and the \acrfull{boom}.
 
 \begin{itemize}
     \item The Rocket Core is a mature, stable, and widely-used 5-stage, single-issue, in-order processor core. It is highly configurable and provides a solid foundation for general-purpose computing, capable of booting full operating systems like Linux. Its relative simplicity and extensive documentation make it a reliable and robust choice for systems where the primary focus is on integrating other components, such as custom accelerators \cite{asanovic2016rocketchip}.
-    \item The Berkeley Out-of-Order Machine (BOOM) is a synthesizable, parameterized, out-of-order RISC-V core designed for high-performance applications \cite{celio2016boom_spec, celio_phdthesis_2018boom}. It features a much more complex microarchitecture than Rocket, with a deeper pipeline and sophisticated hardware for dynamic scheduling, register renaming, and speculative execution. BOOM is designed to compete with high-performance commercial cores, targeting performance levels suitable for desktop or server-class applications \cite{zhao2020sonicboom_ieee}.
+    \item The \acrfull{boom} is a synthesizable, parameterized, out-of-order RISC-V core designed for high-performance applications \cite{celio2016boom_spec, celio_phdthesis_2018boom}. It features a much more complex microarchitecture than Rocket, with a deeper pipeline and sophisticated hardware for dynamic scheduling, register renaming, and speculative execution. BOOM is designed to compete with high-performance commercial cores, targeting performance levels suitable for desktop or server-class applications \cite{zhao2020sonicboom_ieee}.
 \end{itemize}
 
 For this thesis, the Rocket Core was undoubtedly the correct choice. While BOOM offers superior standalone CPU performance, our project's primary goal was to design an SoC, integrate, and evaluate a specialized DNN accelerator (Gemmini). The vast majority of the performance uplift for our target workload was expected to come from the accelerator, not the host CPU. Therefore, the selection criteria for the CPU core prioritized stability, reliability, and ease of integration over raw CPU performance.
@@ -72,7 +72,7 @@ This thesis aims to demonstrate the capabilities of the Chipyard framework throu
     
     \item \textbf{FPGA Prototyping and Validation}: Successfully deploy and validate the designed SoC on a Xilinx VC707 FPGA board, providing a realistic hardware platform for system evaluation and serving as a crucial stepping stone toward future ASIC implementation.
     
-    \item \textbf{Accelerator Integration and Testing}: Demonstrate the integration of the Gemmini accelerator as a Rocket Custom Coprocessor (RoCC), validate its functionality through comprehensive testing, and showcase how specialized computational units can be seamlessly incorporated into RISC-V systems using modern interconnect standards.
+    \item \textbf{Accelerator Integration and Testing}: Demonstrate the integration of the Gemmini accelerator as a \acrfull{rocc}, validate its functionality through comprehensive testing, and showcase how specialized computational units can be seamlessly incorporated into RISC-V systems using modern interconnect standards.
     
     \item \textbf{Documentation and Knowledge Transfer}: Create comprehensive documentation of the design process, implementation challenges, and solutions to serve as a foundational reference for future CESLAB projects targeting chip prototyping and VLSI development.
 \end{enumerate}

@@ -168,7 +168,7 @@ The control-flow mechanisms described above orchestrate the work performed by th
 \subsection{The Processing Element (PE) and Distributed Arithmetic}
 \label{ssec:pe_and_mac}
 
-The fundamental building block of Gemmini's compute engine is the \textbf{Processing Element (PE)}. Each PE is a self-contained unit capable of performing a Multiply-Accumulate (MAC) operation, which is the core computation of a neural network. As shown in Figure~\ref{fig:pe_dataflows}, the PE is designed with the flexibility to support different dataflow strategies, such as Weight Stationary (WS) and Output Stationary (OS), allowing it to be optimized for different layer types.
+The fundamental building block of Gemmini's compute engine is the \textbf{\acrfull{pe}}. Each PE is a self-contained unit capable of performing a \acrfull{mac} operation, which is the core computation of a neural network. As shown in Figure~\ref{fig:pe_dataflows}, the PE is designed with the flexibility to support different dataflow strategies, such as \acrfull{ws} and \acrfull{os}, allowing it to be optimized for different layer types.
 
 \begin{figure}[h!]
     \centering
@@ -177,7 +177,7 @@ The fundamental building block of Gemmini's compute engine is the \textbf{Proces
     \label{fig:pe_dataflows}
 \end{figure}
 
-A critical design choice in Gemmini is its approach to floating-point arithmetic. Gemmini avoids using a traditional, centralized Floating Point Unit (FPU). Instead, it implements a \textbf{distributed floating-point architecture} where arithmetic capabilities are embedded within every single PE. This is achieved through a powerful abstraction layer known as the \texttt{Arithmetic.scala} typeclass, which provides a full suite of IEEE 754-compliant operations by leveraging the Berkeley HardFloat library. The MAC unit at the heart of each PE (Figure~\ref{fig:mac_module}) utilizes this typeclass, effectively making every PE a specialized FPU. This design transforms the systolic array into a massively parallel floating-point computation engine, tailor-made for the demands of modern DNNs.
+A critical design choice in Gemmini is its approach to floating-point arithmetic. Gemmini avoids using a traditional, centralized \acrfull{fpu}. Instead, it implements a \textbf{distributed floating-point architecture} where arithmetic capabilities are embedded within every single PE. This is achieved through a powerful abstraction layer known as the \texttt{Arithmetic.scala} typeclass, which provides a full suite of IEEE 754-compliant operations by leveraging the Berkeley HardFloat library. The MAC unit at the heart of each PE (Figure~\ref{fig:mac_module}) utilizes this typeclass, effectively making every PE a specialized FPU. This design transforms the systolic array into a massively parallel floating-point computation engine, tailor-made for the demands of modern DNNs.
 
 \begin{figure}[h!]
     \centering

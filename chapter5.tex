@@ -2,7 +2,7 @@
 \chapter{The Gemmini DNN Accelerator: An Architectural Overview}
 \label{chap:gemmini_overview}
 
-As established in the previous chapter, the System-on-Chip (SoC) developed in this thesis utilizes a single Rocket Core augmented with a specialized accelerator for deep learning workloads. This chapter delves into the architecture of this accelerator: Gemmini, a sophisticated component designed to overcome the fundamental limitations of general-purpose processors for Deep Neural Network (DNN) tasks.
+As established in the previous chapter, the \acrfull{soc} developed in this thesis utilizes a single Rocket Core augmented with a specialized accelerator for deep learning workloads. This chapter delves into the architecture of this accelerator: Gemmini, a sophisticated component designed to overcome the fundamental limitations of general-purpose processors for \acrfull{dnn} tasks.
 
 \begin{figure}[htbp]
     \centering
@@ -44,7 +44,7 @@ The Gemmini generator can produce a wide range of accelerator instances based on
 \label{sec:gemmini_components}
 
 \subsection{The Systolic Compute Engine}
-The computational heart of Gemmini is its systolic array, a highly configurable spatial array that functions as a powerful General Matrix-Matrix Multiplication (GEMM) engine. The array's microarchitecture, as detailed in Figure \ref{fig:gemmini_microarch}, features a two-level hierarchy composed of Tiles and individual Processing Elements (PEs). Each PE is capable of performing a Multiply-Accumulate (MAC) operation in a single clock cycle. This hierarchical and configurable design allows Gemmini to efficiently execute the dense matrix multiplications fundamental to modern Deep Neural Networks (DNNs).
+The computational heart of Gemmini is its systolic array, a highly configurable spatial array that functions as a powerful General Matrix-Matrix Multiplication (GEMM) engine. The array's microarchitecture, as detailed in Figure \ref{fig:gemmini_microarch}, features a two-level hierarchy composed of Tiles and individual Processing Elements (PEs). Each PE is capable of performing a \acrfull{mac} operation in a single clock cycle. This hierarchical and configurable design allows Gemmini to efficiently execute the dense matrix multiplications fundamental to modern Deep Neural Networks (DNNs).
 
 \begin{figure}[htbp]
     \centering
@@ -56,7 +56,7 @@ The computational heart of Gemmini is its systolic array, a highly configurable 
 The key parameters of the systolic array can be specified at generation time:
 \begin{itemize}
     \item \textbf{Dimensions:} The size of the PE grid, structured into a hierarchy of tiles, can be configured (e.g., a 16x16 array composed of 2x2 tiles, each with 8x8 PEs). This allows for a trade-off between hardware area and parallel processing capability.
-    \item \textbf{Dataflow:} Gemmini primarily supports two dataflow strategies: Weight Stationary (WS) and Output Stationary (OS). 
+    \item \textbf{Dataflow:} Gemmini primarily supports two dataflow strategies: \acrfull{ws} and \acrfull{os}. 
     \begin{itemize}
         \item In \textbf{WS dataflow}, the DNN weights are pre-loaded into the PEs and remain stationary, maximizing weight reuse as input activations are streamed through. 
         \item In \textbf{OS dataflow}, partial sums of the output activations remain stationary within the PEs, while both inputs and weights are streamed. This is particularly beneficial for layers with low weight reuse.
@@ -109,7 +109,7 @@ To feed its high-throughput systolic array, Gemmini includes a specialized on-ch
 \label{sec:gemmini_soc_integration}
 
 \subsection{The RoCC Coprocessor Interface}
-Gemmini integrates into the Chipyard SoC via the \textbf{Rocket Custom Coprocessor (RoCC)} interface (Section \ref{sec:rocketchip_soc_structure}). As a tightly-coupled coprocessor, it receives custom RISC-V instructions dispatched directly by the host Rocket Core's pipeline. This allows for low-latency command and control.
+Gemmini integrates into the Chipyard SoC via the \textbf{\acrfull{rocc}} interface (Section \ref{sec:rocketchip_soc_structure}). As a tightly-coupled coprocessor, it receives custom RISC-V instructions dispatched directly by the host Rocket Core's pipeline. This allows for low-latency command and control.
 
 This integration uses a decoupled access-execute model, as illustrated conceptually in Figure~\ref{fig:decoupled_pipelines}. The host CPU issues three main types of commands to Gemmini: load (from main memory to scratchpad), execute (perform computation on data within the scratchpad), and store (from scratchpad to main memory). These commands are placed into separate hardware queues, allowing Gemmini's internal controller then processes these commands asynchronously, and Gemmini's DMA engine to handle data movement in parallel with the systolic array's computations. This overlapping of communication and computation is crucial for hiding memory latency and maximizing the utilization of the systolic array.
 
@@ -121,7 +121,7 @@ This integration uses a decoupled access-execute model, as illustrated conceptua
 \end{figure}
 
 \subsection{Virtual Memory Support}
-To operate correctly under a full-featured operating system like Linux, an accelerator's DMA engine must be able to translate virtual memory addresses into physical addresses. Gemmini is designed with this "full-stack" capability. It can be configured to share the host CPU's Page Table Walker (PTW) to perform its own address translations, and it includes its own local Translation Lookaside Buffer (TLB) to cache these translations and reduce latency.
+To operate correctly under a full-featured operating system like Linux, an accelerator's DMA engine must be able to translate virtual memory addresses into physical addresses. Gemmini is designed with this "full-stack" capability. It can be configured to share the host CPU's \acrfull{ptw} to perform its own address translations, and it includes its own local \acrfull{tlb} to cache these translations and reduce latency.
 
 %
 % SECTION 4: THE SOFTWARE INTERFACE
@@ -138,7 +138,7 @@ At the lowest level, Gemmini is controlled by its custom RoCC instruction set. T
 To abstract the complexities of direct ISA programming, Gemmini provides a C library (typically accessed via \texttt{gemmini.h}). This library offers functions for common DNN operations, such as \texttt{tiled\_matmul} and \texttt{tiled\_conv}. These functions implement optimized heuristics for loop tiling and data movement to maximize scratchpad utilization based on the specific hardware parameters of the generated Gemmini instance.
 
 \subsection{High-Level: Compiler Support (Conceptual)}
-The Gemmini ecosystem is designed to support higher-level compilation flows. This involves tools that can take DNN models described in standard frameworks like ONNX (Open Neural Network Exchange) and compile them down to Gemmini instructions, either by calling the mid-level C library or by directly generating low-level ISA calls. This further simplifies the deployment of DNNs on Gemmini-accelerated SoCs.
+The Gemmini ecosystem is designed to support higher-level compilation flows. This involves tools that can take DNN models described in standard frameworks like \acrfull{onnx} and compile them down to Gemmini instructions, either by calling the mid-level C library or by directly generating low-level ISA calls. This further simplifies the deployment of DNNs on Gemmini-accelerated SoCs.
 
 
 \section{Summary}
