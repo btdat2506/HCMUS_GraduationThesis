@@ -1,5 +1,5 @@
-\appendix
-\renewcommand{\thechapter}{E} % Set Appendix Chapter Label to E
+% \appendix
+\renewcommand{\thechapter}{D} % Set Appendix Chapter Label to E
 
 \chapter{Detailed Performance Evaluation Results}
 \label{app:detailed_performance_evaluation_results}
@@ -12,31 +12,16 @@ This appendix provides the comprehensive, unabridged results of the performance 
 \centering
 \caption{Detailed Matrix Multiplication Performance}
 \label{tab:matrix_multiplication_performance}
-\begin{tabular}{|l|l|r|r|r|}
+\begin{tabular}{|l|l|c|c|r|}
 \hline
-\textbf{Test} & \textbf{Matrix Size} & \textbf{CPU Cycles} & \textbf{Gemmini Cycles} & \textbf{Speedup} \\
-\hline
-tiled\_matmul\_os & - & 2,036,450,432 & 38,780,800 & 52.5$\times$ \\
-tiled\_matmul\_ws & 512$\times$512$\times$512 & 2,488,827,520 & 20,438,400 & 121.8$\times$ \\
-tiled\_matmul\_ws\_At & - & 4,113,003,392 & 12,444,800 & 330.5$\times$ \\
-tiled\_matmul\_ws\_Bt & - & 510,343,424 & 12,361,600 & 41.3$\times$ \\
-tiled\_matmul\_ws\_full\_C & - & 4,064,579,328 & 22,064,000 & 184.2$\times$ \\
-tiled\_matmul\_ws\_low\_D & - & 4,264,697,856 & 12,096,000 & 352.6$\times$ \\
-\hline
-\end{tabular}
-\end{table}
-
-\subsection{Matrix Multiplication Performance Analysis}
-
-\begin{table}[htbp]
-\centering
-\caption{Matrix Multiplication Performance Analysis}
-\label{tab:matrix_multiplication_analysis}
-\begin{tabular}{|l|l|r|r|r|r|r|r|}
-\hline
-\textbf{Test} & \textbf{Matrix Config} & \textbf{Total MACs} & \textbf{Cycles} & \textbf{Ideal Cycles} & \textbf{Utilization} & \textbf{RDMA Bytes} & \textbf{WDMA Bytes} \\
-\hline
-tiled\_matmul\_ws\_perf & 128$\times$256$\times$512 & 16,777,216 & 2,425,600 & 65,536 & 2\% & 2,162,688 & 32,768 \\
+\multirow{2}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Test: \\ \texttt{tiled\_matmul\_*}\end{tabular}}} & \multirow{2}{*}{\textbf{Matrix Size}} & \multicolumn{2}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Execution Time \\ (ms)\end{tabular}}} & \multirow{2}{*}{\textbf{Speedup}} \\ \cline{3-4}
+                                                          &                                      & \textbf{CPU}                        & \textbf{Gemmini}                       &                                      \\ \hline
+*\_os & - & 2,036.450 & 38.781 & 52.5$\times$ \\
+*\_ws & 512$\times$512$\times$512 & 2,488.828 & 20.438 & 121.8$\times$ \\
+*\_ws\_At & - & 4,113.003 & 12.445 & 330.5$\times$ \\
+*\_ws\_Bt & - & 510.343 & 12.362 & 41.3$\times$ \\
+*\_ws\_full\_C & - & 4,064.579 & 22.064 & 184.2$\times$ \\
+*\_ws\_low\_D & - & 4,264.698 & 12.096 & 352.6$\times$ \\
 \hline
 \end{tabular}
 \end{table}
@@ -45,21 +30,21 @@ tiled\_matmul\_ws\_perf & 128$\times$256$\times$512 & 16,777,216 & 2,425,600 & 6
 \centering
 \caption{Detailed Convolution Performance}
 \label{tab:convolution_performance}
-\begin{tabular}{|l|l|l|r|r|r|}
+\begin{tabular}{|p{4.5cm}|p{2cm}|c|c|c|r|}
 \hline
-\textbf{Test} & \textbf{Input Size} & \textbf{Output Size} & \textbf{CPU Cycles} & \textbf{Gemmini Cycles} & \textbf{Speedup} \\
-\hline
-conv & 224$\times$224 & 112$\times$112 & 44,931,244,800 & 83,296,000 & 539.3$\times$ \\
-conv\_first\_layer & 224$\times$224 & 112$\times$112 & 44,727,939,200 & 84,102,400 & 531.8$\times$ \\
-conv\_perf & 224$\times$224 (4 batch, 3$\rightarrow$32 ch) & 112$\times$112 & - & 84,032,000 & - \\
-conv\_dw & 112$\times$112 & 56$\times$56 & 1,536,294,400 & 102,560,000 & 15.0$\times$ \\
-conv\_dw\_perf & 112$\times$112 (3 batch, 17 ch) & 56$\times$56 & - & 103,971,200 & - \\
-conv\_rect & 224$\times$224 & 112$\times$112 & 44,761,961,600 & 83,120,000 & 538.4$\times$ \\
-conv\_stride & 224$\times$224 & - & 45,357,881,600 & 81,936,000 & 553.7$\times$ \\
-conv\_trans\_output\_1203 & - & - & 131,830,361,600 & 130,940,800 & 1006.6$\times$ \\
-conv\_trans\_weight\_0132 & - & - & 169,097,846,400 & 129,206,400 & 1308.7$\times$ \\
-conv\_trans\_weight\_1203 & - & - & 134,060,240,000 & 132,128,000 & 1014.6$\times$ \\
-conv\_with\_rot180 & - & - & 93,918,979,200 & 146,601,600 & 640.5$\times$ \\
+\multirow{2}{*}{Test: \texttt{conv\_*}} & \multirow{2}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Input\\ Size\end{tabular}}} & \multirow{2}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Output\\ Size\end{tabular}}} & \multicolumn{2}{c|}{\textbf{Execution Time (ms)}} & \multirow{2}{*}{\textbf{Speedup}} \\ \cline{4-5}
+                                                 &                                      &                                       & \textbf{CPU}                        & \textbf{Gemmini}                       &                                      \\ \hline
+* & 224$\times$224 & 112$\times$112 & 44,931.245 & 83.296 & 539.3$\times$ \\
+*\_first\_layer & 224$\times$224 & 112$\times$112 & 44,727.939 & 84.102 & 531.8$\times$ \\
+*\_perf & 224$\times$224 (4 batch, 3$\rightarrow$32 ch) & 112$\times$112 & - & 84.032 & - \\
+*\_dw & 112$\times$112 & 56$\times$56 & 1,536.294 & 102.560 & 15.0$\times$ \\
+*\_dw\_perf & 112$\times$112 (3 batch, 17 ch) & 56$\times$56 & - & 103.971 & - \\
+*\_rect & 224$\times$224 & 112$\times$112 & 44,761.962 & 83.120 & 538.4$\times$ \\
+*\_stride & 224$\times$224 & - & 45,357.882 & 81.936 & 553.7$\times$ \\
+*\_trans\_output\_1203 & - & - & 131,830.362 & 130.941 & 1006.6$\times$ \\
+*\_trans\_weight\_0132 & - & - & 169,097.846 & 129.206 & 1308.7$\times$ \\
+*\_trans\_weight\_1203 & - & - & 134,060.240 & 132.128 & 1014.6$\times$ \\
+*\_with\_rot180 & - & - & 93,918.979 & 146.602 & 640.5$\times$ \\
 \hline
 \end{tabular}
 \end{table}
@@ -68,12 +53,15 @@ conv\_with\_rot180 & - & - & 93,918,979,200 & 146,601,600 & 640.5$\times$ \\
 \centering
 \caption{Detailed Convolution with Pooling Performance}
 \label{tab:convolution_pooling_performance}
-\begin{tabular}{|l|l|l|r|r|r|r|r|}
+\begin{tabular}{|l|c|c|c|c|c|c|r|}
 \hline
-\textbf{Test} & \textbf{Input Size} & \textbf{Output Size} & \textbf{CPU Conv} & \textbf{CPU Pool} & \textbf{CPU Total} & \textbf{Gemmini} & \textbf{Speedup} \\
-\hline
-conv\_with\_pool & 224$\times$224 & 112$\times$112$\rightarrow$56$\times$56 & 44,810,374,400 & 4,024,304,000 & 48,834,678,400 & 97,036,800 & 503.2$\times$ \\
-conv\_rect\_pool & 224$\times$224 & 112$\times$112$\rightarrow$56$\times$56 & 44,755,398,400 & 4,014,457,600 & 48,769,856,000 & 98,576,000 & 494.6$\times$ \\
+\multirow{3}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Test:\\ conv\end{tabular}}} & \multirow{3}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Input\\ Size\end{tabular}}} & \multirow{3}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Output\\ Size\end{tabular}}} & \multicolumn{4}{c|}{\textbf{Execution Time}} & \multirow{3}{*}{\textbf{Speedup}} \\ \cline{4-7}
+                               &                                      &                                       & \multicolumn{3}{c|}{\textbf{CPU (sec)}} &  \multirow{2}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Gemmini\\ (ms)\end{tabular}}} &                                      \\ \cline{4-6}
+                               &                                      &                                       & \textbf{Conv} & \textbf{Pool} & \textbf{Total}                              &                                  &                                      \\ \hline
+*\_with\_ & 224$\times$224 & 112$\times$112 & 44,810 & 4,024 & 48,834 & 97 & 503.2$\times$ \\
+pool &  & $\rightarrow$56$\times$56 &  &  &  &  &  \\
+*\_rect\_ & 224$\times$224 & 112$\times$112 & 44,755 & 4,014 & 48,769 & 98 & 494.6$\times$ \\
+pool &  & $\rightarrow$56$\times$56 &  &  &  &  &  \\
 \hline
 \end{tabular}
 \end{table}
@@ -84,11 +72,11 @@ conv\_rect\_pool & 224$\times$224 & 112$\times$112$\rightarrow$56$\times$56 & 44
 \label{tab:residual_addition_performance}
 \begin{tabular}{|l|l|r|}
 \hline
-\textbf{Test} & \textbf{Matrix Size} & \textbf{Cycles} \\
+\textbf{Test} & \textbf{Matrix Size} & \textbf{Time Execution (ms)} \\
 \hline
-resadd & 128$\times$512 & 1,382,400 \\
-resadd\_stride & - & 217,641,600 \\
-resadd\_stride & - & 726,400 \\
+resadd & 128$\times$512 & 1.382 \\
+resadd\_stride & - & 217.642 \\
+resadd\_stride & - & 0.726 \\
 \hline
 \end{tabular}
 \end{table}
@@ -97,13 +85,13 @@ resadd\_stride & - & 726,400 \\
 \centering
 \caption{Detailed MLP Model Performance}
 \label{tab:mlp_performance}
-\begin{tabular}{|l|l|r|}
+\begin{tabular}{|l|l|r{2cm}|}
 \hline
-\textbf{Model} & \textbf{Layer Distribution} & \textbf{Total Cycles} \\
+\textbf{Model} & \textbf{Layer Distribution} & \textbf{\begin{tabular}[c]{@{}c@{}}Execution\\ Time (ms)\end{tabular}} \\
 \hline
-mlp1\_32 & 6 layers (22.4M, 77.1M, 46.1M, 22.5M, 6.2M, 0.5M) & 174,870,400 \\
-mlp1 & 6 layers (22.4M, 77.3M, 45.7M, 18.7M, 6.2M, 0.5M) & 170,636,800 \\
-mlp4 & 2 layers (215.6M, 217.2M) & 432,838,400 \\
+mlp1\_32 & 6 layers (22.4M, 77.1M, 46.1M, 22.5M, 6.2M, 0.5M) & 174.870 \\
+mlp1 & 6 layers (22.4M, 77.3M, 45.7M, 18.7M, 6.2M, 0.5M) & 170.637 \\
+mlp4 & 2 layers (215.6M, 217.2M) & 432.838 \\
 \hline
 \end{tabular}
 \end{table}
@@ -161,7 +149,7 @@ This section documents the specific configuration of each test program used in t
   \item \textbf{Verified metrics}: 
     \begin{itemize}
     \item Total MACs: 16,777,216
-    \item Cycles: 2,425,600 | Ideal: 65,536 | \textbf{Utilization: 2\%}
+    \item Time Execution (ms): 2.426 | \textbf{Utilization: 2\%}
     \item Memory traffic: 2.16MB RDMA reads, 32KB WDMA writes
     \end{itemize}
   \end{itemize}
@@ -266,15 +254,15 @@ This section documents the specific configuration of each test program used in t
   \item Architecture: 832$\rightarrow$2560$\rightarrow$2048$\rightarrow$1536$\rightarrow$1024$\rightarrow$512$\rightarrow$64
   \item Original dimensions: 784$\rightarrow$2500$\rightarrow$2000$\rightarrow$1500$\rightarrow$1000$\rightarrow$500$\rightarrow$10 (zero-padded)
   \item Batch size: 64
-  \item \textbf{Total cycles}: 170,636,800
-  \item \textbf{Layer breakdown}: 22.4M, 77.3M, 45.7M, 18.7M, 6.2M, 0.5M cycles
+  \item \textbf{Total time execution (ms)}: 170.637
+  \item \textbf{Layer breakdown}: 22.4M, 77.3M, 45.7M, 18.7M, 6.2M, 0.5M (ms)
   \end{itemize}
 
 \item \texttt{mlp1\_32}: 32-bit version of MLP1
   \begin{itemize}
   \item Same architecture as \texttt{mlp1} but with 32-bit precision
-  \item \textbf{Total cycles}: 174,870,400
-  \item \textbf{Layer breakdown}: 22.4M, 77.1M, 46.1M, 22.5M, 6.2M, 0.5M cycles
+  \item \textbf{Total Time Execution (ms)}: 174.870
+  \item \textbf{Layer breakdown}: 22.4M, 77.1M, 46.1M, 22.5M, 6.2M, 0.5M (ms)
   \end{itemize}
 \end{itemize}
 
@@ -285,8 +273,8 @@ This section documents the specific configuration of each test program used in t
   \item Architecture: 3072$\rightarrow$4608$\rightarrow$3072
   \item Original dimensions: 3036$\rightarrow$4554$\rightarrow$3036 (zero-padded)
   \item Batch size: 64
-  \item \textbf{Total cycles}: 432,838,400
-  \item \textbf{Layer breakdown}: 215.6M, 217.2M cycles
+  \item \textbf{Total Time Execution (ms)}: 432.838
+  \item \textbf{Layer breakdown}: 215.6M, 217.2M (ms)
   \end{itemize}
 \end{itemize}
 
@@ -295,7 +283,7 @@ This section documents the specific configuration of each test program used in t
 \item \texttt{resadd}: Residual addition operations
   \begin{itemize}
   \item Tests element-wise addition for residual connections
-  \item \textbf{Cycles}: 1,382,400 (128$\times$512 matrix)
+  \item \textbf{Time Execution (ms)}: 1.382 (128$\times$512 matrix)
   \end{itemize}
 
 \item \texttt{gemmini\_counter}: Hardware counter validation

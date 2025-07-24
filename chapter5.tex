@@ -7,7 +7,7 @@ As established in the previous chapter, the System-on-Chip (SoC) developed in th
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.6\textwidth]{Gemmini_Logo.pdf}
-    \caption{Gemmini Logo. \cite{gemini-dac}.}
+    \caption{Gemmini, the DNN Accelerator designed for SoC intergration developed by UC Berkeley. \cite{gemini-dac}.}
     \label{fig:gemmini_logo}
 \end{figure}
 
@@ -71,10 +71,29 @@ While systolic arrays are fundamentally designed to accelerate General Matrix-Ma
 
 Recognizing the computational cost of this pre-processing step, Gemmini can be configured with a dedicated hardware unit to perform the \texttt{im2col} transformation on-the-fly. This offloads the data restructuring from the host CPU, freeing it for other tasks and streamlining the overall computation pipeline. The decision to include this unit represents a classic area-versus-performance trade-off in the accelerator design.
 
-\begin{figure}[h!]
+\begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth]{Gemmini_Im2Col.png}
-    \caption[The im2col Transformation]{From convolution to systolic array computation: (a) direct convolution operation; (c) example of a systolic array operation; (b) A visualization of the \texttt{im2col}-based GEMM operation. The 3D input tensor (left) is transformed into a 2D matrix (center) that can be processed by the systolic array. Adapted from Gookyi et al. \cite{gookyi2023gemmini_case_study}.}
+    \begin{subfigure}[t]{\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Im2Col_Convolution.pdf}
+        \caption{Convolution operation.}
+        \label{fig:im2col_convolution}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Im2Col_GEMM.pdf}
+        \caption{A visualization of the \texttt{im2col}-based GEMM operation.}
+        \label{fig:im2col_gemm}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Im2Col_SystolicArray.pdf}
+        \caption{Example of a systolic array operation.}
+        \label{fig:im2col_systolic}
+    \end{subfigure}
+    \caption{From convolution to systolic array computation. The 3D input tensor (left) is transformed into a 2D matrix (center) that can be processed by the systolic array. Adapted from Gookyi et al. \cite{gookyi2023gemmini_case_study}.}
     \label{fig:im2col}
 \end{figure}
 

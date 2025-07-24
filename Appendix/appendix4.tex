@@ -1,12 +1,12 @@
-\appendix
-\renewcommand{\thechapter}{D} % Set Appendix Chapter Label to D
+% \appendix
+\renewcommand{\thechapter}{C} % Set Appendix Chapter Label to D
 
 \chapter{Time Measuring Methodology}
 \label{app:time_measuring_methodology}
 
 Due to Linux does not support reading CPU cycles directly using the rdcycle instruction, the \texttt{clock\_gettime} function (CLOCK\_MONOTONIC) is used to measure elapsed time in nanoseconds. The following C code snippet demonstrates how to read the CPU cycles using this method:
 
-\begin{lstlisting}[language=C, caption={}, label={lst:}, captionpos=b]
+\begin{lstlisting}[language=C, caption={Time Measurement Function Used in Gemmini Tests}, label={lst:read_cycles_function}, captionpos=b]
 // From generators/gemmini/software/gemmini-rocc-tests/include/gemmini_testutils.h
 static uint64_t read_cycles() {
     struct timespec ts;
@@ -21,7 +21,6 @@ static uint64_t read_cycles() {
 Exclusive tests were performed to measure the overhead of this method, which was found to be negligible compared to the overall execution time of the tests. 
 
 The result shows that the overhead of using \texttt{clock\_gettime(CLOCK\_MONO\allowbreak TONIC)} is the lowest, around 7.4 μs, while \texttt{gettimeofday} has a similar overhead of around 7.7 μs. The \texttt{clock\_gettime\allowbreak (CLOCK\_\allowbreak PRO\allowbreak CESS\_CPUTIME\_ID)} has a higher overhead of around 26.4 μs, which is expected as it provides more detailed CPU time information.
-
 
 \begin{lstlisting}[language=C, caption={C Code for Timing Test}, label={lst:timing_test}, captionpos=b]
 /*

@@ -17,7 +17,7 @@ This bottleneck is not just about latency; it is fundamentally about energy. As 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\textwidth]{EfficientDNN_EnergyConsumption.pdf} 
-    \caption[The Relative Energy Cost of Computation vs. Memory Access]{The relative energy cost of various arithmetic and memory operations. A 32-bit DRAM read is orders of magnitude more costly than a 32-bit floating-point addition. This disparity is the primary motivation for specialized accelerator architectures. Adapted from Horowitz, as presented in Sze et al. \cite{sze2020efficient, horowitz2014energy}.}
+    \caption[The Relative Energy Cost of Computation vs. Memory Access]{The relative energy cost of various arithmetic and memory operations. A 32-bit DRAM read is orders of magnitude more costly than a 32-bit floating-point addition. This disparity is the primary motivation for specialized accelerator architectures. \cite{sze2020efficient, horowitz2014energy}.}
     \label{fig:energy_cost}
 \end{figure}
 
@@ -58,7 +58,7 @@ The TPUv1's design philosophy is a masterclass in optimizing for a specific doma
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.7\textwidth]{TPU_v1_Overview.pdf} 
-    \caption[The Google TPUv1 Block Diagram]{A high-level block diagram of the Google TPUv1. The design is dominated by the systolic Matrix Multiply Unit and its large on-chip Unified Buffer. Adapted from Jouppi et al. \cite{jouppi2017tpu, mittal2021survey}.}
+    \caption[The Google TPUv1 Block Diagram]{A high-level block diagram of the Google TPUv1. The design is dominated by the systolic Matrix Multiply Unit and its large on-chip Unified Buffer. \cite{jouppi2017tpu, mittal2021survey}.}
     \label{fig:tpu_diagram}
 \end{figure}
 
@@ -122,26 +122,26 @@ Therefore, for the objectives of this thesis—to implement and evaluate a custo
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.9\textwidth]{Gemmini_SystolicNVDLA.pdf} 
-    \caption[Architectural Flexibility of the Gemmini Generator]{The design space enabled by the Gemmini generator, allowing it to produce a wide variety of spatial array structures, from systolic (TPU-like) to parallel vector engines (NVDLA-like). Source: \cite{gemini-dac}.}
+    \caption[Architectural Flexibility of the Gemmini Generator]{The design space enabled by the Gemmini generator, allowing it to produce a wide variety of spatial array structures, from systolic (TPU-like) to parallel vector engines (NVDLA-like). \cite{gemini-dac}.}
     \label{fig:gemmini_flexibility}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \begin{subfigure}[b]{0.48\textwidth}
+    \begin{subfigure}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Gemmini_compute_os.pdf}
-        \caption{Output Stationary (OS)}
+        \caption{In the \textbf{Output Stationary} dataflow, the result matrix C remains stationary in the PEs to accumulate partial sums.}
         \label{fig:os_dataflow}
     \end{subfigure}
     \hfill
-    \begin{subfigure}[b]{0.48\textwidth}
+    \begin{subfigure}[t]{0.48\textwidth}
         \centering
         \includegraphics[width=\textwidth]{Gemmini_compute_ws.pdf}
-        \caption{Weight Stationary (WS)}
+        \caption{In the \textbf{Weight Stationary} dataflow, the weight matrix B is preloaded and remains stationary in the PEs to maximize weight reuse.}
         \label{fig:ws_dataflow}
     \end{subfigure}
-    \caption[Comparison of OS and WS Dataflows]{A visual comparison of the two primary dataflows supported by Gemmini. (a) In the \textbf{Output Stationary} dataflow, the result matrix C remains stationary in the PEs to accumulate partial sums. (b) In the \textbf{Weight Stationary} dataflow, the weight matrix B is preloaded and remains stationary in the PEs to maximize weight reuse. The choice between these strategies represents a fundamental trade-off in accelerator design. Source: \cite{gemini-dac}.}
+    \caption[Comparison of OS and WS Dataflows]{A visual comparison of the two primary dataflows supported by Gemmini. The choice between these strategies represents a fundamental trade-off in accelerator design. \cite{gemini-dac}.}
     \label{fig:dataflow_comparison}
 \end{figure}
 

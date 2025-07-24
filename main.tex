@@ -213,7 +213,7 @@
 \newcommand{\tenSV}{Bùi~Thành~Đạt} % Dấu ~ là khoảng trắng không được tách (các chữ nối với nhau bằng dấu ~ sẽ nằm cùng 1 dòng
 \newcommand{\displayTenSV}[1]{#1} % Dấu ~ là khoảng trắng không được tách (các chữ nối với nhau bằng dấu ~ sẽ nằm cùng 1 dòng
 \newcommand{\tenKL}{Open-Source~RISC-V~SoC~Implementation with~DNN~Acceleration:~A~Chipyard~Framework~Study with~FPGA~Prototyping} % Chú ý dấu ~ trong tên khóa luận
-\newcommand{\tenGVHD}{Huynh~Huu~Thuan,~Ph.D.}
+\newcommand{\tenGVHD}{Huynh~Huu~Thuan,~Dr.}
 \newcommand{\tenBM}{}
 \newcommand{\locationdateauto}[1]{#1, \ifnum\month<10 0\fi\the\month/\the\year}
 
@@ -229,7 +229,7 @@
 
 %\addcontentsline{toc}{chapter}{Lời cam đoan}
 %\include{Appendix/reassurances}
-\include{Appendix/editComfirmation}
+%\include{Appendix/editComfirmation}
 \include{Appendix/thanks}
 \include{Appendix/commitment}
 
@@ -244,12 +244,12 @@
 % Mục lục, danh sách hình, danh sách bảng
 \cleardoublepage
 \phantomsection
-% \addcontentsline{toc}{chapter}{MỤC LỤC}
+\addcontentsline{toc}{chapter}{MỤC LỤC}
 \tableofcontents
 % Danh sách chữ viết tắt
 \printglossary[type=\acronymtype,
-                title=DANH SÁCH CHỮ VIẾT TẮT, 
-                toctitle=DANH SÁCH CHỮ VIẾT TẮT
+                title=LIST OF ABBREVIATIONS, 
+                toctitle=LIST OF ABBREVIATIONS
                 ]
 
 \cleardoublepage
@@ -317,13 +317,12 @@
 % ===================================================================== %
 
 \renewcommand{\chaptername}{Appendix}
+\appendix
 % Phần phụ lục
-\begin{appendices}
-  \include{Appendix/appendix1}
-  \include{Appendix/appendix2}
-  \include{Appendix/appendix3}
-  \include{Appendix/appendix4}
-  \include{Appendix/appendix5}
-\end{appendices}
+% \include{Appendix/appendix1}
+\include{Appendix/appendix2}
+\include{Appendix/appendix3}
+\include{Appendix/appendix4}
+\include{Appendix/appendix5}
 
 \end{document}

@@ -252,7 +252,7 @@ Notably, the relatively low-arithmetic-intensity \textbf{Depthwise Convolution} 
 The empirical data reveals several key characteristics of the implemented system:
 
 \begin{itemize}
-\item \textbf{Dataflow is King:} The highest speedups ($>$1000$\times$) were achieved in tests (\texttt{conv\_trans\_*}) where the data was explicitly arranged to match the hardware's preferred weight-stationary dataflow. This confirms that performance is not just about raw compute power, but about the synergy between algorithm and architecture.
+\item \textbf{The Critical Impact of Dataflow:} The highest speedups ($>$1000$\times$) were achieved in tests (\texttt{conv\_trans\_*}) where the data was explicitly arranged to match the hardware's preferred weight-stationary dataflow. This confirms that performance is not just about raw compute power, but about the synergy between algorithm and architecture.
 
 \item \textbf{Computational Intensity Matters:} The comparatively low 15$\times$ speedup on depthwise convolutions is expected. These layers have a lower ratio of computation to memory access, making them more memory-bound and limiting the benefits of the systolic array.
 

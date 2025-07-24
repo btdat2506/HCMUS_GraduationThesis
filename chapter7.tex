@@ -68,7 +68,7 @@ This Scala configuration is then consumed by the Chipyard generator-based framew
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.8\textwidth]{Gemmini_Configuration_onSoC.pdf}
+  \includegraphics[width=0.9\textwidth]{Gemmini_Configuration_onSoC.pdf}
   \caption{Gemmini Configuration on \texttt{Rocket64b1gem16jtag} SoC.}
   \label{fig:gemmini_configuration_on_soc}
 \end{figure}
@@ -132,7 +132,7 @@ The SD card is accessed in SD mode, which is a common mode for embedded systems.
 
 \FloatBarrier
 
-For comparion, here is how the same operation looks in SPI mode, which is another common mode for SD cards. The SPI mode is often used for compatibility with older systems or when a simpler interface is required. The SPI Mode offers lower speed compared to SD mode, but it is simpler to implement and can be used in systems that do not require high-speed data transfer.
+For comparison, here is how the same operation looks in SPI mode, which is another common mode for SD cards. The SPI mode is often used for compatibility with older systems or when a simpler interface is required. The SPI Mode offers lower speed compared to SD mode, but it is simpler to implement and can be used in systems that do not require high-speed data transfer.
 
 \begin{figure}[h]
   \centering
@@ -167,7 +167,7 @@ The Ethernet subsystem provides high-speed network connectivity for the RISC-V R
 The Ethernet subsystem is implemented as a hierarchical design with four distinct functional blocks, as illustrated in Figure \ref{fig:rocket_soc}. 
 
 \begin{enumerate}
-  \item \textbf{Ethernet DMA Controller}: serves as the primary interface between the RocketChip SoC and the Ethernet MAC layer. Provide functionality for managing data transfers between the SoC and the Ethernet MAC, including packet buffering, flow control, and interrupt handling.
+  \item \textbf{Ethernet DMA Controller}: serves as the primary interface between the RocketChip SoC and the Ethernet MAC layer. It provides functionality for managing data transfers between the SoC and the Ethernet MAC, including packet buffering, flow control, and interrupt handling.
 
   \item \textbf{SGMII 1Gbps Ethernet MAC}: The MAC (Media Access Control) layer is implemented using the open-source \texttt{eth\_mac\_1g\_fifo} module from the verilog-ethernet project \cite{verilog-ethernet}. This component provides: IEEE 802.3 Compliance, integrated frame-level FIFO Buffering, Frame Processing (Automatic frame padding, FCS generation and checking, and frame validation), AXI4-Stream Interface, Standard GMII Interface (Gigabit Media Independent Interface).
 

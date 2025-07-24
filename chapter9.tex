@@ -1,4 +1,37 @@
-% !TeX root = main.tex
 \chapter{Conclusion and Future Work}
+\label{ch:conclusion_and_future_work}
 
-This thesis successfully evaluated the Chipyard framework, demonstrating its superiority over traditional Quartus-based flows for our laboratory's objectives due to its integrated VLSI toolchain, support for industry-standard AXI4 interconnects, and its open-source nature.
+This thesis confronted the growing demand for specialized hardware acceleration for Deep Neural Networks by moving beyond traditional, proprietary FPGA-centric design flows. The primary objective was to demonstrate the viability and superiority of a modern, full-stack, open-source methodology for developing complex System-on-Chip (SoC) designs. This was achieved through the successful implementation and validation of a Linux-capable, 64-bit RISC-V SoC featuring the Gemmini DNN accelerator, all within the Chipyard framework. This work not only serves as a proof-of-concept but also establishes a foundational, reproducible, and extensible platform for future research in hardware acceleration within our laboratory.
+
+\section{Summary of Contributions}
+This project successfully met all of its research objectives as laid out in Section 1.5. The key contributions of this thesis are:
+
+\begin{enumerate}
+    \item \textbf{Framework Evaluation and Migration:} This work successfully evaluated the Chipyard framework, demonstrating its capability as a complete replacement for traditional FPGA toolchains like Intel Quartus for the purpose of advanced SoC development. Its integrated support for modern interconnects (AXI4, TileLink) and its end-to-end VLSI design flow were validated as essential for the laboratory's strategic goals.
+
+    \item \textbf{System Architecture Design:} A custom SoC, the \texttt{Rocket64b1gem16jtag}, was designed and configured. This architecture integrates a 64-bit, in-order Rocket Core with a 16$\times$16 systolic array (Gemmini), demonstrating the framework's flexibility in creating complex, heterogeneous systems.
+
+    \item \textbf{Full-Stack Implementation and Validation:} A complete hardware and software stack was implemented and deployed on a Xilinx VC707 FPGA board. The system successfully booted a full Debian Linux operating system, validating the entire open-source toolchain from high-level Chisel design, through hardware generation and peripheral integration, to final system deployment.
+
+    \item \textbf{Accelerator Integration and Performance Analysis:} The Gemmini accelerator was successfully integrated as a RoCC co-processor. Quantitative performance analysis confirmed its effectiveness, achieving dramatic speedups over equivalent software-only implementations on the Rocket Core. For workloads optimized for the hardware's preferred weight-stationary dataflow, the accelerator achieved a remarkable speedup of over \textbf{1,300$\times$}. Even for standard convolutions, the average speedup was approximately \textbf{541$\times$}.
+\end{enumerate}
+
+\section{Limitations and Key Insights}
+The empirical results from Chapter 8 provided critical insights into the system's performance characteristics and limitations. The analysis of a real-world workload, MobileNetV1, revealed that overall performance is not dictated by peak speedup alone. The inference time was dominated by depthwise convolution layers, which, due to their lower computational intensity, achieved a more modest speedup of approximately 15$\times$.
+
+Furthermore, performance analysis revealed that even during high-speedup operations, the systolic array's peak utilization was only 2\%. This strongly suggests that the system is primarily limited by memory bandwidth, not computational capacity. This "memory wall" is a common challenge in accelerator design and highlights that simply adding more compute units will not yield better performance without corresponding improvements in the memory subsystem.
+
+\section{Future Work}
+The successful implementation and the insights gained from this thesis open several clear and promising avenues for future research. This work establishes a baseline system upon which the following enhancements can be built and evaluated:
+
+\begin{itemize}
+    \item \textbf{Mitigating Memory Bottlenecks:} Future work should prioritize improving the memory subsystem to better feed the compute units. This could involve implementing more sophisticated DMA prefetching mechanisms within the accelerator's Load/Store controllers or exploring novel scratchpad memory architectures with higher bandwidth or more complex banking schemes.
+
+    \item \textbf{Architectural Exploration for Common Workloads:} Given that low-intensity layers like depthwise convolutions dominate many modern neural networks, a key research direction is to explore architectural modifications that specifically target these layers. This could involve designing a more flexible compute fabric or a secondary, smaller accelerator optimized for non-GEMM operations.
+
+    \item \textbf{Hardware Utilization Analysis and Optimization:} The low utilization of the systolic array presents a clear opportunity for optimization. Future projects could investigate more advanced dataflow strategies or dynamic scheduling within the accelerator to keep the processing elements busy for a higher percentage of the time.
+
+    \item \textbf{Transition to ASIC Implementation:} This project has validated the Chipyard framework's entire FPGA flow. The logical next step is to leverage Chipyard's integrated VLSI flow (Hammer) to transition this design from an FPGA prototype to a full ASIC implementation, a critical step toward producing custom silicon.
+\end{itemize}
+
+In conclusion, this thesis has successfully demonstrated that open-source, full-stack frameworks like Chipyard provide a powerful and practical path for designing, implementing, and evaluating sophisticated SoC-based hardware accelerators. The resulting system serves as a robust foundation for future research, positioning our laboratory to contribute meaningfully to the fields of computer architecture and custom silicon design.

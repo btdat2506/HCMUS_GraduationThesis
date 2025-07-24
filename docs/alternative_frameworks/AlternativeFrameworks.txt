@@ -1,0 +1,97 @@
+## **LiteX Framework**
+
+Overview:  
+LiteX is an open-source, versatile Python-based framework for building FPGA SoCs (System-on-Chips) and full FPGA designs. Its core strength lies in using Migen, a Python internal DSL (Domain-Specific Language), to describe its IP components, simplifying the design process. It aims to provide a flexible and adaptable environment for digital logic design, supporting various FPGA platforms and fostering open-source hardware development.  
+**Key Capabilities and Features:**
+
+* **Python-based SoC Builder:** Uses Migen (a Python DSL) to describe and generate hardware, allowing for higher-level abstraction, object-oriented programming, and metaprogramming.  
+* **FPGA and ASIC Support:** Designed for both FPGA-based accelerators and innovative ASIC SoCs. It includes initial support for a SKY130 build backend and aims to streamline switching between simulation, FPGA prototyping, and ASIC flows.  
+* **Extensive IP Library:** Provides a wide collection of IP cores, including softcore CPUs (RISC-V, LM32), memory controllers (SDR, DDR, LPDDR, DDR2, DDR3), HDMI video in/out, UART, GPIO, timers, NOR/SPI flash controllers, Ethernet MAC, PCIe, SATA, SDCard, USB, and more.  
+* **Open-Source and BSD Licensed:** Encourages community contribution and transparency.  
+* **Broad FPGA Compatibility:** Supports platforms from various vendors, including Lattice, Intel, Xilinx, Gowin, and Efinix.  
+* **Linux on LiteX:** Enables running Linux on many popular FPGA boards using VexRISCV (32-bit RISC-V) and Rocket (64-bit RISC-V) CPUs.  
+* **Real-Time Extensions:** Research efforts are underway to extend LiteX for real-time systems, focusing on RISC-V processors like VexRiscv with features for deterministic performance, prioritized task scheduling, and low interrupt latency.  
+* **Integration with Other Tools:** Can encapsulate legacy Verilog/VHDL code and integrate with tools like LiteEth for Etherbone connectivity.
+
+**Use Cases:**
+
+* Creating FPGA-based accelerators.  
+* Developing custom ASIC SoCs.  
+* Running CI tests on FPGA boards.  
+* Building embedded systems with softcore CPUs.  
+* Rapid prototyping and exploration of digital design architectures.
+
+**Links:**
+
+* GitHub: [https://github.com/enjoy-digital/litex](https://github.com/enjoy-digital/litex)
+
+## 
+
+## **PULP Platform by ETH Zurich**
+
+Overview:  
+PULP (Parallel Ultra-Low-Power) is an open-source multi-core computing platform developed through a collaboration between ETH Zurich and the University of Bologna. It leverages the RISC-V open ISA to develop energy-efficient computing architectures, initially for low-power IoT end-node applications, but now expanding to high-performance systems and many-core RISC-V chiplets.  
+**Key Capabilities and Features:**
+
+* **RISC-V Based:** Built around RISC-V cores, including RISCY (an in-order, single-issue core with 4 pipeline stages, supporting RV32I, RV32C, RV32M, and configurable RV32F extensions, designed for energy efficiency in ultra-low-power signal processing) and zero-riscy (a simpler, 2-pipeline stage core for ultra-low-power and ultra-low-area constraints).  
+* **Parallel Ultra-Low-Power Architecture:** Incorporates clusters of tightly-coupled cores (e.g., 8-core clusters) with advanced techniques for fast performance and energy scalability.  
+* **Power Management:** Features dynamic body bias multiplexing for ultra-fast transitions between operating modes, and a power management unit (PMU) for clock gating and control.  
+* **Microcontroller System and Multi-core Platform:** Offers a state-of-the-art microcontroller system and a multi-core platform designed to meet the computational demands of IoT applications within a few milliwatts.  
+* **Efficient I/O Subsystem:** Includes a micro-DMA (uDMA) for autonomous peripheral communication, reducing the core's burden for data transfers.  
+* **Rich Peripheral Set:** Supports I/O interfaces such as SPI (master), I2S, Camera Interface (CPI), I2C, UART, and JTAG.  
+* **Hardware Accelerator Integration:** Enables the integration of Hardware Processing Engines (HWPEs) that share memory with the RISC-V cores and are programmed on the memory map, with specific support for streaming accelerators.  
+* **Software Ecosystem:** Supports multiple application programming interfaces like OpenMP, OpenCL™, and OpenVX™ for agile application development and performance tuning.  
+* **Research Focus:** Aims to break the energy efficiency barrier and satisfy computational demands for data stream processing from sensors in IoT. Recent research includes mixed-precision matrix-matrix operation engines for TinyML training acceleration.
+
+**Use Cases:**
+
+* IoT end-node applications requiring flexible processing of data streams.  
+* Ultra-low-power embedded computing.  
+* On-device training of deep learning models in TinyML scenarios.  
+* Research and development of new and efficient computing architectures.  
+* High-performance computing (with expansions to many-core chiplets).
+
+**Links:**
+
+* PULP Platform Website: [https://pulp-platform.org/implementation.html](https://pulp-platform.org/implementation.html)  
+* GitHub Organization: [https://github.com/pulp-platform](https://github.com/pulp-platform)  
+* Research Paper (2024): [https://arxiv.org/abs/2412.20391](https://arxiv.org/abs/2412.20391)
+
+## **OpenTitan Framework**
+
+Overview:  
+OpenTitan is the first open-source project dedicated to building a transparent, high-quality reference design and integration guidelines for silicon Root-of-Trust (RoT) chips. It aims to make secure silicon design and implementation more transparent, trustworthy, and ultimately, secure for enterprises, platforms, and chip manufacturers.  
+**Key Capabilities and Features:**
+
+* **Silicon Root of Trust (RoT):** Provides essential functionalities like secure boot and execution integrity, acting as the system root of trust by actively mediating access to the first-stage boot firmware.  
+* **Open Source and Transparent:** Allows anyone to inspect, evaluate, and contribute to its design and documentation, promoting security through transparency.  
+* **High-Quality Design:** Developed by engineers and researchers from leading organizations (ETH Zurich, G+D Mobile Security, Google, lowRISC, Nuvoton Technology, Western Digital) with a focus on logical security, reference firmware, verification collateral, and technical documentation.  
+* **Flexible and Platform-Agnostic:** Designed to be integrated into various hardware, including data center servers, storage devices, peripherals, and other devices, reducing costs and expanding market reach.  
+* **Modern Architecture:** Built upon the quality constructs and security principles used in Google's Titan chips.  
+* **Security Features:** Includes a NIST SP 800-90B compliant entropy source, CSRNG (Cryptographically Secure Random Number Generator), and a comprehensive set of cryptographic hardware accelerators for:  
+  * Secure Hash Functions (SHA-256)  
+  * Message Authentication Codes (HMAC)  
+  * Block Ciphers (AES)  
+  * Asymmetric Encryption Schemes (OTBN \- OpenTitan Big Number Accelerator)  
+* **Secure Memory Storage:** Provides tamper-proof memory storage for cryptographic keys and secrets.  
+* **Ibex RISC-V Core:** Integrates a RV32IMCB RISC-V Ibex core.  
+* **Extensive Peripherals:** Includes a wide array of peripherals such as Flash Controller, UART, I2C, SPI host, GPIO, Key Manager, RV timer, Timer AON, Reset Manager AON, OTP Controller, Life Cycle Controller, PLIC, Entropy Source, Alert handler, System Reset Controller, and Clock Manager.  
+* **Pre-silicon Development Support:** Supported by tools like Renode for comprehensive simulation, allowing for testing of complex SoC designs with various building blocks and custom configurations.  
+* **FPGA Prototyping and Tooling:** Efforts are underway to adapt OpenTitan for open-source FPGA prototyping and tooling development, including work to expand SystemVerilog support in open-source synthesis tools like Yosys.
+
+**Use Cases:**
+
+* Implementing secure boot processes.  
+* Establishing a hardware Root of Trust in various systems.  
+* Developing secure microcontrollers.  
+* Integrating secure execution environments into SoCs.  
+* Accelerating cryptographic operations in security-critical embedded systems.  
+* Providing a secure backend for security libraries like OpenSSL.
+
+**Links:**
+
+* OpenTitan Website: [https://opentitan.org/](https://opentitan.org/)  
+* GitHub Repository: [https://github.com/lowRISC/opentitan](https://github.com/lowRISC/opentitan)  
+* Getting Started Documentation: [https://opentitan.org/book/doc/getting\_started/index.html](https://opentitan.org/book/doc/getting_started/index.html)  
+* Ibex RISC-V Core Documentation: [https://opentitan.org/book/hw/top\_earlgrey/ip\_autogen/rv\_core\_ibex/index.html](https://opentitan.org/book/hw/top_earlgrey/ip_autogen/rv_core_ibex/index.html)  
+* FPGA Board Information: [https://opentitan.org/book/doc/contributing/fpga/get\_a\_board.html](https://opentitan.org/book/doc/contributing/fpga/get_a_board.html)

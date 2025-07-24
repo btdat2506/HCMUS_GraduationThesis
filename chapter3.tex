@@ -1,5 +1,5 @@
 % !TeX root = main.tex
-\chapter{A Single-Core with Gemmini RoCC Accelerator RISC-V Processor System}
+\chapter{A Single-Core RISC-V Processor System with a Gemmini RoCC Accelerator}
 \label{chap:SingleCoreGemminiRiscVSystem}
 
 From the surveys and analyses in the preceding sections regarding processor cores and the two SoC development frameworks, it is evident that each of these research subjects possesses distinct advantages and limitations. However, for the research orientation and implementation of a processor system featuring a custom accelerator, the Chipyard framework and its library components are deemed most suitable for the objectives of this thesis. Not only does Chipyard effectively meet current requirements, but it also holds the potential for expansion to support more complex systems in the future.
@@ -125,7 +125,7 @@ For Rocket Chip, the TileLink \cite{sifive2018tilelink} system communication bus
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\textwidth]{TileLink_Topology.pdf}
-    \caption{Connection model in TileLink and its interfaces. Source: \cite{sifive2018tilelink}}
+    \caption{Connection model in TileLink and its interfaces. \cite{sifive2018tilelink}}
     \label{fig:tilelink_connection_model}
 \end{figure}
 
@@ -135,7 +135,7 @@ A TileLink bus system can support a combination of multiple communicating agents
 
 \begin{table}[h!]
 \centering
-\caption{TileLink operational configurations. Source: \cite{sifive2018tilelink}}
+\caption{TileLink operational configurations. \cite{sifive2018tilelink}}
 \label{tab:tilelink_configs}
 \begin{tabular}{|l|c|c|c|}
 \hline
@@ -158,7 +158,7 @@ For integrating peripheral hardware, all three bus configuration levels can be u
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.8\textwidth]{TileLink_FiveChannel.pdf}
-    \caption{Channels in a TileLink connection between two agents. Source: \cite{sifive2018tilelink}}
+    \caption{Channels in a TileLink connection between two agents. \cite{sifive2018tilelink}}
     \label{fig:tilelink_channels}
 \end{figure}
 
@@ -181,7 +181,7 @@ The choice of TileLink bus configuration is relevant for connecting various memo
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.7\textwidth]{TileLink_Overview.pdf} % Replace placeholder.png with your actual image file
-    \caption{TileLink TL-UL connection structure. Source: \cite{sifive2018tilelink}}
+    \caption{TileLink TL-UL connection structure. \cite{sifive2018tilelink}}
     \label{fig:tilelink_tl_ul_structure}
 \end{figure}
 
@@ -271,7 +271,7 @@ To minimize design complexity for MMIO peripherals, the Rocket Chip architecture
 
 The primary conduit for communication between the Rocket Core and the Gemmini accelerator is the RoCC (Rocket Custom Coprocessor) interface. This interface, however, is not merely an external bus; it is a profound hardware \textbf{co-design methodology} that fundamentally alters the CPU's own pipeline. When the \texttt{WithGemmini} trait is active in the SoC configuration, the Chipyard generator does more than just instantiate the accelerator; it injects specific logic directly into the Rocket Core's decoder, hazard unit, and writeback stage.
 
-The architectural philosophy of the RoCC interface is designed for high-throughput, decoupled accelerators. As it is were found in prior work by Pala, the interface's high-latency profile for CPU-to-accelerator register reads makes it best suited for offloading large, autonomous tasks rather than for frequent, small operations that require constant communication between CPU and accelerator \cite{pala_master_thesis}. Gemmini, which operates on large data streams for DNN computation, is a canonical example of this intended use case.
+The architectural philosophy of the RoCC interface is designed for high-throughput, decoupled accelerators. As was found in prior work by Pala, the interface's high-latency profile for CPU-to-accelerator register reads makes it best suited for offloading large, autonomous tasks rather than for frequent, small operations that require constant communication between CPU and accelerator \cite{pala_master_thesis}. Gemmini, which operates on large data streams for DNN computation, is a canonical example of this intended use case.
 
 This section will trace the lifecycle of a RoCC instruction to demonstrate how these code-level modifications create a tightly-coupled, low-latency communication channel that is essential for high-performance acceleration.
 
@@ -306,7 +306,7 @@ The fields in this instruction format are critical for orchestrating the hardwar
 \begin{itemize}
     \item \textbf{\texttt{opcode}}: Identifies the instruction as a RoCC command, directing it away from the standard execution units.
     \item \textbf{\texttt{funct7}}: This 7-bit field is passed directly to Gemmini, which uses it to select the specific operation to perform (e.g., \texttt{LOOP\_CONV\_WS}, \texttt{CONFIG\_LOAD}).
-    \item \textbf{\texttt{xd, xs1, xs2}}: These single-bit fields are essential hardware control signals. They function as "valid" bits for the register operands. \texttt{xs1} and \texttt{xs2} signal that valid data is present on the \texttt{rs1} and \texttt{rs2} busses, while \texttt{xd} signals that the CPU expects a result for the destination register \texttt{rd} and must stall until a response arrives.
+    \item \textbf{\texttt{xd, xs1, xs2}}: These single-bit fields are essential hardware control signals. They function as "valid" bits for the register operands. \texttt{xs1} and \texttt{xs2} signal that valid data is present on the \texttt{rs1} and \texttt{rs2} buses, while \texttt{xd} signals that the CPU expects a result for the destination register \texttt{rd} and must stall until a response arrives.
 \end{itemize}
 
 \subsubsection{Modifying the CPU's Instruction Decoder}
@@ -366,7 +366,7 @@ Beyond the command interface, the RoCC protocol provides a privileged, high-band
     \label{fig:rocc_mem_iface_asym}
 \end{figure}
 
-Critically, this interface is asymmetrical. The request channel from Gemmini to the L1D\$ (\texttt{mem\_req}) is a full \texttt{Decoupled} interface, allowing Gemmini to wait if the cache is busy. However, the response channel from the L1D\$ to Gemmini (\texttt{mem\_resp}) has only a \texttt{valid} signal. This is a deliberate design choice: the accelerator cannot apply back-pressure to the L1D\$ and must accept memory responses immediately to prevent stalling the main CPU pipeline. This nuance highlights the deeply integrated nature of the memory co-design. As confirmed by the timing analysis in Figures \ref{fig:rocc_mem_timing_single} and \ref{fig:rocc_mem_timing_multiple}, this interface exhibits a two-cycle latency and a maximum throughput of 50\%, performance characteristics that must be considered when designing and scheduling operations for the accelerator
+Critically, this interface is asymmetrical. The request channel from Gemmini to the L1 D-Cache (\texttt{mem\_req}) is a full \texttt{Decoupled} interface, allowing Gemmini to wait if the cache is busy. However, the response channel from the L1 D-Cache to Gemmini (\texttt{mem\_resp}) has only a \texttt{valid} signal. This is a deliberate design choice: the accelerator cannot apply back-pressure to the L1 D-Cache and must accept memory responses immediately to prevent stalling the main CPU pipeline. This nuance highlights the deeply integrated nature of the memory co-design. As confirmed by the timing analysis in Figures \ref{fig:rocc_mem_timing_single} and \ref{fig:rocc_mem_timing_multiple}, this interface exhibits a two-cycle latency and a maximum throughput of 50\%, performance characteristics that must be considered when designing and scheduling operations for the accelerator
 
 \begin{figure}[h!]
     \centering
@@ -378,11 +378,11 @@ Critically, this interface is asymmetrical. The request channel from Gemmini to 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.9\textwidth]{Rocket_RoCC_MemSignals_Multiple.pdf}
-    \caption{Timing diagram for consecutive RoCC memory requests. This illustrates the 50\% maximum throughput of the interface. The L1D\$ can accept two back-to-back requests but then requires a one-cycle pause before accepting the next two, a critical performance characteristic for data-intensive accelerators. \cite{pala_master_thesis}}
+    \caption{Timing diagram for consecutive RoCC memory requests. This illustrates the 50\% maximum throughput of the interface. The L1 D-Cache can accept two back-to-back requests but then requires a one-cycle pause before accepting the next two, a critical performance characteristic for data-intensive accelerators. \cite{pala_master_thesis}}
     \label{fig:rocc_mem_timing_multiple}
 \end{figure}
 
 \subsubsection{Conclusion}
 In summary, the RoCC integration is a profound act of hardware co-design, proven by the evidence from the hardware generator. The process modifies the CPU's instruction decoder, injects new stall conditions into the core hazard unit, provides a privileged response path to the register file, and grants direct, arbitrated access to the L1 cache. These code-level modifications create the tightly-coupled, high-performance link necessary to realize the performance uplift for DNN workloads, which will be quantified in Chapter \ref{chap:results}. 
 
-With the hardware co-design methodology now established as the mechanism for integrating our accelerator, the next chapter will explore the architectural foundations of Deep Neural Network (DNN) acceleration to understand why such specialized hardware like Gemmini is required in the first place. The complete, detailed definitions of the RoCC hardware interface bundles are provided in Appendix \ref{app:rocc_interfaces} for reference.
+With the hardware co-design methodology now established as the mechanism for integrating our accelerator, the next chapter will explore the architectural foundations of Deep Neural Network (DNN) acceleration to understand why such specialized hardware like Gemmini is required in the first place. The complete, detailed definitions of the RoCC hardware interface bundles are provided in Appendix \ref{app:rocc_implementation_details} for reference.

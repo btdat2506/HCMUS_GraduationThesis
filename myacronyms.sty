@@ -2,43 +2,172 @@
 \RequirePackage[acronym,toc]{glossaries}
 \makeglossaries
 
-\newacronym{pdk}{PDK}{Process Design Kit}
-\newacronym{rtl}{RTL}{Register Transfer Level}
-\newacronym{sta}{STA}{Static Timing Analysis}
-
-% FPGA / Nios / Project Specific Acronyms (From Ch1/Ch3/OCR)
+% Core Architecture and Computer Science
 \newacronym{ai}{AI}{Artificial Intelligence}
+\newacronym{api}{API}{Application Programming Interface}
 \newacronym{asic}{ASIC}{Application-Specific Integrated Circuit}
-\newacronym{bsp}{BSP}{Board Support Package}
-\newacronym{ceslab}{CESLAB}{Computer Embedded Systems Laboratory}
+\newacronym{boom}{BOOM}{Berkeley Out-of-Order Machine}
+\newacronym{cpu}{CPU}{Central Processing Unit}
+\newacronym{dnn}{DNN}{Deep Neural Network}
 \newacronym{dma}{DMA}{Direct Memory Access}
 \newacronym{dsp}{DSP}{Digital Signal Processing}
-\newacronym{elf}{ELF}{Executable and Linkable Format}
-\newacronym{fetel}{FETEL}{Faculty of Electronics and Telecommunications}
 \newacronym{fpga}{FPGA}{Field-Programmable Gate Array}
-\newacronym{hcmus}{HCMUS}{University of Science}
+\newacronym{gpu}{GPU}{Graphics Processing Unit}
 \newacronym{ic}{IC}{Integrated Circuit}
-\newacronym{ide}{IDE}{Integrated Development Environment}
-\newacronym{io}{I/O}{Input/Output} % Common abbreviation
-\newacronym{iot}{IoT}{Internet of Things}
 \newacronym{ip}{IP}{Intellectual Property}
-\newacronym{jtag}{JTAG}{Joint Test Action Group}
-\newacronym{mac}{MAC}{Media Access Control}
-\newacronym{nic}{NIC}{Network Interface Card}
+\newacronym{isa}{ISA}{Instruction Set Architecture}
+\newacronym{mac}{MAC}{Multiply-Accumulate}
+\newacronym{riscv}{RISC-V}{Reduced Instruction Set Computer - Five}
+\newacronym{rocc}{RoCC}{Rocket Custom Coprocessor}
+\newacronym{soc}{SoC}{System-on-Chip}
+\newacronym{tpu}{TPU}{Tensor Processing Unit}
+\newacronym{vlsi}{VLSI}{Very Large Scale Integration}
 
-\newacronym{nios2}{Nios II}{Nios\textregistered{} II}
-\newacronym{niosv}{Nios V}{Nios V/m} % Added Nios V explicitly
+% Chipyard and RISC-V Ecosystem
+\newacronym{chisel}{Chisel}{Constructing Hardware in a Scala Embedded Language}
+\newacronym{firrtl}{FIRRTL}{Flexible Intermediate Representation for RTL}
+\newacronym{rtl}{RTL}{Register Transfer Level}
+\newacronym{hdl}{HDL}{Hardware Description Language}
+\newacronym{hls}{HLS}{High-Level Synthesis}
+
+% Memory and Storage
+\newacronym{bram}{BRAM}{Block RAM}
+\newacronym{ddr}{DDR}{Double Data Rate}
+\newacronym{dram}{DRAM}{Dynamic Random Access Memory}
 \newacronym{ram}{RAM}{Random Access Memory}
 \newacronym{rom}{ROM}{Read-Only Memory}
-\newacronym{rtos}{RTOS}{Real-Time Operating System}
-\newacronym{soc}{SoC}{System-on-Chip}
-\newacronym{sof}{SOF}{SRAM Object File} % From OCR
-\newacronym{sslc}{SSLC}{Self-Service Licensing Center}
+\newacronym{sram}{SRAM}{Static Random Access Memory}
+\newacronym{tlb}{TLB}{Translation Lookaside Buffer}
+\newacronym{ptw}{PTW}{Page Table Walker}
+\newacronym{mmu}{MMU}{Memory Management Unit}
+
+% Interconnects and Interfaces
+\newacronym{axi4}{AXI4}{Advanced eXtensible Interface 4}
+\newacronym{mmio}{MMIO}{Memory-Mapped Input/Output}
+\newacronym{io}{I/O}{Input/Output}
+\newacronym{jtag}{JTAG}{Joint Test Action Group}
 \newacronym{uart}{UART}{Universal Asynchronous Receiver/Transmitter}
 \newacronym{usb}{USB}{Universal Serial Bus}
-\newacronym{vnu-hcm}{VNU-HCM}{Vietnam National University Ho Chi Minh City}
-\newacronym{qsf}{QSF}{Quartus Settings File} % Maybe add if needed
+\newacronym{pcie}{PCIe}{Peripheral Component Interconnect Express}
+\newacronym{gpio}{GPIO}{General Purpose Input/Output}
+\newacronym{i2c}{I2C}{Inter-Integrated Circuit}
+\newacronym{spi}{SPI}{Serial Peripheral Interface}
 
-\newacronym{chisel}{CHISEL}{Constructing Hardware In a Scala Embedded Language}
-\newacronym{boom}{BOOM}{Berkeley Out-of-Order Machine}
-\newacronym{firrtl}{FIRRTL}{Flexible Intermediate Representation for RTL}
+% Gemmini and Acceleration
+\newacronym{gemm}{GEMM}{General Matrix Multiply}
+\newacronym{ws}{WS}{Weight Stationary}
+\newacronym{os}{OS}{Output Stationary} % Note: context-dependent with Operating System
+\newacronym{pe}{PE}{Processing Element}
+
+% Tools and Software
+\newacronym{gcc}{GCC}{GNU Compiler Collection}
+\newacronym{llvm}{LLVM}{Low Level Virtual Machine}
+\newacronym{gdb}{GDB}{GNU Debugger}
+\newacronym{openocd}{OpenOCD}{Open On-Chip Debugger}
+\newacronym{vivado}{Vivado}{Xilinx Vivado Design Suite}
+\newacronym{quartus}{Quartus}{Intel Quartus Prime}
+\newacronym{eda}{EDA}{Electronic Design Automation}
+
+% Organizations and Institutions
+\newacronym{ceslab}{CESLAB}{Computer Embedded Systems Laboratory}
+\newacronym{hcmus}{HCMUS}{Ho Chi Minh City University of Science}
+\newacronym{vnu-hcm}{VNU-HCM}{Vietnam National University Ho Chi Minh City}
+\newacronym{ucb}{UC Berkeley}{University of California, Berkeley}
+\newacronym{fetel}{FETEL}{Faculty of Electronics and Telecommunications}
+
+% Machine Learning and AI
+\newacronym{cnn}{CNN}{Convolutional Neural Network}
+\newacronym{relu}{ReLU}{Rectified Linear Unit}
+\newacronym{onnx}{ONNX}{Open Neural Network Exchange}
+\newacronym{tensorflow}{TensorFlow}{TensorFlow}
+\newacronym{pytorch}{PyTorch}{PyTorch}
+\newacronym{nvdla}{NVDLA}{NVIDIA Deep Learning Accelerator}
+\newacronym{vta}{VTA}{Versatile Tensor Accelerator}
+\newacronym{tvm}{TVM}{Tensor Virtual Machine}
+
+% File Formats and Standards
+\newacronym{elf}{ELF}{Executable and Linkable Format}
+\newacronym{json}{JSON}{JavaScript Object Notation}
+\newacronym{yaml}{YAML}{YAML Ain't Markup Language}
+\newacronym{csv}{CSV}{Comma-Separated Values}
+\newacronym{xml}{XML}{eXtensible Markup Language}
+
+% Operating Systems and Software
+\newacronym{linux}{Linux}{Linux Operating System}
+\newacronym{debian}{Debian}{Debian GNU/Linux}
+\newacronym{ubuntu}{Ubuntu}{Ubuntu Linux Distribution}
+\newacronym{rtos}{RTOS}{Real-Time Operating System}
+\newacronym{bsp}{BSP}{Board Support Package}
+\newacronym{ide}{IDE}{Integrated Development Environment}
+
+% Network and Communication
+\newacronym{ethernet}{Ethernet}{Ethernet Protocol}
+\newacronym{tcp}{TCP}{Transmission Control Protocol}
+\newacronym{udp}{UDP}{User Datagram Protocol}
+\newacronym{http}{HTTP}{HyperText Transfer Protocol}
+\newacronym{ssh}{SSH}{Secure Shell}
+\newacronym{ftp}{FTP}{File Transfer Protocol}
+
+% Foundries and Manufacturing
+\newacronym{tsmc}{TSMC}{Taiwan Semiconductor Manufacturing Company}
+\newacronym{globalfoundries}{GlobalFoundries}{GlobalFoundries Inc.}
+\newacronym{samsung}{Samsung}{Samsung Semiconductor}
+\newacronym{intel}{Intel}{Intel Corporation}
+
+% Design Tools and Methodologies
+\newacronym{sta}{STA}{Static Timing Analysis}
+\newacronym{pdk}{PDK}{Process Design Kit}
+\newacronym{drc}{DRC}{Design Rule Check}
+\newacronym{lvs}{LVS}{Layout Versus Schematic}
+\newacronym{pnr}{PnR}{Place and Route}
+\newacronym{qor}{QoR}{Quality of Results}
+
+% Interrupt and Control Systems
+\newacronym{plic}{PLIC}{Platform-Level Interrupt Controller}
+\newacronym{clint}{CLINT}{Core-Local Interrupt Controller}
+\newacronym{csr}{CSR}{Control and Status Register}
+\newacronym{msi}{MSI}{Message Signaled Interrupt}
+\newacronym{irq}{IRQ}{Interrupt Request}
+
+% FPGA Specific
+\newacronym{lut}{LUT}{Look-Up Table}
+\newacronym{clb}{CLB}{Configurable Logic Block}
+\newacronym{mig}{MIG}{Memory Interface Generator}
+\newacronym{vc707}{VC707}{Xilinx VC707 Evaluation Board}
+
+% Programming Languages
+\newacronym{scala}{Scala}{Scala Programming Language}
+\newacronym{python}{Python}{Python Programming Language}
+\newacronym{jvm}{JVM}{Java Virtual Machine}
+
+% Additional Technical Terms
+\newacronym{noc}{NoC}{Network-on-Chip}
+\newacronym{simd}{SIMD}{Single Instruction, Multiple Data}
+\newacronym{cisc}{CISC}{Complex Instruction Set Computer}
+\newacronym{risc}{RISC}{Reduced Instruction Set Computer}
+\newacronym{alu}{ALU}{Arithmetic Logic Unit}
+\newacronym{fpu}{FPU}{Floating Point Unit}
+\newacronym{iot}{IoT}{Internet of Things}
+\newacronym{edge}{Edge Computing}{Edge Computing}
+\newacronym{cloud}{Cloud Computing}{Cloud Computing}
+
+% Performance and Hardware Metrics
+\newacronym{tops}{TOPS}{Trillion Operations Per Second}
+\newacronym{gflops}{GFLOPS}{Giga Floating Point Operations Per Second}
+\newacronym{mflops}{MFLOPS}{Mega Floating Point Operations Per Second}
+\newacronym{mhz}{MHz}{Megahertz}
+\newacronym{ghz}{GHz}{Gigahertz}
+
+% Additional Technical Terms
+\newacronym{sbt}{sbt}{Simple Build Tool}
+\newacronym{fifo}{FIFO}{First In, First Out}
+\newacronym{eth}{ETH}{Swiss Federal Institute of Technology}
+\newacronym{dsl}{DSL}{Domain-Specific Language}
+\newacronym{mlp}{MLP}{Multi-Layer Perceptron}
+\newacronym{lstm}{LSTM}{Long Short-Term Memory}
+\newacronym{dac}{DAC}{Design Automation Conference}
+\newacronym{gddr5}{GDDR5}{Graphics Double Data Rate 5}
+\newacronym{mib}{MiB}{Mebibyte}
+\newacronym{pwm}{PWM}{Pulse Width Modulation}
+\newacronym{adc}{ADC}{Analog-to-Digital Converter}
+\newacronym{xadc}{XADC}{Xilinx Analog-to-Digital Converter}
