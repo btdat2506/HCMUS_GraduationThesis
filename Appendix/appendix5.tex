@@ -68,21 +68,6 @@ pool &  & $\rightarrow$56$\times$56 &  &  &  &  &  \\
 
 \begin{table}[htbp]
 \centering
-\caption{Detailed Residual Addition Performance}
-\label{tab:residual_addition_performance}
-\begin{tabular}{|l|l|r|}
-\hline
-\textbf{Test} & \textbf{Matrix Size} & \textbf{Time Execution (ms)} \\
-\hline
-resadd & 128$\times$512 & 1.382 \\
-resadd\_stride & - & 217.642 \\
-resadd\_stride & - & 0.726 \\
-\hline
-\end{tabular}
-\end{table}
-
-\begin{table}[htbp]
-\centering
 \caption{Detailed MLP Model Performance}
 \label{tab:mlp_performance}
 \begin{tabular}{|l|l|r{2cm}|}
@@ -246,8 +231,6 @@ This section documents the specific configuration of each test program used in t
 \end{itemize}
 
 \subsection{Multi-Layer Perceptron Models (mlps/)}
-
-\subsubsection{MLP1 Family}
 \begin{itemize}
 \item \texttt{mlp1}: 6-layer MLP with RELU activation
   \begin{itemize}
@@ -264,10 +247,7 @@ This section documents the specific configuration of each test program used in t
   \item \textbf{Total Time Execution (ms)}: 174.870
   \item \textbf{Layer breakdown}: 22.4M, 77.1M, 46.1M, 22.5M, 6.2M, 0.5M (ms)
   \end{itemize}
-\end{itemize}
-
-\subsubsection{MLP4 Family}
-\begin{itemize}
+  
 \item \texttt{mlp4}: 2-layer MLP with RELU activation
   \begin{itemize}
   \item Architecture: 3072$\rightarrow$4608$\rightarrow$3072

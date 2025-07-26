@@ -220,6 +220,8 @@
 \usepackage{tabularx}
 \usepackage{appendix}
 
+\NewDocumentCommand{\chapref}{s m}{Chapter~\ref{#2}:\IfBooleanF{#1}{ \nameref{#2}}}
+
 \begin{document}
 
 \input{Title/title.tex}

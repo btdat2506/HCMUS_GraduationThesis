@@ -16,6 +16,9 @@ Do all the Appendix
 	+ Survey alternative frameworks.
 	+ Put BOOM core (in Chap2) to here if needed.
 ---
+The scripts ```rep_*.ps1``` are used for replacing with abbreviations in the text.
+
+---
 
 
 To build the latex pdf file, run the following code block in the terminal at the repository directory:

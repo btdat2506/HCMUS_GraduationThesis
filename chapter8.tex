@@ -3,18 +3,18 @@
 \chapter{Implementation Results and Discussion}
 \label{chap:results}
 
-This chapter presents the culminating results of the thesis, transitioning from theoretical design to tangible implementation and empirical validation. The \acrfull{soc}, designed programmatically in Chisel, was compiled through the FIRRTL intermediate representation and subsequently implemented using the Xilinx Vivado toolchain for the VC707 FPGA target. This chapter is organized into three main sections. First, it details the hardware implementation results, including the final system architecture and an analysis of on-chip resource utilization and power consumption. Second, it documents the successful deployment of the full software stack, demonstrating a boot-to-Linux environment. Finally, and most critically, it evaluates the performance of the integrated Gemmini DNN accelerator, providing quantitative evidence of its effectiveness.
+This chapter presents the culminating results of the thesis, transitioning from theoretical design to tangible implementation and empirical validation. The \acrfull{soc}, designed programmatically in \acrshort{chisel}, was compiled through the \acrshort{firrtl} intermediate representation and subsequently implemented using the Xilinx \acrshort{vivado} toolchain for the \acrshort{vc707} \acrshort{fpga} target. This chapter is organized into three main sections. First, it details the hardware implementation results, including the final system architecture and an analysis of on-chip resource utilization and power consumption. Second, it documents the successful deployment of the full software stack, demonstrating a boot-to-\acrshort{linux} environment. Finally, and most critically, it evaluates the performance of the integrated Gemmini \acrshort{dnn} accelerator, providing quantitative evidence of its effectiveness.
 
 \section{Hardware Implementation Analysis}
 \label{sec:hardware_results}
 
-The hardware generation process produces a set of Verilog files that are synthesized, placed, and routed by the Vivado Design Suite. The following sections analyze the final hardware implementation from architectural, resource, and power perspectives.
+The hardware generation process produces a set of Verilog files that are synthesized, placed, and routed by the \acrlong{vivado}. The following sections analyze the final hardware implementation from architectural, resource, and power perspectives.
 
 \subsection{System Block Design and Address Map}
 
-The generated system is a complex integration of the RISC-V core, the Gemmini accelerator, memory subsystems, and peripherals. The block diagrams in Figure \ref{fig:block_design}, Figure \ref{fig:block_design_ddr}, and Figure \ref{fig:block_design_io} provide a visual representation of the final hardware architecture as implemented in Vivado. These diagrams confirm the successful integration of all system components, from the top-level SoC (Figure \ref{fig:block_design}) down to the specific connections for DDR memory (Figure \ref{fig:block_design_ddr}) and I/O peripherals like UART and Ethernet (Figure \ref{fig:block_design_io}).
+The generated system is a complex integration of the \acrshort{riscv} core, the Gemmini accelerator, memory subsystems, and peripherals. The block diagrams in Figure \ref{fig:block_design}, Figure \ref{fig:block_design_ddr}, and Figure \ref{fig:block_design_io} provide a visual representation of the final hardware architecture as implemented in \acrshort{vivado}. These diagrams confirm the successful integration of all system components, from the top-level \acrshort{soc} (Figure \ref{fig:block_design}) down to the specific connections for \acrshort{ddr} memory (Figure \ref{fig:block_design_ddr}) and \acrshort{io} peripherals like \acrshort{uart} and \acrshort{ethernet} (Figure \ref{fig:block_design_io}).
 
-The system's memory-mapped architecture is confirmed by the Address Editor view in Figure \ref{fig:address_editor}, which shows the memory ranges assigned to the DDR memory controller, the Gemmini DMA interface, and various peripheral buses. This confirms that the diplomacy framework within Chipyard correctly generated the necessary hardware and address decoding logic.
+The system's memory-mapped architecture is confirmed by the Address Editor view in Figure \ref{fig:address_editor}, which shows the memory ranges assigned to the \acrshort{ddr} memory controller, the Gemmini \acrshort{dma} interface, and various peripheral buses. This confirms that the diplomacy framework within Chipyard correctly generated the necessary hardware and address decoding logic.
 
 \begin{figure}[h!]
 \centering
@@ -47,11 +47,11 @@ The system's memory-mapped architecture is confirmed by the Address Editor view 
 \subsection{Vivado Implemented Design Results}
 
 \subsubsection{Device Utilization Analysis}
-Resource utilization is a critical metric for evaluating the cost and feasibility of an SoC implementation on a given FPGA. The post-implementation utilization report from Vivado provides a detailed accounting of the hardware resources consumed by the design.
+Resource utilization is a critical metric for evaluating the cost and feasibility of an \acrshort{soc} implementation on a given \acrshort{fpga}. The post-implementation utilization report from \acrshort{vivado} provides a detailed accounting of the hardware resources consumed by the design.
 
-As shown in Figure \ref{fig:utilization_summary_detailed}, the complete, Linux-capable SoC is a substantial design, consuming \textbf{80.92\%} of the available Look-Up Tables (LUTs), \textbf{28.59\%} of \acrfull{bram}, and \textbf{8.96\%} of DSP slices on the Xilinx VC707's Virtex-7 FPGA. The high LUT utilization is expected given the complexity of a 64-bit processor core with an L2 cache and numerous peripherals. The significant BRAM usage is primarily attributable to the memory-intensive components of the design, namely the L2 cache and the Gemmini accelerator's scratchpad and accumulator memories.
+As shown in Figure \ref{fig:utilization_summary_detailed}, the complete, \acrshort{linux}-capable \acrshort{soc} is a substantial design, consuming \textbf{80.92\%} of the available \acrfullpl{lut}, \textbf{28.59\%} of \acrfull{bram}, and \textbf{8.96\%} of \acrshort{dsp} slices on the Xilinx \acrshort{vc707}'s Virtex-7 \acrshort{fpga}. The high \acrshort{lut} utilization is expected given the complexity of a 64-bit processor core with an L2 cache and numerous peripherals. The significant \acrshort{bram} usage is primarily attributable to the memory-intensive components of the design, namely the L2 cache and the Gemmini accelerator's scratchpad and accumulator memories.
 
-To isolate the resource cost of the Gemmini accelerator itself, a hierarchical utilization analysis was performed. Figure \ref{fig:utilization_hierarchical_gemmini} shows that the Gemmini module (`riscv\_tile/riscv\_tile/Queue\_Gemmini`) consumes 180,142 LUTs. This represents approximately 73.5\% of the logic within the `riscv\_tile` and underscores the fact that the specialized accelerator is, by far, the largest single component in the processor tile, dwarfing the RISC-V core itself. This trade-off of silicon area for specialized performance is the central premise of hardware acceleration.
+To isolate the resource cost of the Gemmini accelerator itself, a hierarchical utilization analysis was performed. Figure \ref{fig:utilization_hierarchical_gemmini} shows that the Gemmini module (\texttt{riscv\_i/RocketChip/inst/rocket\_system/tile\_prci\_domain/tile\_reset\_\allowbreak domain\_tile/v}, with reference named \texttt{riscv\_RocketChip\_0\_Gemmini}) consumes 180,142 \acrshortpl{lut}. This represents approximately 73.5\% of the logic within the system and underscores the fact that the specialized accelerator is, by far, the largest single component in the processor tile, dwarfing the \acrshort{riscv} core itself. This trade-off of silicon area for specialized performance is the central premise of hardware acceleration.
 
 % \begin{figure}[h!]
 % \centering
@@ -84,9 +84,9 @@ To isolate the resource cost of the Gemmini accelerator itself, a hierarchical u
 
 \subsubsection{Power Consumption Analysis}
 
-Power analysis, performed by Vivado based on the placed-and-routed design and simulation-derived activity factors, is crucial for understanding the thermal and power-delivery requirements of the system.
+Power analysis, performed by \acrshort{vivado} based on the placed-and-routed design and simulation-derived activity factors, is crucial for understanding the thermal and power-delivery requirements of the system.
 
-The power summary in Figure \ref{fig:power_summary} reports a \textbf{Total On-Chip Power of 3.856W}. A key observation is the breakdown between static and dynamic power. Dynamic power, consumed by switching logic, accounts for 3.309W (86\% of the total), while static power is only 0.237W (6\%). This is characteristic of a high-performance digital design where power consumption is dominated by computational activity rather than leakage. The report identifies that the most significant contributors to dynamic power are Clocks, Signals, and I/O, which is expected for a large, high-frequency SoC with multiple external interfaces. The power hierarchical report (Figure \ref{fig:power_hierarchical_gemmini}) further shows that the Gemmini module contributes significantly to the overall power budget, consistent with its large area and high level of computational activity.
+The power summary in Figure \ref{fig:power_summary} reports a \textbf{Total On-Chip Power of 3.856W}. A key observation is the breakdown between static and dynamic power. Dynamic power, consumed by switching logic, accounts for 3.309W (86\% of the total), while static power is only 0.237W (6\%). This is characteristic of a high-performance digital design where power consumption is dominated by computational activity rather than leakage. The report identifies that the most significant contributors to dynamic power are Clocks, Signals, and \acrshort{io}, which is expected for a large, high-frequency \acrshort{soc} with multiple external interfaces. The power hierarchical report (Figure \ref{fig:power_hierarchical_gemmini}) further shows that the Gemmini module contributes significantly to the overall power budget, consistent with its large area and high level of computational activity.
 
 % \begin{figure}[h!]
 % \centering
@@ -97,7 +97,7 @@ The power summary in Figure \ref{fig:power_summary} reports a \textbf{Total On-C
 
 \begin{figure}[h!]
    \centering
-   \includegraphics[width=\textwidth]{Images/Results/Power_Summary.png}
+   \includegraphics[width=0.8\textwidth]{Images/Results/Power_Summary.png}
    \caption{Post-implementation on-chip power summary.}
    \label{fig:power_summary}
 \end{figure}
@@ -111,7 +111,7 @@ The power summary in Figure \ref{fig:power_summary} reports a \textbf{Total On-C
 
 \begin{figure}[h!]
    \centering
-   \includegraphics[width=\textwidth]{Images/Results/Power_Hierarchical_Gemmini.png}
+   \includegraphics[width=0.8\textwidth]{Images/Results/Power_Hierarchical_Gemmini.png}
    \caption{Hierarchical power report for the Gemmini accelerator.}
    \label{fig:power_hierarchical_gemmini}
 \end{figure}
@@ -120,12 +120,12 @@ The power summary in Figure \ref{fig:power_summary} reports a \textbf{Total On-C
 
 \section{Software Stack Validation}
 \label{sec:software_results}
-A primary objective of this thesis was to implement a full-stack, Linux-capable system. This section provides evidence of this successful implementation by documenting the complete boot process, from the initial on-chip Boot ROM to a fully functional Debian Linux user environment.
+A primary objective of this thesis was to implement a full-stack, \acrshort{linux}-capable system. This section provides evidence of this successful implementation by documenting the complete boot process, from the initial on-chip Boot \acrshort{rom} to a fully functional \acrshort{debian} \acrshort{linux} user environment.
 
 \subsection{System Boot Sequence}
-The system boot process involves a multi-stage software chain, starting with the first-stage bootloader in ROM, which then loads subsequent stages from the SD card. The console output in Listing \ref{lst:boot_log} captures this entire sequence.
+The system boot process involves a multi-stage software chain, starting with the first-stage bootloader in \acrshort{rom}, which then loads subsequent stages from the SD card. The console output in Listing \ref{lst:boot_log} captures this entire sequence.
 
-The process begins with the `RISC-V 64, Boot ROM` identifying the hardware and proceeding to load the next stage, OpenSBI, which is the `boot.elf` file on the SD card. OpenSBI (Open Source Supervisor Binary Interface) successfully initializes, reporting platform details such as the HART (Hardware Thread) count and timer frequency. It then loads and jumps to the U-Boot bootloader. U-Boot initializes the DRAM and other system hardware before loading the Linux kernel (`image-v6.11.10`) and the Flattened Device Tree (FDT) blob into memory. Finally, the message `Starting kernel ...` marks the successful handoff to the Linux operating system, which proceeds to boot, initialize its drivers, and present a login prompt.
+The process begins with the \texttt{RISC-V 64, Boot ROM} identifying the hardware and proceeding to load the next stage, OpenSBI, which is the \texttt{boot.elf} file on the SD card. OpenSBI (Open Source Supervisor Binary Interface) successfully initializes, reporting platform details such as the HART (Hardware Thread) count and timer frequency. It then loads and jumps to the U-Boot bootloader. U-Boot initializes the \acrshort{dram} and other system hardware before loading the \acrshort{linux} kernel (\texttt{6.11.10-dirty (btdat@btdat-hpZ4)}) and the Flattened Device Tree (FDT) blob into memory. Finally, the message \texttt{Starting kernel ...} marks the successful handoff to the \acrshort{linux} operating system, which proceeds to boot, initialize its drivers, and present a login prompt.
 
 \begin{lstlisting}[style=terminalstyle, caption={Console output capturing the full boot sequence from Boot ROM to the Linux kernel.}, label={lst:boot_log}]
 RISC-V 64, Boot ROM V3.8
@@ -144,21 +144,44 @@ Platform Name               : freechips,rocketchip-vivado
 ...
 (Abridged OpenSBI and U-Boot output for brevity)
 ...
+Boot HART ID                : 0
+Boot HART Domain            : root
+Boot HART Priv Version      : v1.12
+Boot HART Base ISA          : rv64imafdcx
+Boot HART ISA Extensions    : sdtrig
+Boot HART PMP Count         : 8
+Boot HART PMP Granularity   : 2 bits
+Boot HART PMP Address Bits  : 32
+Boot HART MHPM Info         : 0 (0x00000000)
+Boot HART Debug Triggers    : 8 triggers
+Boot HART MIDELEG           : 0x0000000000000222
+Boot HART MEDELEG           : 0x000000000000b109
+
+
+U-Boot 2022.01-dirty (Jan 09 2025 - 16:37:27 +0700)
+
+CPU:   rv64imafdczicsr_zifencei_zihpm_xrocket
+Model: freechips,rocketchip-vivado
+DRAM:  1 GiB
+MMC:   mmc0@60000000: 0
+Loading Environment from nowhere... OK
+...
 ## Flattened Device Tree blob at 00010080
    Booting using the fdt blob at 0x010080
    Loading Device Tree to 0000000084ffc000, end 0000000084fffe3f ... OK
 
 Starting kernel ...
 
-[    0.000000] Linux version 6.11.10-dirty (btdat@btdat-hpZ4) ...
+[    0.000000] Linux version 6.11.10-dirty (btdat@btdat-hpZ4) (riscv64-linux-gnu-gcc (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #1 SMP Thu Jan  9 16:51:21 +07 2025
+[    0.000000] OF: fdt: Ignoring memory range 0x80000000 - 0x80200000
 [    0.000000] Machine model: freechips,rocketchip-vivado
 [    0.000000] SBI specification v2.0 detected
 \end{lstlisting}
 
 \subsection{Debian Linux Environment}
-After booting, the system provides a standard \acrlong{debian} environment. Listing \ref{lst:linux_env} confirms this by showing a successful login and the output of standard Linux commands. The `uname -a` command verifies the kernel version and the `riscv64` architecture. Critically, the output of `cat /proc/cpuinfo` confirms the processor's identity as `sifive,rocket0` and details its ISA as `rv64imafdc\_...`, matching the design specification. This successful boot to a full-featured OS validates the entire hardware and software co-design process.
+After booting, the system provides a standard \acrlong{debian} environment. Listing \ref{lst:linux_env} confirms this by showing a successful login and the output of standard \acrshort{linux} commands. The \texttt{uname -a} command verifies the kernel version and the \texttt{riscv64} architecture. Critically, the output of \texttt{cat /proc/cpuinfo} confirms the processor's identity as \texttt{sifive,rocket0} and details its \acrshort{isa} as \texttt{rv64imafdc\_...}, matching the design specification. This successful boot to a full-featured \acrshort{os} validates the entire hardware and software co-design process.
 
-\begin{lstlisting}[style=terminalstyle, caption={Demonstration of a functional Debian Linux environment on the implemented SoC.}, label={lst:linux_env}]
+\begin{lstlisting}[style=terminalstyle, caption={Demonstration of a functional \acrshort{debian} \acrshort{linux} environment on the implemented \acrshort{soc}.}, label={lst:linux_env}]
 \acrlong{debian} trixie/sid debian ttyAU0
 
 debian login: debian
@@ -185,15 +208,15 @@ hart isa        : rv64imafdc_zicntr_zicsr_zifencei_zihpm_zca_zcd
 \section{Gemmini Accelerator Performance Evaluation}
 \label{sec:gemmini_results}
 
-With the SoC's functional correctness and stability validated, the final and most critical evaluation is to quantify the performance benefits of the Gemmini DNN accelerator. The evaluation involved running a comprehensive suite of benchmarks from the \texttt{gemmini-rocc-tests} repository, comparing the cycle counts of software-only implementations on the RISC-V Rocket Core against the hardware-accelerated versions. The results provide a definitive measure of the speedup achieved across various workloads.
+With the \acrshort{soc}'s functional correctness and stability validated, the final and most critical evaluation is to quantify the performance benefits of the Gemmini \acrshort{dnn} accelerator. The evaluation involved running a comprehensive suite of benchmarks from the \texttt{gemmini-rocc-tests} repository, comparing the cycle counts of software-only implementations on the \acrshort{riscv} Rocket Core against the hardware-accelerated versions. The results provide a definitive measure of the speedup achieved across various workloads.
 
 \subsection{Functional Correctness}
 
-As a prerequisite for performance evaluation, the functional correctness of the accelerator was verified. All 25 test cases within the benchmark suite, spanning matrix multiplications, convolutions, and full network layers, passed successfully. A representative test, \texttt{tiled\_matmul\_ws}, which multiplies two 512$\times$512 matrices, confirmed that the output matrix from the Gemmini accelerator was bit-perfect identical to the one produced by the pure software implementation. This confirms the correctness of the entire hardware/software co-design, from RoCC instruction dispatch to DMA transfers and the systolic array computation.
+As a prerequisite for performance evaluation, the functional correctness of the accelerator was verified. All 25 test cases within the benchmark suite, spanning matrix multiplications, convolutions, and full network layers, passed successfully. A representative test, \texttt{tiled\_matmul\_ws}, which multiplies two 512$\times$512 matrices, confirmed that the output matrix from the Gemmini accelerator was bit-perfect identical to the one produced by the pure software implementation. This confirms the correctness of the entire hardware/software co-design, from \acrshort{rocc} instruction dispatch to \acrshort{dma} transfers and the systolic array computation.
 
 \subsection{Performance Speedup and Analysis}
 
-The primary motivation for this work was to demonstrate the dramatic performance uplift provided by a specialized hardware accelerator for DNN workloads. The results, summarized in Table~\ref{tab:performance_summary}, unequivocally validate this thesis.
+The primary motivation for this work was to demonstrate the dramatic performance uplift provided by a specialized hardware accelerator for \acrshort{dnn} workloads. The results, summarized in Table~\ref{tab:performance_summary}, unequivocally validate this thesis.
 
 \begin{table}[htbp]
 \centering
@@ -202,12 +225,12 @@ The primary motivation for this work was to demonstrate the dramatic performance
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{|c|cc|c|c|}
 \hline
-\multirow{2}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Operation\\ Category\end{tabular}}} & \multicolumn{2}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Execution Time Range \\ (ns)\end{tabular}}} & \multirow{2}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Speedup\\ Range\end{tabular}}} & \multirow{2}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Average\\ Speedup\end{tabular}}} \\ \cline{2-3}
+\multirow{2}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Operation\\ Category\end{tabular}}} & \multicolumn{2}{c|}{\textbf{Execution Time Range}} & \multirow{2}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Speedup\\ Range\end{tabular}}} & \multirow{2}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Average\\ Speedup\end{tabular}}} \\ \cline{2-3}
                                                                                        & \multicolumn{1}{c|}{\textbf{CPU}}                        & \textbf{Gemmini}                       &                                                                                   &                                                                                     \\ \hline
-\begin{tabular}[c]{@{}c@{}}Matrix\\ Multiplication\end{tabular} & \multicolumn{1}{c|}{510M - 4.3B}                   & 12M - 39M                          & 41$\times$ - 353$\times$                               & \textbf{$\sim$180$\times$}                               \\ \hline
-\begin{tabular}[c]{@{}c@{}}Standard\\ Convolution\end{tabular} & \multicolumn{1}{c|}{44.7B - 45.4B}                 & 81M - 84M                          & 532$\times$ - 554$\times$                              & \textbf{$\sim$541$\times$}                               \\ \hline
-\begin{tabular}[c]{@{}c@{}}Transformed\\ Convolution\end{tabular} & \multicolumn{1}{c|}{132B - 169B}                   & 129M - 132M                        & 1,007$\times$ - 1,309$\times$                          & \textbf{$\sim$1,110$\times$}                             \\ \hline
-\begin{tabular}[c]{@{}c@{}}Depthwise\\ Convolution\end{tabular} & \multicolumn{1}{c|}{1.5B}                          & 103M                               & 15$\times$                                              & \textbf{15$\times$}                                      \\ \hline
+\begin{tabular}[c]{@{}c@{}}Matrix\\ Multiplication\end{tabular} & \multicolumn{1}{c|}{510ms - 4.3s}                   & 12ms - 39ms                          & 41$\times$ - 353$\times$                               & \textbf{$\sim$180$\times$}                               \\ \hline
+\begin{tabular}[c]{@{}c@{}}Standard\\ Convolution\end{tabular} & \multicolumn{1}{c|}{44.7s - 45.4s}                 & 81ms - 84ms                          & 532$\times$ - 554$\times$                              & \textbf{$\sim$541$\times$}                               \\ \hline
+\begin{tabular}[c]{@{}c@{}}Transformed\\ Convolution\end{tabular} & \multicolumn{1}{c|}{132s - 169s}                   & 129ms - 132ms                        & 1,007$\times$ - 1,309$\times$                          & \textbf{$\sim$1,110$\times$}                             \\ \hline
+\begin{tabular}[c]{@{}c@{}}Depthwise\\ Convolution\end{tabular} & \multicolumn{1}{c|}{1.5s}                          & 103ms                               & 15$\times$                                              & \textbf{15$\times$}                                      \\ \hline
 \end{tabular}%
 }
 \end{table}
@@ -215,14 +238,14 @@ The primary motivation for this work was to demonstrate the dramatic performance
 The performance gains are profound. While standard convolutions already show a remarkable $\sim$541$\times$ average speedup, the most impressive results come from workloads optimized for the hardware's dataflow. The \texttt{conv\_trans\_weight\_0132} test, which leverages weight tensor transformations to maximize data reuse within the systolic array, achieved a staggering \textbf{1,308-fold speedup} over the software-only implementation.
 
 \begin{equation}
-\text{Speedup} = \frac{\text{CPU Time}}{\text{Gemmini Time}} = \frac{169,097,846,400}{129,206,400} \approx 1308.7\times
+\text{Speedup} = \frac{\text{CPU Time (ns)}}{\text{Gemmini Time (ns)}} = \frac{169,097,846,400}{129,206,400} \approx 1308.7\times
 \end{equation}
 
-This result is a powerful demonstration of the principles discussed in Chapter \ref{chap:dnn_foundations}. By architecting the hardware and software to work in concert, we can effectively overcome the Memory Wall bottleneck that cripples general-purpose CPUs on these workloads.
+This result is a powerful demonstration of the principles discussed in Chapter \ref{chap:dnn_foundations}. By architecting the hardware and software to work in concert, we can effectively overcome the Memory Wall bottleneck that cripples general-purpose \acrshortpl{cpu} on these workloads.
 
 \subsection{Real-World Workload Analysis: MobileNetV1}
 
-To evaluate performance on a realistic application, the full MobileNetV1 neural network was executed on the system. The accelerator completed the inference task in \textbf{3.81 billion nanoseconds (3.81 seconds)}. A breakdown of the execution time, shown in Table~\ref{tab:mobilenet_breakdown}, reveals critical insights into the performance characteristics of modern CNNs.
+To evaluate performance on a realistic application, the full MobileNetV1 neural network was executed on the system. The accelerator completed the inference task in \textbf{3.81 seconds}. A breakdown of the execution time, shown in Table~\ref{tab:mobilenet_breakdown}, reveals critical insights into the performance characteristics of modern \acrshortpl{cnn}.
 
 \begin{table}[htbp]
 \centering
