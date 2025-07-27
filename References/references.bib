@@ -24,14 +24,18 @@
 }
 
 @techreport{asanovic2016rocketchip,
-  title       = {{The Rocket Chip Generator}},
-  author      = {Asanovi{\'c}, Krste and Avi{\v{z}}ienis, Rimas and Bachrach, Jonathan and Beamer, Scott and Biancolin, David and Celio, Christopher and Cook, Henry and Dabbelt, Palmer and Hauser, John and Izraelevitz, Adam and Karandikar, Sagar and Keller, Benjamin and Kim, Donggyu and Koenig, John and Lee, Yunsup and Love, Eric and Maas, Martin and Magyar, Albert and Mao, Howard and Moreto, Miquel and Ou, Albert and Patterson, David and Richards, Brian and Schmidt, Colin and Twigg, Stephen and Vo, Huy and Waterman, Andrew},
-  year        = {2016},
-  institution = {Electrical Engineering and Computer Sciences, University of California, Berkeley},
-  number      = {UCB/EECS-2016-17},
-  url         = {http://www.eecs.berkeley.edu/Pubs/TechRpts/2016/EECS-2016-17.html}
+    Author= {Asanović, Krste and Avizienis, Rimas and Bachrach, Jonathan and Beamer, Scott and Biancolin, David and Celio, Christopher and Cook, Henry and Dabbelt, Daniel and Hauser, John and Izraelevitz, Adam and Karandikar, Sagar and Keller, Ben and Kim, Donggyu and Koenig, John and Lee, Yunsup and Love, Eric and Maas, Martin and Magyar, Albert and Mao, Howard and Moreto, Miquel and Ou, Albert and Patterson, David A. and Richards, Brian and Schmidt, Colin and Twigg, Stephen and Vo, Huy and Waterman, Andrew},
+    Title= {The Rocket Chip Generator},
+    Year= {2016},
+    Month= {4},
+    Url= {http://www2.eecs.berkeley.edu/Pubs/TechRpts/2016/EECS-2016-17.html},
+    Number= {UCB/EECS-2016-17},
+    Abstract= {Rocket Chip is an open-source Sysem-on-Chip design generator that emits synthesizable RTL. It leverages the Chisel hardware construction language to compose a library of sophisticated generators for cores, caches, and interconnects into an integrated SoC. Rocket Chip generates general-purpose processor cores that use the open RISC-V ISA, and provides both an in-order core generator (Rocket) and an out-of-order core generator (BOOM). For SoC designers interested in utilizing heterogeneous specialization for added efficiency gains, Rocket Chip supports the integration of custom accelerators in the form of instruction set extensions, coprocessors, or fully independent novel cores. Rocket Chip has been taped out (manufactured) eleven times, and yielded functional silicon prototypes capable of booting Linux.},
 }
 
+% BOOM Core
+
+%% BROOM Chip: Using BOOM Core
 @article{celio2018broom,
   author   = {Celio, Christopher and Chiu, Pi-Feng and Asanović, Krste and Nikolić, Borivoje and Patterson, David},
   journal  = {IEEE Micro},
@@ -44,41 +48,44 @@
   doi      = {10.1109/MM.2019.2897782}
 }
 
-
-@inproceedings{zhao2020sonicboom_ieee,
-  title     = {{SonicBOOM: The 3rd Generation Berkeley Out-of-Order Machine}},
-  author    = {Zhao, Jerry and Gonzalez, Abraham and Korpan, Ben and Asanovic, Krste},
-  booktitle = {2020 Workshop on Computer Architecture Research with RISC-V (CARRV)},
-  year      = {2020},
-  doi       = {10.1109/CARRV51705.2020.9408173},
-  publisher = {IEEE}
+@article{zhao2020sonicboom_ieee,
+  title={SonicBOOM: The 3rd Generation Berkeley Out-of-Order Machine},
+  author={Zhao, Jerry and Korpan, Ben and Gonzalez, Abraham and Asanovic, Krste},
+  booktitle={Fourth Workshop on Computer Architecture Research with RISC-V (CARRV)},
+  year={2020},
+  month={May}
 }
 
+@techreport{celio2015boom,
+    Author= {Celio, Christopher and Patterson, David A. and Asanović, Krste},
+    Title= {The Berkeley Out-of-Order Machine (BOOM): An Industry-Competitive, Synthesizable, Parameterized RISC-V Processor},
+    Year= {2015},
+    Month= {Jun},
+    Url= {http://www2.eecs.berkeley.edu/Pubs/TechRpts/2015/EECS-2015-167.html},
+    Number= {UCB/EECS-2015-167},
+    Abstract= {BOOM is a synthesizable, parameterized, superscalar out-of-order RISC-V core designed to serve as the prototypical baseline processor for future micro-architectural studies of out-of-order processors. Our goal is to provide a readable, open-source implementation for use in education, research, and industry.
 
-
-@inproceedings{6241660,
-  author    = {Bachrach, Jonathan and Vo, Huy and Richards, Brian and Lee, Yunsup and Waterman, Andrew and Avižienis, Rimas and Wawrzynek, John and Asanović, Krste},
-  booktitle = {DAC Design Automation Conference 2012},
-  title     = {Chisel: Constructing hardware in a Scala embedded language},
-  year      = {2012},
-  volume    = {},
-  number    = {},
-  pages     = {1212-1221},
-  keywords  = {Hardware;Hardware design languages;Generators;Registers;Wires;Vectors;Finite impulse response filter;CAD},
-  doi       = {10.1145/2228360.2228584}
+BOOM is written in roughly 9,000 lines of the hardware construction language Chisel. We leveraged Berkeley's open-source Rocket-chip SoC generator, allowing us to quickly bring up an entire multi-core processor system (including caches and uncore) by replacing the in-order Rocket core with an out-of-order BOOM core. BOOM supports atomics, IEEE 754-2008 floating-point, and page-based virtual memory. We have demonstrated BOOM running Linux, SPEC CINT2006, and CoreMark.},
 }
+
+@manual{celio2016boom_spec,
+  author       = {Celio, C. and Patterson, D. and Asanovic, K.},
+  title        = {The Berkeley Out-of-Order Machine (BOOM) Design Specification},
+  organization = {University of California, Berkeley},
+  year         = {2016},
+  url = {https://github.com/ccelio/riscv-boom-doc/raw/gh-pages/boom-spec.pdf}
+}
+
+@phdthesis{celio_phdthesis_2018boom,
+    Author= {Celio, Christopher},
+    Title= {A Highly Productive Implementation of an Out-of-Order Processor Generator},
+    School= {EECS Department, University of California, Berkeley},
+    Year= {2018},
+    Month= {Dec},
+    Url= {http://www2.eecs.berkeley.edu/Pubs/TechRpts/2018/EECS-2018-151.html},
+    Number= {UCB/EECS-2018-151}}
 
 @inproceedings{bachrach2012chisel,
-  title     = {{Chisel: Constructing Hardware in a Scala Embedded Language}},
-  author    = {Bachrach, Jonathan and Asher, Huu and Jevnikar, Jonathan and Nikolic, Borivoje and Patterson, David and Asanovic, Krste},
-  booktitle = {Proceedings of the 49th Annual Design Automation Conference (DAC)},
-  pages     = {645-654},
-  year      = {2012},
-  doi       = {10.1145/2228362.2228479},
-  publisher = {ACM}
-}
-
-@inproceedings{10.1145/2228360.2228584,
   author    = {Bachrach, Jonathan and Vo, Huy and Richards, Brian and Lee, Yunsup and Waterman, Andrew and Avi\v{z}ienis, Rimas and Wawrzynek, John and Asanovi\'{c}, Krste},
   title     = {Chisel: constructing hardware in a Scala embedded language},
   year      = {2012},
@@ -96,67 +103,44 @@
   series    = {DAC '12}
 }
 
-@techreport{asanovic2014riscv,
-  author      = {Asanovi{'c}, Krste and Patterson, David A.},
-  title       = {Instruction sets should be free: The case for RISC-V},
-  institution = {EECS Department, University of California, Berkeley},
-  year        = {2014},
-  number      = {UCB/EECS-2014-146},
-  url         = {http://www.eecs.berkeley.edu/Pubs/TechRpts/2014/EECS-2014-146.html}
+@techreport{Asanovic:EECS-2014-146,
+    Author= {Asanović, Krste and Patterson, David A.},
+    Title= {Instruction Sets Should Be Free: The Case For RISC-V},
+    Year= {2014},
+    Month= {8},
+    Url= {http://www2.eecs.berkeley.edu/Pubs/TechRpts/2014/EECS-2014-146.html},
+    Number= {UCB/EECS-2014-146}
 }
 
-@techreport{celio2015boom,
-  author      = {Celio, C. and Patterson, D. A. and Asanovic, K.},
-  title       = {The {Berkeley} out-of-order machine ({BOOM}): An industry-competitive, synthesizable, parameterized {RISC-V} processor},
-  institution = {EECS Department, University of California, Berkeley},
-  year        = {2015},
-  number      = {UCB/EECS-2015-167},
-  type        = {Tech. Rep.},
-  url = {https://www.eecs.berkeley.edu/Pubs/TechRpts/2015/EECS-2015-167.html}
+@INPROCEEDINGS{karandikar2018firesim,
+  author={Karandikar, Sagar and Mao, Howard and Kim, Donggyu and Biancolin, David and Amid, Alon and Lee, Dayeol and Pemberton, Nathan and Amaro, Emmanuel and Schmidt, Colin and Chopra, Aditya and Huang, Qijing and Kovacs, Kyle and Nikolic, Borivoje and Katz, Randy and Bachrach, Jonathan and Asanovic, Krste},
+  booktitle={2018 ACM/IEEE 45th Annual International Symposium on Computer Architecture (ISCA)}, 
+  title={FireSim: FPGA-Accelerated Cycle-Exact Scale-Out System Simulation in the Public Cloud}, 
+  year={2018},
+  volume={},
+  number={},
+  pages={29-42},
+  keywords={Field programmable gate arrays;Servers;Solid modeling;Computational modeling;Switches;Rockets;Cloud computing;Data centers;Computer simulation;Field programmable gate arrays;Computer networks;Distributed computing;Performance analysis;Scalability;Computer architecture},
+  doi={10.1109/ISCA.2018.00014}}
+
+@techreport{waterman2015riscvprivileged,
+    Author= {Waterman, Andrew and Lee, Yunsup and Avizienis, Rimas and Patterson, David A. and Asanović, Krste},
+    Title= {The RISC-V Instruction Set Manual Volume II: Privileged Architecture Version 1.7},
+    Year= {2015},
+    Month= {May},
+    Url= {http://www2.eecs.berkeley.edu/Pubs/TechRpts/2015/EECS-2015-49.html},
+    Number= {UCB/EECS-2015-49},
+    Abstract= {This is a draft specification version 1.7 of the RISC-V Privileged Architecture.  This draft specification will change before being accepted as standard, so implementations made to this draft specification will likely not conform to the future standard.},
 }
 
-@manual{celio2016boom_spec,
-  author       = {Celio, C. and Patterson, D. and Asanovic, K.},
-  title        = {The {Berkeley} Out-of-Order Machine ({BOOM}) Design Specification},
-  organization = {University of California, Berkeley},
-  year         = {2016},
-  url = {https://github.com/ccelio/riscv-boom-doc/raw/gh-pages/boom-spec.pdf}
-}
-
-@techreport{celio_phdthesis_2018boom,
-  author      = {Christopher Celio},
-  title       = {A Highly Productive Implementation of an Out-of-Order Processor Generator},
-  institution = {Electrical Engineering and Computer Sciences, University of California at Berkeley},
-  year        = {2018},
-  number      = {UCB/EECS-2018-151},
-  url         = {http://www2.eecs.berkeley.edu/Pubs/TechRpts/2018/EECS-2018-151.html}
-}
-
-misc{genc2019gemmini,
-  author        = {Genc, Hasan and Haj-Ali, Ameer and Iyer, Vighnesh and Mao, Howard and Schmidt, Colin and Amid, Alon and Zhao, Jerry and Grubb, Daniel and Liew, Harrison and Ou, Albert and Steffl, Samuel and Wright, John and Stoica, Ion and Ragan-Kelley, Jonathan and Asanovi{'c}, Krste and Nikoli{'c}, Borivoje and Shao, Yakun Sophia},
-  title         = {Gemmini: An agile systolic array generator enabling systematic evaluations of deep-learning architectures},
-  year          = {2019},
-  eprint        = {1911.09925},
-  archiveprefix = {arXiv},
-  primaryclass  = {cs.AR}
-}
-
-@inproceedings{karandikar2018firesim,
-  author    = {Karandikar, Sagar and Mao, Howard and Kim, Donggyu and Biancolin, David and Amid, Alon and Lee, Dayeol and Han, Nathan and Gope, Dima and Schmidt, Colin and Eckert, Chris and Ou, Albert and Pemberton, Nathan and Wright, John and Cook, Henry and Asanovi{'c}, Krste and Nikoli{'c}, Borivoje and Bachrach, Jonathan},
-  title     = {{FireSim: FPGA-Accelerated Cycle-Exact Scale-Out System Simulation in the Public Cloud}},
-  booktitle = {Proceedings of the 45th Annual International Symposium on Computer Architecture (ISCA)},
-  pages     = {29-42},
-  year      = {2018},
-  doi       = {10.1109/ISCA.2018.00013}
-}
-
-@techreport{waterman2015riscvpriv,
-  author      = {Waterman, Andrew and Lee, Yunsup and Patterson, David A. and Asanovi{'c}, Krste},
-  title       = {The RISC-V instruction set manual volume II: Privileged architecture version 1.7},
-  institution = {EECS Department, University of California, Berkeley},
-  year        = {2015},
-  number      = {UCB/EECS-2015-49},
-  url         = {https://www2.eecs.berkeley.edu/Pubs/TechRpts/2015/EECS-2015-49.html}
+@manual{riscv:manual:user:2024,
+  title        = {The RISC-V Instruction Set Manual, Volume I: User-Level ISA},
+  editor       = {Waterman, Andrew and Asanovi{\'c}, Krste},
+  organization = {RISC-V Foundation},
+  year         = {2024},
+  month        = {4},
+  note         = {Document Version 20240411},
+  url          = {https://github.com/riscv/riscv-isa-manual/releases/download/20240411/unpriv-isa-asciidoc.pdf}
 }
 
 @article{kung1982systolic,
@@ -180,7 +164,7 @@ misc{genc2019gemmini,
   note         = {Accessed: November 28, 2023}
 }
 
-@misc{tarassov_vivado-risc-v_nodate,
+@misc{tarassov_vivado-risc-v,
   title  = {vivado-risc-v: FPGA based RISC-V Systems & Workloads including Linux & Debian on an SD Card for Xilinx FPGAs with Vivado and Vitis},
   url    = {https://github.com/eugene-tarassov/vivado-risc-v},
   author = {Tarassov, Eugene},
@@ -189,7 +173,7 @@ misc{genc2019gemmini,
 
 @Article{gookyi2023gemmini_case_study,
 AUTHOR = {Gookyi, Dennis Agyemanh Nana and Lee, Eunchong and Kim, Kyungho and Jang, Sung-Joon and Lee, Sang-Seol},
-TITLE = {Deep Learning Accelerators’ Configuration Space Exploration Effect on Performance and Resource Utilization: A Gemmini Case Study},
+TITLE = {Deep Learning Accelerators' Configuration Space Exploration Effect on Performance and Resource Utilization: A Gemmini Case Study},
 JOURNAL = {Sensors},
 VOLUME = {23},
 YEAR = {2023},
@@ -203,32 +187,14 @@ DOI = {10.3390/s23052380}
 }
 
 @manual{sifive2018tilelink,
-  author  = {{SiFive Inc.}},
-  title   = {{SiFive TileLink Specification}},
+  author  = {SiFive Inc.},
+  title   = {SiFive TileLink Specification},
   year    = {2018},
   month   = dec,
   day     = {3},
   version = {1.7.1},
   url     = {https://sifive.cdn.prismic.io/sifive%2F57f93ecf-2c42-46f7-9818-bcdd7d39400a_tilelink-spec-1.7.1.pdf},
   note    = {Accessed: Jun. 6, 2025}
-}
-
-@inproceedings{10.1145/3079856.3080246,
-author = {Jouppi, Norman P. and Young, Cliff and Patil, Nishant and Patterson, David and Agrawal, Gaurav and Bajwa, Raminder and Bates, Sarah and Bhatia, Suresh and Boden, Nan and Borchers, Al and Boyle, Rick and Cantin, Pierre-luc and Chao, Clifford and Clark, Chris and Coriell, Jeremy and Daley, Mike and Dau, Matt and Dean, Jeffrey and Gelb, Ben and Ghaemmaghami, Tara Vazir and Gottipati, Rajendra and Gulland, William and Hagmann, Robert and Ho, C. Richard and Hogberg, Doug and Hu, John and Hundt, Robert and Hurt, Dan and Ibarz, Julian and Jaffey, Aaron and Jaworski, Alek and Kaplan, Alexander and Khaitan, Harshit and Killebrew, Daniel and Koch, Andy and Kumar, Naveen and Lacy, Steve and Laudon, James and Law, James and Le, Diemthu and Leary, Chris and Liu, Zhuyuan and Lucke, Kyle and Lundin, Alan and MacKean, Gordon and Maggiore, Adriana and Mahony, Maire and Miller, Kieran and Nagarajan, Rahul and Narayanaswami, Ravi and Ni, Ray and Nix, Kathy and Norrie, Thomas and Omernick, Mark and Penukonda, Narayana and Phelps, Andy and Ross, Jonathan and Ross, Matt and Salek, Amir and Samadiani, Emad and Severn, Chris and Sizikov, Gregory and Snelham, Matthew and Souter, Jed and Steinberg, Dan and Swing, Andy and Tan, Mercedes and Thorson, Gregory and Tian, Bo and Toma, Horia and Tuttle, Erick and Vasudevan, Vijay and Walter, Richard and Wang, Walter and Wilcox, Eric and Yoon, Doe Hyun},
-title = {In-Datacenter Performance Analysis of a Tensor Processing Unit},
-year = {2017},
-isbn = {9781450348928},
-publisher = {Association for Computing Machinery},
-address = {New York, NY, USA},
-url = {https://doi.org/10.1145/3079856.3080246},
-doi = {10.1145/3079856.3080246},
-abstract = {Many architects believe that major improvements in cost-energy-performance must now come from domain-specific hardware. This paper evaluates a custom ASIC---called a Tensor Processing Unit (TPU) --- deployed in datacenters since 2015 that accelerates the inference phase of neural networks (NN). The heart of the TPU is a 65,536 8-bit MAC matrix multiply unit that offers a peak throughput of 92 TeraOps/second (TOPS) and a large (28 MiB) software-managed on-chip memory. The TPU's deterministic execution model is a better match to the 99th-percentile response-time requirement of our NN applications than are the time-varying optimizations of CPUs and GPUs that help average throughput more than guaranteed latency. The lack of such features helps explain why, despite having myriad MACs and a big memory, the TPU is relatively small and low power. We compare the TPU to a server-class Intel Haswell CPU and an Nvidia K80 GPU, which are contemporaries deployed in the same datacenters. Our workload, written in the high-level TensorFlow framework, uses production NN applications (MLPs, CNNs, and LSTMs) that represent 95\% of our datacenters' NN inference demand. Despite low utilization for some applications, the TPU is on average about 15X -- 30X faster than its contemporary GPU or CPU, with TOPS/Watt about 30X -- 80X higher. Moreover, using the CPU's GDDR5 memory in the TPU would triple achieved TOPS and raise TOPS/Watt to nearly 70X the GPU and 200X the CPU.},
-booktitle = {Proceedings of the 44th Annual International Symposium on Computer Architecture},
-pages = {1–12},
-numpages = {12},
-keywords = {CNN, DNN, GPU, LSTM, MLP, RNN, TPU, TensorFlow, accelerator, deep learning, domain-specific architecture, neural network},
-location = {Toronto, ON, Canada},
-series = {ISCA '17}
 }
 
 @article{jouppi2017tpu,
@@ -271,7 +237,15 @@ keywords = {CNN, DNN, GPU, LSTM, MLP, RNN, TPU, TensorFlow, accelerator, deep le
   keywords={Field programmable gate arrays;Open source software;Random access memory;Rockets;Clocks;Protocols;Hardware;NVDLA;FireSim;RISC-V;FPGA;Cloud;DNN;Embedded Systems},
   doi={10.1109/EMC249363.2019.00012}}
 
-@book{sze2020efficient, title={Efficient processing of deep neural networks}, url={https://doi.org/10.1007/978-3-031-01766-7}, DOI={10.1007/978-3-031-01766-7}, journal={Synthesis lectures on computer architecture}, author={Sze, Vivienne and Chen, Yu-Hsin and Yang, Tien-Ju and Emer, Joel S.}, year={2020}, month=jan }
+@book{sze2020efficient, 
+  title={Efficient processing of deep neural networks}, 
+  author={Sze, Vivienne and Chen, Yu-Hsin and Yang, Tien-Ju and Emer, Joel S.}, 
+  month={1},
+  year={2020}, 
+  journal={Synthesis lectures on computer architecture}, 
+  url={https://doi.org/10.1007/978-3-031-01766-7}, 
+  DOI={10.1007/978-3-031-01766-7}, 
+}
 
 @INPROCEEDINGS{horowitz2014energy,
   author={Horowitz, Mark},
@@ -284,18 +258,32 @@ keywords = {CNN, DNN, GPU, LSTM, MLP, RNN, TPU, TensorFlow, accelerator, deep le
   keywords={CMOS integrated circuits;Hardware;Transistors;Voltage control;CMOS technology;Energy efficiency;Logic gates},
   doi={10.1109/ISSCC.2014.6757323}}
 
+@INPROCEEDINGS{jia2014survey,
+  author={Rui Jia and Colin Yu Lin and Zhenhong Guo and Rui Chen and Fei Wang and Tongqiang Gao and Haigang Yang},
+  booktitle={2014 24th International Conference on Field Programmable Logic and Applications (FPL)}, 
+  title={A survey of open source processors for FPGAs}, 
+  year={2014},
+  volume={},
+  number={},
+  pages={1-6},
+  keywords={Field programmable gate arrays;Java;Registers;Licenses;Multicore processing;Reduced instruction set computing},
+  doi={10.1109/FPL.2014.6927482}}
 
-
-% Full-day Tutorial on FireSim and Chipyard at ISCA 2023
-% Speakers: Sagar Karandikar, Jerry Zhao, Vighnesh Iyer, JunSun Choi, Joonho Whangbo, Dima Nikiforov, Shengjun Kris Dong. Full-day Tutorial on FireSim and Chipyard at ISCA 2023. Orlando, FL, June 2023.
-% Slides: https://fires.im/isca-2023-tutorial/
+@misc{survey_openrisc_fpga_pdf,
+  author = {{Institute of Electronics, Chinese Academy of Sciences}},
+  title = {{A Survey of Open Source Processors for FPGAs}},
+  howpublished = {PDF Document from Semantic Scholar},
+  url = {https://pdfs.semanticscholar.org/9da2/ef5a0d52d1164f62d1cb4dbd447430bb90f0.pdf},
+  year = {2025}, % Publication year is not specified in the provided information, so using access year.
+  note = {Presentation. Accessed: Jul. 26, 2025}
+}
 
 @misc{karandikar2023firesim_tutorial,
   author       = {Karandikar, Sagar and Zhao, Jerry and Iyer, Vighnesh and Choi, JunSun and Whangbo, Joonho and Nikiforov, Dima and Dong, Shengjun Kris},
   title        = {{Full-day Tutorial on FireSim and Chipyard}},
   howpublished = {Presented at the 50th Annual International Symposium on Computer Architecture (ISCA)},
   year         = {2023},
-  month        = {June},
+  month        = {6},
   address      = {Orlando, FL, USA},
   note         = {Tutorial slides available online},
   url          = {https://fires.im/isca-2023-tutorial/}
@@ -344,9 +332,9 @@ keywords = {Recurrent neural networks, Deep learning, GPU, FPGA, ASIC, Pruning, 
 abstract = {“Recurrent neural networks” (RNNs) are powerful artificial intelligence models that have shown remarkable effectiveness in several tasks such as music generation, speech recognition and machine translation. RNN computations involve both intra-timestep and inter-timestep dependencies. Due to these features, hardware acceleration of RNNs is more challenging than that of CNNs. Recently, several researchers have proposed hardware architectures for RNNs. In this paper, we present a survey of GPU/FPGA/ASIC-based accelerators and optimization techniques for RNNs. We highlight the key ideas of different techniques to bring out their similarities and differences. Improvements in deep-learning algorithms have inevitably gone hand-in-hand with the improvements in the hardware-accelerators. Nevertheless, there is a need and scope of even greater synergy between these two fields. This survey seeks to synergize the efforts of researchers in the area of deep learning, computer architecture, and chip-design.}
 }
 
-@misc{keller2013cs250lab,
+@misc{keller2013cs250lab2,
   author       = {Keller, Ben},
-  title        = {{CS250 Laboratory 2: RISC-V, Spike, and the Rocket Core}},
+  title        = {CS250 Laboratory 2: RISC-V, Spike, and the Rocket Core},
   howpublished = {Course Handout, CS250: VLSI Systems Design, University of California, Berkeley},
   year         = {2013},
   month        = {sep},
@@ -355,6 +343,15 @@ abstract = {“Recurrent neural networks” (RNNs) are powerful artificial intel
 }
 
 CS250 Laboratory: https://web.archive.org/web/20200201115643/http://www-inst.eecs.berkeley.edu/~cs250/fa13/handouts/index.html
+
+@misc{keller2013cs250,
+  author       = {Keller, Ben},
+  title        = {Handouts for CS250: VLSI Systems Design, University of California, Berkeley},
+  year         = {2013},
+  month        = {sep},
+  note         = {Fall 2013. Accessed via the Internet Archive},
+  url          = {https://web.archive.org/web/20200201115643/http://www-inst.eecs.berkeley.edu/~cs250/fa13/handouts/index.html}
+}
 
 @techreport{CactusTechnologies_SDCardInterface,
   author = {{Cactus Technologies}},
@@ -367,23 +364,27 @@ CS250 Laboratory: https://web.archive.org/web/20200201115643/http://www-inst.eec
   url = {https://www.cactus-tech.com/wp-content/uploads/2019/03/An-Introduction-To-SD-Card-Interface.pdf}
 }
 
-@article{litex_paper,
-  author       = {Florent Kermarrec and
-                  S{\'{e}}bastien Bourdeauducq and
-                  Jean{-}Christophe Le Lann and
-                  Hannah Badier},
-  title        = {LiteX: an open-source SoC builder and library based on Migen Python
-                  {DSL}},
-  journal      = {CoRR},
-  volume       = {abs/2005.02506},
-  year         = {2020},
-  url          = {https://arxiv.org/abs/2005.02506},
-  eprinttype    = {arXiv},
-  eprint       = {2005.02506},
-  timestamp    = {Sat, 09 May 2020 15:06:08 +0200},
-  biburl       = {https://dblp.org/rec/journals/corr/abs-2005-02506.bib},
-  bibsource    = {dblp computer science bibliography, https://dblp.org}
+@misc{litex_paper,
+      title={LiteX: an open-source SoC builder and library based on Migen Python DSL}, 
+      author={Florent Kermarrec and Sébastien Bourdeauducq and Jean-Christophe Le Lann and Hannah Badier},
+      year={2020},
+      eprint={2005.02506},
+      archivePrefix={arXiv},
+      primaryClass={cs.AR},
+      url={https://arxiv.org/abs/2005.02506}, 
 }
+
+@INPROCEEDINGS{tong2006soft,
+  author={Tong, Jason G. and Anderson, Ian D. L. and Khalid, Mohammed A. S.},
+  booktitle={2006 International Conference on Microelectronics}, 
+  title={Soft-Core Processors for Embedded Systems}, 
+  year={2006},
+  volume={},
+  number={},
+  pages={170-173},
+  keywords={Embedded system;Open source software;Hardware design languages;Application software;Embedded software;Application specific integrated circuits;Field programmable gate arrays;Process design;Costs;Software performance},
+  doi={10.1109/ICM.2006.373294}}
+
 
 @misc{litex_github,
   author       = {{Enjoy-Digital}},
@@ -465,59 +466,6 @@ CS250 Laboratory: https://web.archive.org/web/20200201115643/http://www-inst.eec
 
 % Below are references from another document
 
-@online{asml2022moore,
-  author = {{ASML}},
-  title  = {Moore's Law: What's next in the evolution of chipmaking},
-  year   = {2022},
-  url    = {https://www.asml.com/en/news/stories/2022/moores-law-evolution},
-  note   = {Accessed: Dec. 30, 2024}
-}
-
-@manual{riscv:manual:user:2024,
-  title        = {{The RISC-V Instruction Set Manual, Volume I: User-Level ISA}},
-  editor       = {Waterman, Andrew and Asanovi{\'c}, Krste},
-  organization = {{RISC-V Foundation}},
-  year         = {2024},
-  month        = apr,
-  note         = {Document Version 20240411},
-  url          = {https://github.com/riscv/riscv-isa-manual/releases/download/20240411/unpriv-isa-asciidoc.pdf}
-}
-
-@techreport{waterman2014riscv,
-  author      = {Andrew Waterman and Yunsup Lee and David A. Patterson and Krste Asanovic},
-  title       = {The {RISC-V} instruction set manual, volume {I}: User-level {ISA}, version 2.0},
-  institution = {EECS Department, University of California, Berkeley},
-  year        = {2014},
-  number      = {UCB/EECS-2014-54},
-  month       = {may},
-  type        = {Tech. Rep.}
-} 
-
-@online{github2023octoverse,
-  author = {{GitHub}},
-  title  = {Octoverse: The state of open source and AI},
-  year   = {2023},
-  url    = {https://github.blog/news-insights/research/the-state-of-open-source-and-ai/},
-  note   = {Accessed: Dec. 30, 2024}
-}
-
-@online{krewell2022riscvsummit,
-  author       = {Kevin Krewell},
-  title        = {{RISC-V} Summit 2022: All Your {CPUs} Belong to Us},
-  organization = {EETimes},
-  year         = {2022},
-  url          = {https://www.eetimes.com/risc-v-summit-2022-all-your-cpus-belong-to-us/},
-  note         = {Accessed: Dec. 30, 2024}
-}
-
-@inproceedings{holler2019opensource,
-  author    = {Höller, R. and Haselberger, D. and Ballek, D. and Rössler, P. and Krapfenbauer, M. and Linauer, M.},
-  title     = {Open-Source {RISC-V} Processor {IP} Cores for {FPGAs} - Overview and Evaluation},
-  booktitle = {2019 8th Mediterranean Conference on Embedded Computing (MECO)},
-  year      = {2019},
-  pages     = {1--6}
-}
-
 @online{sifive2024portfolio,
   author = {{SiFive}},
   title  = {A Winning Processor Portfolio},
@@ -526,67 +474,26 @@ CS250 Laboratory: https://web.archive.org/web/20200201115643/http://www-inst.eec
   note   = {Accessed: Dec. 30, 2024}
 }
 
-@article{wu2021intelligent,
-  author  = {Wu, W. and Su, D. and Yuan, B. and Li, Y.},
-  title   = {Intelligent Security Monitoring System Based on {RISC-V} {SoC}},
-  journal = {Electronics},
-  year    = {2021},
-  volume  = {10},
-  number  = {11},
-  pages   = {1366},
-  doi     = {10.3390/electronics10111366}
+@Article{zhang2021heterogeneous,
+AUTHOR = {Zhang, Haifeng and Wu, Xiaoti and Du, Yuyu and Guo, Hongqing and Li, Chuxi and Yuan, Yidong and Zhang, Meng and Zhang, Shengbing},
+TITLE = {A Heterogeneous RISC-V Processor for Efficient DNN Application in Smart Sensing System},
+JOURNAL = {Sensors},
+VOLUME = {21},
+YEAR = {2021},
+NUMBER = {19},
+ARTICLE-NUMBER = {6491},
+URL = {https://www.mdpi.com/1424-8220/21/19/6491},
+PubMedID = {34640811},
+ISSN = {1424-8220},
+ABSTRACT = {Extracting features from sensing data on edge devices is a challenging application for which deep neural networks (DNN) have shown promising results. Unfortunately, the general micro-controller-class processors which are widely used in sensing system fail to achieve real-time inference. Accelerating the compute-intensive DNN inference is, therefore, of utmost importance. As the physical limitation of sensing devices, the design of processor needs to meet the balanced performance metrics, including low power consumption, low latency, and flexible configuration. In this paper, we proposed a lightweight pipeline integrated deep learning architecture, which is compatible with open-source RISC-V instructions. The dataflow of DNN is organized by the very long instruction word (VLIW) pipeline. It combines with the proposed special intelligent enhanced instructions and the single instruction multiple data (SIMD) parallel processing unit. Experimental results show that total power consumption is about 411 mw and the power efficiency is about 320.7 GOPS/W.},
+DOI = {10.3390/s21196491}
 }
-
-@article{lee2020miot,
-  author  = {Lee, D. and Moon, H. and Oh, S. and Park, D.},
-  title   = {{mIoT}: Metamorphic {IoT} Platform for On-Demand Hardware Replacement in Large-Scaled {IoT} Applications},
-  journal = {Sensors},
-  year    = {2020},
-  volume  = {20},
-  number  = {12},
-  pages   = {3337},
-  doi     = {10.3390/s20123337}
-}
-
-@article{zhang2021heterogeneous,
-  author  = {Zhang, H. and Wu, X. and Du, Y. and Guo, H. and Li, C. and Yuan, Y. and Zhang, M. and Zhang, S.},
-  title   = {A Heterogeneous {RISC-V} Processor for Efficient {DNN} Application in Smart Sensing System},
-  journal = {Sensors},
-  year    = {2021},
-  volume  = {21},
-  number  = {19},
-  pages   = {6491},
-  doi     = {10.3390/s21196491}
-}
-
-
-@online{intel2025hybrid,
-  author = {{Intel}},
-  title  = {How hybrid design works},
-  year   = {2025},
-  url    = {https://www.intel.com/content/www/us/en/gaming/resources/how-hybrid-design-works.html},
-  note   = {Accessed: Jan. 1, 2025}
-}
-
-
-@techreport{waterman2015riscvprivileged,
-  author      = {Waterman, A. and Lee, Y. and Avizienis, R. and Patterson, D. A. and Asanovic, K.},
-  title       = {The {RISC-V} instruction set manual volume {II}: Privileged architecture version 1.7},
-  institution = {EECS Department, University of California, Berkeley},
-  year        = {2015},
-  number      = {UCB/EECS-2015-49},
-  type        = {Tech. Rep.}
-}
-
-
-
-
 
 Below are Gemmini-generated
 
 @mastersthesis{pala_master_thesis,
   author    = {Pala, Davide},
-  title     = {{Design and programming of a coprocessor for a RISC-V architecture: Guidelines for embedding computing cores as RISC-V coprocessors}},
+  title     = {Design and programming of a coprocessor for a RISC-V architecture: Guidelines for embedding computing cores as RISC-V coprocessors},
   school    = {Politecnico di Torino},
   year      = {2017},
   address   = {Torino, Italy},
@@ -601,15 +508,7 @@ Below are Gemmini-generated
   howpublished = {Presentation Slides, MLSys 2022 Tutorial},
   year         = {2022},
   url          = {https://mlsys.org/virtual/2022/tutorial/18433},
-  note         = {Accessed: [Your Access Date]}
-}
-
-@misc{Genc2021GemminiIISWC,
-  author       = {Genc, Hasan and Nikiforov, Vadim (Dima) and Guo, Simon and Nandakumar, Avinash},
-  title        = {{Gemmini @ IISWC 2021}},
-  howpublished = {Presentation Slides, IISWC 2021 Tutorial},
-  year         = {2021},
-  note         = {Accessed: [Your Access Date]}
+  note         = {Accessed: [Jul. 26, 2025]}
 }
 
 @misc{verilog-ethernet,
@@ -621,5 +520,200 @@ Below are Gemmini-generated
   note         = {Accessed: July 2025}
 }
 
+@inproceedings{softcores_embecosm,
+  author       = {Bennett, Jeremy and Cook, Simon},
+  title        = {Softcores for {FPGA}: The Free and Open Source Alternatives},
+  booktitle    = {NMI Meeting on "Embedded Processors - you've got the power, but which to choose"},
+  year         = {2013},
+  month        = {10},
+  address      = {Bristol, UK},
+  organization = {National Microelectronics Institute (NMI)},
+  note         = {Published by Embecosm. Presented by Simon Cook}
+}
 
+@misc{chipsalliance_rocketchip,
+  author       = {{Chips Alliance}},
+  title        = {Rocket Chip Generator},
+  howpublished = {GitHub Repository},
+  year         = {2024},
+  note         = {Accessed on: July 26, 2025. Available at: \url{https://github.com/chipsalliance/rocket-chip}}
+}
 
+@misc{riscv_boom_repo,
+  author       = {{The Berkeley Architecture Research Group}},
+  title        = {The Berkeley Out-of-Order RISC-V Processor},
+  howpublished = {GitHub Repository},
+  year         = {2024},
+  note         = {Accessed on: July 26, 2025. Available at: \url{https://github.com/riscv-boom/riscv-boom}}
+}
+
+@misc{lowrisc_ibex_docs,
+  author       = {{lowRISC}},
+  title        = {{Ibex Core Documentation}: Pipeline Details},
+  howpublished = {Online Documentation},
+  year         = {2024},
+  note         = {Accessed on: July 26, 2025. Available at: \url{https://ibex-core.readthedocs.io/en/latest/03_reference/pipeline_details.html}}
+}
+
+@misc{openhwgroup_cv32e40p,
+  author       = {{OpenHW Group}},
+  title        = {OpenHW Group CORE-V CV32E40P RISC-V IP},
+  howpublished = {GitHub Repository},
+  year         = {2024},
+  note         = {Accessed on: July 26, 2025. Available at: \url{https://github.com/openhwgroup/cv32e40p}}
+}
+
+@misc{softcores_isec,
+  author = {Marcel Baunach},
+  title  = {Soft-Core Processors for Embedded Systems},
+  year   = {2020},
+  note   = {Presentation, ISEC Graz. Accessed on: July 26, 2025. Available at: \url{https://www.isec.tugraz.at/wp-content/uploads/2020/07/softcores.pdf}}
+}
+
+@misc{nlnet_litex,
+  author = {NLnet Foundation},
+  title = {LiteX: Developer framework for FPGA and ASIC designs. Funded by the NGI0 Entrust Fund, a fund established by NLnet with financial support from the European Commission's Next Generation Internet programme, under the aegis of DG Communications Networks, Content and Technology under grant agreement No 101069594.},
+  year = {2024},
+  url = {https://nlnet.nl/project/LiteX/}
+}
+
+@misc{yosyshq_picorv32,
+  author       = {Wolf, Clifford},
+  title        = {PicoRV32 - A Size-Optimized RISC-V CPU},
+  howpublished = {GitHub Repository},
+  year         = {2024},
+  note         = {Accessed on: July 26, 2025. Available at: \url{https://github.com/YosysHQ/picorv32}}
+}
+      
+@misc{shd_group_report,
+  author = {{The SHD Group}},
+  title  = {RISC-V Market Analysis 2024: Abridged Report},
+  year   = {2024},
+  month  = {1},
+  url    = {https://theshdgroup.com/wp-content/uploads/2024/01/RISC-V-Market-Analysis-2024-Abridged-Report-2.pdf}
+}
+
+@misc{gaisler_leon3_product,
+  author       = {{Gaisler}},
+  title        = {LEON3 SPARC V8 Processor},
+  howpublished = {Product Page},
+  year         = {2024},
+  note         = {Accessed on: July 26, 2025. Available at: \url{https://www.gaisler.com/products/leon3}}
+}
+
+@misc{gaisler_leon5_product,
+  author = {{Gaisler}},
+  title = {{LEON5 Processor}},
+  howpublished = {Product Page},
+  url = {https://www.gaisler.com/products/leon5},
+  year = {2019}, 
+  month = {11},
+  note = {Accessed: Jul. 26, 2025}
+}
+
+@misc{gaisler_noel_v_product,
+  author = {{Gaisler}},
+  title = {{NOEL-V Processor}},
+  howpublished = {Product Page},
+  url = {https://www.gaisler.com/products/noel-v},
+  year = {2020}, 
+  month = {1},
+  note = {Accessed: Jul. 26, 2025}
+}
+
+@misc{lowrisc_ibex_repo,
+  author       = {{lowRISC}},
+  title        = {{Ibex}: A 32-bit {RISC-V} CPU core},
+  howpublished = {GitHub Repository},
+  year         = {2024},
+  note         = {Accessed on: July 26, 2025. Available at: \url{https://github.com/lowRISC/ibex}}
+}
+
+@misc{litexhub_linux_on_vexriscv,
+  author       = {LiteX-Hub},
+  title        = {Linux on LiteX-VexRiscv},
+  howpublished = {GitHub Repository},
+  year         = {2024},
+  note         = {Accessed on: July 26, 2025. Available at: \url{https://github.com/litex-hub/linux-on-litex-vexriscv}}
+}
+
+@misc{openrisc_or1200_github,
+  author = {{OpenRISC}},
+  title = {{or1200}},
+  howpublished = {GitHub},
+  url = {https://github.com/openrisc/or1200},
+  year = {2015}, % Assuming current year for latest activity/access, adjust if specific year is known
+  note = {Accessed: Jul. 26, 2025}
+}
+
+@misc{openrisc_io_website,
+  author = {{OpenRISC}},
+  title = {{OpenRISC Official Website}},
+  howpublished = {Website},
+  url = {https://openrisc.io/},
+  year = {2025}, % Assuming current year for latest activity/access, adjust if specific year is known
+  note = {Accessed: Jul. 26, 2025}
+}
+
+@misc{spinalhdl_vexriscv,
+  author       = {Papon, Charles},
+  title        = {{VexRiscv}: A {FPGA} friendly 32 bit {RISC-V} CPU implementation},
+  howpublished = {GitHub Repository},
+  year         = {2024},
+  note         = {Accessed on: July 26, 2025. Available at: \url{https://github.com/SpinalHDL/VexRiscv}}
+}
+
+@misc{riot_forum_vexriscv_spinalhdl,
+  author = {{RIOT OS Forum Community}},
+  title = {{RIOT on a VexRiscV and SpinalHDL FPGA Softcore}},
+  howpublished = {RIOT OS Forum},
+  url = {https://forum.riot-os.org/t/riot-on-a-vexriscv-and-spinalhdl-fpga-softcore/3602},
+  year = {2025}, % Year of access; if a specific publication year is needed, it would require checking the page.
+  note = {Accessed: Jul. 26, 2025}
+}
+
+@misc{opentitan_earlgrey_spec,
+  author = {{OpenTitan Project}},
+  title = {{EarlGrey Top-Level Specification}},
+  howpublished = {OpenTitan Documentation},
+  url = {https://opentitan.org/book/hw/top_earlgrey/doc/specification.html},
+  year = {2025}, % Year accessed, as specific publication date isn't immediately obvious.
+  note = {Accessed: Jul. 26, 2025}
+}
+
+@misc{lowrisc_zerorisc_partner,
+  author = {{lowRISC}},
+  title = {{lowRISC announces new OpenTitan project partner, ZeroRISC}},
+  howpublished = {lowRISC News},
+  url = {https://lowrisc.org/news/lowrisc-announces-new-opentitan-project-partner-zerorisc/},
+  month = {10},
+  year = {2023}, % Year accessed, as specific publication date isn't immediately obvious.
+  note = {Accessed: Jul. 26, 2025}
+}
+
+@misc{intel_licensing_cores,
+  author = {{Intel Corporation}},
+  title = {{Licensing Cores}},
+  howpublished = {Intel Documentation},
+  url = {https://www.intel.com/content/www/us/en/docs/programmable/683502/17-1/licensing-cores.html},
+  year = {2018}, % Based on URL segment "17-1" likely indicating version 17.1 or similar, often implying publication around 2017.
+  note = {Accessed: Jul. 26, 2025}
+}
+
+@misc{xilinx_microblaze_faq,
+  author = {{Xilinx}},
+  title = {{MicroBlaze FAQ}},
+  howpublished = {PDF Document from EETrend},
+  url = {https://fpga.eetrend.com/files-eetrend-xilinx/forum/201103/1735-3159-microblaze_faq.pdf},
+  year = {2011}, % Based on URL segment "201103" indicating March 2011.
+  note = {Accessed: Jul. 26, 2025}
+}
+
+@misc{gaisler_silicon_ip_licensing,
+  author = {{Gaisler}},
+  title = {{Silicon IP Licensing}},
+  howpublished = {Gaisler Website},
+  url = {https://www.gaisler.com/silicon-ip-licensing},
+  year = {2025}, % Year accessed, as a specific publication date for a general licensing page isn't common.
+  note = {Accessed: Jul. 26, 2025}
+}

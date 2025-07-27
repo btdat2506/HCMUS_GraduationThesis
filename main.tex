@@ -2,7 +2,10 @@
 
 % Chú ý: đọc các phần chú ý đóng khung của file này và chỉnh lại cho phù hợp.
 
-\documentclass[twoside,a4paper,14pt,openright]{extreport}
+% In 1 mặt
+\documentclass[oneside,a4paper,14pt,openright]{extreport}
+% In 2 mặt thì tắt comment này
+% \documentclass[twoside,a4paper,14pt,openright]{extreport}
 % font size
 \usepackage[fontsize=13pt]{scrextend}
 % Font tiếng Việt
@@ -14,7 +17,7 @@
 
 % Tài liệu tham khảo
 \usepackage[
-	sorting=nty,
+	sorting=none,
 	backend=biber,
 	defernumbers=true]{biblatex}
 \usepackage[unicode]{hyperref} % Bookmark tiếng Việt
@@ -124,7 +127,7 @@
 \newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 
 % Đổi tên mặc định
-\renewcommand{\chaptername}{Chapter}
+\renewcommand{\chaptername}{CHAPTER}
 \renewcommand{\figurename}{Figure}
 \renewcommand{\tablename}{Table}
 \renewcommand{\contentsname}{TABLE OF CONTENTS}
@@ -175,8 +178,9 @@
 }
 
 % Canh lề
+% In 2 mặt thì chuyển từ oneside sang twoside
 \usepackage[
-  twoside,
+  oneside,
   top=20mm,
   bottom=20mm,
   left=25mm,
@@ -220,7 +224,9 @@
 \usepackage{tabularx}
 \usepackage{appendix}
 
-\NewDocumentCommand{\chapref}{s m}{Chapter~\ref{#2}:\IfBooleanF{#1}{ \nameref{#2}}}
+\NewDocumentCommand{\chapref}{s m}{CHAPTER~\ref{#2}:\IfBooleanF{#1}{ \nameref{#2}}}
+
+\newcommand{\myname}[1]{\underline{Thanh-Dat Bui}}
 
 \begin{document}
 
@@ -244,7 +250,8 @@
 % \include{Appendix/decuong}
 
 % Mục lục, danh sách hình, danh sách bảng
-\cleardoublepage
+% In 2 mặt thì tắt comment này
+% \cleardoublepage
 \phantomsection
 \addcontentsline{toc}{chapter}{MỤC LỤC}
 \tableofcontents
@@ -254,19 +261,22 @@
                 toctitle=LIST OF ABBREVIATIONS
                 ]
 
-\cleardoublepage
+% In 2 mặt thì tắt comment này
+% \cleardoublepage
 \newpage
 \phantomsection
 \addcontentsline{toc}{chapter}{\listfigurename}
 \listoffigures
 
-\cleardoublepage
+% In 2 mặt thì tắt comment này
+% \cleardoublepage
 \newpage
 \phantomsection
 \addcontentsline{toc}{chapter}{\listtablename}
 \listoftables
 
-\cleardoublepage
+% In 2 mặt thì tắt comment này
+% \cleardoublepage
 
 \pagenumbering{arabic} % Đánh số 1, 2, 3, ...
 
@@ -290,7 +300,8 @@
 \include{chapter9}
 
 % Công trình của tác giả (nếu không có thì comment 02 dòng dưới)
-\cleardoublepage
+% In 2 mặt thì tắt comment này
+% \cleardoublepage
 \newpage
 \phantomsection
 % \addcontentsline{toc}{chapter}{DANH MỤC CÔNG TRÌNH CỦA TÁC GIẢ}
@@ -298,7 +309,8 @@
 \include{Appendix/publish}
 
 % In tài liệu tham khảo
-\cleardoublepage
+% In 2 mặt thì tắt comment này
+% \cleardoublepage
 \newpage
 \phantomsection
 % \addcontentsline{toc}{chapter}{TÀI LIỆU THAM KHẢO}
@@ -318,7 +330,7 @@
 % CHÚ Ý: phải gán lại resetnumbers=số tài liệu tham khảo tiếng Việt + 1 %
 % ===================================================================== %
 
-\renewcommand{\chaptername}{Appendix}
+\renewcommand{\chaptername}{APPENDIX}
 \appendix
 % Phần phụ lục
 % \include{Appendix/appendix1}

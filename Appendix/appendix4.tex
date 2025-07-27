@@ -1,7 +1,7 @@
 % \appendix
 \renewcommand{\thechapter}{C} % Set Appendix Chapter Label to D
 
-\chapter{Time Measuring Methodology}
+\chapter{TIME MEASURING METHODOLOGY}
 \label{app:time_measuring_methodology}
 
 Due to Linux does not support reading CPU cycles directly using the rdcycle instruction, the \texttt{clock\_gettime} function (CLOCK\_MONOTONIC) is used to measure elapsed time in nanoseconds. The following C code snippet demonstrates how to read the CPU cycles using this method:
@@ -20,7 +20,7 @@ static uint64_t read_cycles() {
 
 Exclusive tests were performed to measure the overhead of this method, which was found to be negligible compared to the overall execution time of the tests. 
 
-The result shows that the overhead of using \texttt{clock\_gettime(CLOCK\_MONO\allowbreak TONIC)} is the lowest, around 7.4 μs, while \texttt{gettimeofday} has a similar overhead of around 7.7 μs. The \texttt{clock\_gettime\allowbreak (CLOCK\_\allowbreak PRO\allowbreak CESS\_CPUTIME\_ID)} has a higher overhead of around 26.4 μs, which is expected as it provides more detailed CPU time information.
+The result shows that the overhead of using \texttt{clock\_gettime(CLOCK\_MONO\allowbreak TONIC)} is the lowest, around 7.4 us, while \texttt{gettimeofday} has a similar overhead of around 7.7 us. The \texttt{clock\_gettime\allowbreak (CLOCK\_\allowbreak PRO\allowbreak CESS\_CPUTIME\_ID)} has a higher overhead of around 26.4 us, which is expected as it provides more detailed CPU time information.
 
 \begin{lstlisting}[language=C, caption={C Code for Timing Test}, label={lst:timing_test}, captionpos=b]
 /*
@@ -218,11 +218,11 @@ void test_timing_demo() {
     end_proc = get_process_time_ns();
     
     printf("Results:\n");
-    printf("  clock_gettime(CLOCK_MONOTONIC):     %lu ns (%.2f μs)\n", 
+    printf("  clock_gettime(CLOCK_MONOTONIC):     %lu ns (%.2f us)\n", 
            end_mono - start_mono, (end_mono - start_mono) / 1000.0);
-    printf("  gettimeofday():                     %lu μs (%.2f μs)\n", 
+    printf("  gettimeofday():                     %lu us (%.2f us)\n", 
            end_gtod - start_gtod, (double)(end_gtod - start_gtod));
-    printf("  clock_gettime(CLOCK_PROCESS_CPUTIME): %lu ns (%.2f μs)\n", 
+    printf("  clock_gettime(CLOCK_PROCESS_CPUTIME): %lu ns (%.2f us)\n", 
            end_proc - start_proc, (end_proc - start_proc) / 1000.0);
     printf("  Sum result: %ld\n", sum);
     printf("\n");
@@ -316,8 +316,8 @@ Function call overhead (average over 10000 calls):
 
 Timing a simple computation (1000 additions):
 Results:
-  clock_gettime(CLOCK_MONOTONIC):     69000 ns (69.00 μs)
-  gettimeofday():                     69 μs (69.00 μs)
-  clock_gettime(CLOCK_PROCESS_CPUTIME): 128000 ns (128.00 μs)
+  clock_gettime(CLOCK_MONOTONIC):     69000 ns (69.00 us)
+  gettimeofday():                     69 us (69.00 us)
+  clock_gettime(CLOCK_PROCESS_CPUTIME): 128000 ns (128.00 us)
   Sum result: 499500
 \end{lstlisting}

@@ -1,5 +1,5 @@
 % !TeX root = main.tex
-\chapter{The Gemmini DNN Accelerator: An Architectural Overview}
+\chapter{THE GEMMINI DNN ACCELERATOR: AN ARCHITECTURAL OVERVIEW}
 \label{chap:gemmini_overview}
 
 As established in the previous chapter, the \acrfull{soc} developed in this thesis utilizes a single Rocket Core augmented with a specialized accelerator for deep learning workloads. This chapter delves into the architecture of this accelerator: Gemmini, a sophisticated component designed to overcome the fundamental limitations of general-purpose processors for \acrfull{dnn} tasks.
@@ -7,7 +7,7 @@ As established in the previous chapter, the \acrfull{soc} developed in this thes
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.6\textwidth]{Gemmini_Logo.pdf}
-    \caption{Gemmini, the DNN Accelerator designed for SoC intergration developed by UC Berkeley. \cite{gemini-dac}.}
+    \caption{Gemmini, the DNN Accelerator designed for SoC integration developed by UC Berkeley. \cite{gemini-dac}.}
     \label{fig:gemmini_logo}
 \end{figure}
 
@@ -75,25 +75,25 @@ Recognizing the computational cost of this pre-processing step, Gemmini can be c
     \centering
     \begin{subfigure}[t]{\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Im2Col_Convolution.pdf}
-        \caption{Convolution operation.}
+        \includegraphics[width=0.9\textwidth]{Im2Col_Convolution.pdf}
+        \caption{A conceptual view of a direct 2D convolution, where a kernel (B) operates on an input tensor (A).}
         \label{fig:im2col_convolution}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Im2Col_GEMM.pdf}
-        \caption{A visualization of the \texttt{im2col}-based GEMM operation.}
+        \includegraphics[width=0.9\textwidth]{Im2Col_GEMM.pdf}
+        \caption{Visualization of the \texttt{im2col} (image-to-column) transformation, which reorganizes the input tensor into a matrix (A') to convert the convolution into a standard General Matrix-Matrix Multiplication (GEMM) operation.}
         \label{fig:im2col_gemm}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{Im2Col_SystolicArray.pdf}
-        \caption{Example of a systolic array operation.}
+        \includegraphics[width=0.9\textwidth]{Im2Col_SystolicArray.pdf}
+        \caption{Detailed view of the hardware execution, showing how the transformed matrices are streamed into the systolic array's Processing Elements (PEs) over time to compute the final result.}
         \label{fig:im2col_systolic}
     \end{subfigure}
-    \caption{From convolution to systolic array computation. The 3D input tensor (left) is transformed into a 2D matrix (center) that can be processed by the systolic array. Adapted from Gookyi et al. \cite{gookyi2023gemmini_case_study}.}
+    \caption{Mapping Convolution to Systolic Array Computation via the \texttt{im2col}Transformation. Adapted from Gookyi et al. \cite{gookyi2023gemmini_case_study}.}
     \label{fig:im2col}
 \end{figure}
 
@@ -110,7 +110,7 @@ To feed its high-throughput systolic array, Gemmini includes a specialized on-ch
 \label{sec:gemmini_soc_integration}
 
 \subsection{The RoCC Coprocessor Interface}
-Gemmini integrates into the Chipyard \acrshort{soc} via the \textbf{\acrfull{rocc}} interface (Section \ref{sec:rocketchip_soc_structure}). As a tightly-coupled coprocessor, it receives custom \acrshort{riscv} instructions dispatched directly by the host Rocket Core's pipeline. This allows for low-latency command and control.
+Gemmini integrates into the Chipyard \acrshort{soc} via the \textbf{\acrfull{rocc}} interface (Section \ref{subsec:rocc_interface}). As a tightly-coupled coprocessor, it receives custom \acrshort{riscv} instructions dispatched directly by the host Rocket Core's pipeline. This allows for low-latency command and control.
 
 This integration uses a decoupled access-execute model, as illustrated conceptually in Figure~\ref{fig:decoupled_pipelines}. The host \acrshort{cpu} issues three main types of commands to Gemmini: load (from main memory to scratchpad), execute (perform computation on data within the scratchpad), and store (from scratchpad to main memory). These commands are placed into separate hardware queues, allowing Gemmini's internal controller then processes these commands asynchronously, and Gemmini's \acrshort{dma} engine to handle data movement in parallel with the systolic array's computations. This overlapping of communication and computation is crucial for hiding memory latency and maximizing the utilization of the systolic array.
 
@@ -144,6 +144,6 @@ The Gemmini ecosystem is designed to support higher-level compilation flows. Thi
 
 \section{Summary}
 \label{sec:gemmini_overview_summary}
-In summary, Gemmini is a sophisticated, highly configurable \acrshort{dnn} accelerator generator that embodies the principles of systolic computation. Its key architectural features include a powerful systolic array, a specialized on-chip memory hierarchy, and a tightly-coupled integration with a host processor via the \acrshort{RoCC} interface, including support for system-level features like virtual memory. This design enables the high-performance execution of \acrshort{dnn} workloads within a full-stack, system-level context. 
+In summary, Gemmini is a sophisticated, highly configurable \acrshort{dnn} accelerator generator that embodies the principles of systolic computation. Its key architectural features include a powerful systolic array, a specialized on-chip memory hierarchy, and a tightly-coupled integration with a host processor via the \acrshort{rocc} interface, including support for system-level features like virtual memory. This design enables the high-performance execution of \acrshort{dnn} workloads within a full-stack, system-level context. 
 
 Having established this architectural overview, the following chapter will now perform a deep dive into the specifics of Gemmini's internal command processing and its multi-level programming model.

@@ -1,10 +1,10 @@
 % !TeX root = main.tex
-\chapter{RISC-V Microprocessor Instruction Set Architecture}
+\chapter{RISC-V MICROPROCESSOR INSTRUCTION SET ARCHITECTURE}
 \label{chap:riscv_microprocessor_isa}
 
 \section{Overview of RISC-V}
 
-Designing and developing a microprocessor, or \acrfull{cpu}, is a complex process requiring the collaboration of many experts in fields such as digital logic design, compiler development, and operating systems, along with significant financial resources. Major vendors like \acrshort{arm}, with prominent processor lines such as Cortex-M and Cortex-A, often impose high licensing fees and strict confidentiality requirements on their designs. This creates considerable barriers to hardware and software research and customization, particularly for academic institutions or small businesses. In response to these limitations, the \acrshort{riscv} architecture \cite{riscv:manual:user:2024, waterman2015riscvprivileged} was developed and introduced as an open-source solution, providing a flexible platform that eliminates licensing costs and allows for need-based customization. By fostering innovation and opening up a freer research ecosystem, \acrshort{riscv} is reshaping the traditional approach to microprocessor development, aiming for more efficient and comprehensive solutions.
+Designing and developing a microprocessor, or \acrfull{cpu}, is a complex process requiring the collaboration of many experts in fields such as digital logic design, compiler development, and operating systems, along with significant financial resources. Major vendors like \acrshort{arm}, with prominent processor lines such as Cortex-M and Cortex-A, often impose high licensing fees and strict confidentiality requirements on their designs. This creates considerable barriers to hardware and software research and customization, particularly for academic institutions or small businesses. In response to these limitations, the \acrshort{riscv} architecture \cite{riscv:manual:user:2024, waterman2015riscvprivileged, Asanovic:EECS-2014-146} was developed and introduced as an open-source solution, providing a flexible platform that eliminates licensing costs and allows for need-based customization. By fostering innovation and opening up a freer research ecosystem, \acrshort{riscv} is reshaping the traditional approach to microprocessor development, aiming for more efficient and comprehensive solutions.
 
 \begin{figure}[h!]
     \centering
@@ -278,7 +278,7 @@ Rocket \cite{asanovic2016rocketchip}, or Rocket Core, is a \acrshort{riscv} inst
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.7\textwidth]{Rocket_Core_Pipeline_5stages.pdf}
-    \caption{Pipeline of Rocket core. \cite{asanovic2016rocketchip}}
+    \caption{Pipeline of Rocket core. \cite{asanovic2016rocketchip, keller2013cs250lab2, keller2013cs250}}
     \label{fig:rocket_pipeline}
 \end{figure}
 
@@ -333,7 +333,7 @@ Subsequently, to develop and expand the capabilities of Rocket Chip, Chipyard wa
     \label{fig:chipyard_structure}
 \end{figure}
 
-By utilizing \acrshort{chisel}, the \acrshort{firrtl} compiler, the Rocket Chip generator, and other tools, Chipyard facilitates the development of highly customizable \acrshort{riscv} \acrshortpl{soc}. Chipyard includes a diverse set of processor cores (Rocket Core, \acrshort{boom}, Ariane), accelerators (Hwacha, Gemmini, SHA3), along with comprehensive memory systems, peripheral devices, and tools to support the construction of a full-featured \acrshort{soc}. Chipyard supports multiple development flows, allowing for flexible hardware extension and experimentation. These development flows include software-based \acrfull{rtl} simulation, \acrshort{fpga}-accelerated simulation using FireSim, automated \acrshort{vlsi} flows with Hammer, and FireMarshal, which enables the creation and loading of software on both bare-metal systems (similar to microcontrollers) and \acrshort{linux}-based systems.
+By utilizing \acrshort{chisel}, the \acrshort{firrtl} compiler, the Rocket Chip generator, and other tools, Chipyard facilitates the development of highly customizable \acrshort{riscv} \acrshortpl{soc}. Chipyard includes a diverse set of processor cores (Rocket Core, \acrshort{boom}, Ariane), accelerators (Hwacha, Gemmini, SHA3), along with comprehensive memory systems, peripheral devices, and tools to support the construction of a full-featured \acrshort{soc}. Chipyard supports multiple development flows, allowing for flexible hardware extension and experimentation. These development flows include software-based \acrfull{rtl} simulation, \acrshort{fpga}-accelerated simulation using FireSim \cite{karandikar2018firesim}, automated \acrshort{vlsi} flows with Hammer, and FireMarshal, which enables the creation and loading of software on both bare-metal systems (similar to microcontrollers) and \acrshort{linux}-based systems.
 
 Rocket Chip supports deployment on \acrshortpl{fpga}, with operational frequencies reaching 25-100 \acrshort{mhz} depending on the configuration and the type of \acrshort{fpga} used. Currently, Rocket Chip is being utilized by SiFive \cite{sifive2024portfolio}, a company founded by some of the authors of \acrshort{riscv}. SiFive produces \acrshort{riscv} processors on silicon based on Rocket and provides tools for developing, testing, and evaluating their designs.
 

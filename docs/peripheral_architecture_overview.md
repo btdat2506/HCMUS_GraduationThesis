@@ -173,7 +173,7 @@ All peripherals are described in device tree with proper:
 
 ### Interrupt Latency
 - **PLIC**: ~10-20 cycles interrupt delivery
-- **Total**: <1 μs typical interrupt response time
+- **Total**: <1 us typical interrupt response time
 
 ## Debug and Development Features
 

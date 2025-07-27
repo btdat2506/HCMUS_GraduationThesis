@@ -1,5 +1,5 @@
 % !TeX root = main.tex
-\chapter{Gemmini's Internal Architecture and Programming Model}
+\chapter{GEMMINI'S INTERNAL ARCHITECTURE AND PROGRAMMING MODEL}
 \label{chap:gemmini_internals}
 
 While Chapter \ref{chap:gemmini_overview} described the conceptual architecture of Gemmini, this chapter explores its internal structure and the software interfaces used to control it. This analysis will follow the journey of a single instruction from the host \acrshort{cpu} down to the physical hardware, revealing how Gemmini's sophisticated design translates high-level commands into high-performance computation. A deeper understanding of these implementation-level details is necessary to effectively program the accelerator and analyze its performance.
@@ -20,7 +20,7 @@ This decoupled, multi-stage architecture is the key to Gemmini's performance, al
 \section{The Command-Unrolling Hierarchy}
 \label{sec:command_unrolling}
 
-A custom \acrshort{RoCC} instruction sent from the Rocket core is not a simple command executed directly by the systolic array. Instead, it is a high-level, almost \acrshort{cisc}-like directive, such as \texttt{LOOP\_WS} or \texttt{LOOP\_CONV\_WS}, that can encapsulate an entire deep learning layer computation. The fundamental design principle of Gemmini is to offload the immense complexity of interpreting this command from the \acrshort{cpu} into a dedicated, multi-level hardware hierarchy.
+A custom \acrshort{rocc} instruction sent from the Rocket core is not a simple command executed directly by the systolic array. Instead, it is a high-level, almost \acrshort{cisc}-like directive, such as \texttt{LOOP\_WS} or \texttt{LOOP\_CONV\_WS}, that can encapsulate an entire deep learning layer computation. The fundamental design principle of Gemmini is to offload the immense complexity of interpreting this command from the \acrshort{cpu} into a dedicated, multi-level hardware hierarchy.
 
 This hardware-based command unrolling is a defining characteristic of a powerful, tightly-integrated co-processor. It autonomously handles tasks that would otherwise require thousands of \acrshort{cpu} cycles—such as loop control, address calculation, and data dependency checking—freeing the host processor for other work. This section details the two primary levels of this unrolling hierarchy: \texttt{LoopConv} and \texttt{LoopMatmul}.
 
@@ -243,7 +243,7 @@ The Scratchpad exposes two primary interfaces to the rest of the system: an \tex
 
 Internally, its architecture is founded on a set of specialized \textbf{Memory Banks}. Multiple \texttt{ScratchpadBank}s store input data like weights and activations, with their banked structure enabling the parallel access patterns necessary for feeding the array. In parallel, dedicated \texttt{AccumulatorMem} banks store the higher-precision partial sums generated during computation, featuring integrated hardware to support activation functions and scaling operations.
 
-Data movement between these internal banks and external memory is managed by dedicated \textbf{\acrshort{dma} Engines}, the \texttt{StreamReader} and \texttt{StreamWriter}. Critically, the Scratchpad contains several \textbf{Integrated Data Processing Units} that operate on data as it moves, a key design choice that significantly reduces \acrshort{cpu} overhead. These units perform a range of on-the-fly transformations, including scaling for quantization, pixel repetition for convolution optimizations, and applying activation functions. (A detailed breakdown of these processing units is provided in \textbf{Appendix~\ref{app:scratchpad_units}}).
+Data movement between these internal banks and external memory is managed by dedicated \textbf{\acrshort{dma} Engines}, the \texttt{StreamReader} and \texttt{StreamWriter}. Critically, the Scratchpad contains several \textbf{Integrated Data Processing Units} that operate on data as it moves, a key design choice that significantly reduces \acrshort{cpu} overhead. These units perform a range of on-the-fly transformations, including scaling for quantization, pixel repetition for convolution optimizations, and applying activation functions. (A detailed breakdown of these processing units is provided in Appendix~\ref{app:scratchpad_units}).
 
 Ultimately, the sophisticated architecture of the Scratchpad—with its combination of banked memory, integrated data processing, and dedicated \acrshort{dma} engines—is a direct and powerful answer to the "memory wall" problem. It is an active, intelligent subsystem engineered not just to store data, but to transform and deliver it, ensuring the massively parallel Mesh is constantly supplied with operands and enabling the high-throughput computation that is the central goal of this work.
 

@@ -1,6 +1,6 @@
 % !TeX root = main.tex
 
-\chapter{Implementation Results and Discussion}
+\chapter{IMPLEMENTATION RESULTS AND DISCUSSION}
 \label{chap:results}
 
 This chapter presents the culminating results of the thesis, transitioning from theoretical design to tangible implementation and empirical validation. The \acrfull{soc}, designed programmatically in \acrshort{chisel}, was compiled through the \acrshort{firrtl} intermediate representation and subsequently implemented using the Xilinx \acrshort{vivado} toolchain for the \acrshort{vc707} \acrshort{fpga} target. This chapter is organized into three main sections. First, it details the hardware implementation results, including the final system architecture and an analysis of on-chip resource utilization and power consumption. Second, it documents the successful deployment of the full software stack, demonstrating a boot-to-\acrshort{linux} environment. Finally, and most critically, it evaluates the performance of the integrated Gemmini \acrshort{dnn} accelerator, providing quantitative evidence of its effectiveness.
@@ -51,7 +51,7 @@ Resource utilization is a critical metric for evaluating the cost and feasibilit
 
 As shown in Figure \ref{fig:utilization_summary_detailed}, the complete, \acrshort{linux}-capable \acrshort{soc} is a substantial design, consuming \textbf{80.92\%} of the available \acrfullpl{lut}, \textbf{28.59\%} of \acrfull{bram}, and \textbf{8.96\%} of \acrshort{dsp} slices on the Xilinx \acrshort{vc707}'s Virtex-7 \acrshort{fpga}. The high \acrshort{lut} utilization is expected given the complexity of a 64-bit processor core with an L2 cache and numerous peripherals. The significant \acrshort{bram} usage is primarily attributable to the memory-intensive components of the design, namely the L2 cache and the Gemmini accelerator's scratchpad and accumulator memories.
 
-To isolate the resource cost of the Gemmini accelerator itself, a hierarchical utilization analysis was performed. Figure \ref{fig:utilization_hierarchical_gemmini} shows that the Gemmini module (\texttt{riscv\_i/RocketChip/inst/rocket\_system/tile\_prci\_domain/tile\_reset\_\allowbreak domain\_tile/v}, with reference named \texttt{riscv\_RocketChip\_0\_Gemmini}) consumes 180,142 \acrshortpl{lut}. This represents approximately 73.5\% of the logic within the system and underscores the fact that the specialized accelerator is, by far, the largest single component in the processor tile, dwarfing the \acrshort{riscv} core itself. This trade-off of silicon area for specialized performance is the central premise of hardware acceleration.
+To isolate the resource cost of the Gemmini accelerator itself, a hierarchical utilization analysis was performed. Figure \ref{fig:utilization_hierarchical_gemmini} shows that the Gemmini module (\texttt{riscv\_RocketChip\_0\_Gemmini}) consumes 180,142 \acrshortpl{lut}. This represents approximately 73.5\% of the logic within the system and underscores the fact that the specialized accelerator is, by far, the largest single component in the processor tile, dwarfing the \acrshort{riscv} core itself. This trade-off of silicon area for specialized performance is the central premise of hardware acceleration.
 
 % \begin{figure}[h!]
 % \centering

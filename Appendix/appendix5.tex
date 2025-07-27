@@ -1,7 +1,7 @@
 % \appendix
 \renewcommand{\thechapter}{D} % Set Appendix Chapter Label to E
 
-\chapter{Detailed Performance Evaluation Results}
+\chapter{DETAILED PERFORMANCE EVALUATION RESULTS}
 \label{app:detailed_performance_evaluation_results}
 
 This appendix provides the comprehensive, unabridged results of the performance evaluation conducted on the implemented SoC. The data was generated using the \texttt{gemmini-rocc-tests} benchmark suite on the Xilinx VC707 FPGA platform.
@@ -14,7 +14,7 @@ This appendix provides the comprehensive, unabridged results of the performance 
 \label{tab:matrix_multiplication_performance}
 \begin{tabular}{|l|l|c|c|r|}
 \hline
-\multirow{2}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Test: \\ \texttt{tiled\_matmul\_*}\end{tabular}}} & \multirow{2}{*}{\textbf{Matrix Size}} & \multicolumn{2}{c|}{\textbf{\begin{tabular}[c]{@{}c@{}}Execution Time \\ (ms)\end{tabular}}} & \multirow{2}{*}{\textbf{Speedup}} \\ \cline{3-4}
+\multirow{2}{*}{\textbf{\begin{tabular}[c]{@{}c@{}}Test: \\ \texttt{tiled\_matmul\_*}\end{tabular}}} & \multirow{2}{*}{\textbf{Matrix Size}} & \multicolumn{2}{c|}{\textbf{Execution Time (ms)}} & \multirow{2}{*}{\textbf{Speedup}} \\ \cline{3-4}
                                                           &                                      & \textbf{CPU}                        & \textbf{Gemmini}                       &                                      \\ \hline
 *\_os & - & 2,036.450 & 38.781 & 52.5$\times$ \\
 *\_ws & 512$\times$512$\times$512 & 2,488.828 & 20.438 & 121.8$\times$ \\
@@ -70,7 +70,7 @@ pool &  & $\rightarrow$56$\times$56 &  &  &  &  &  \\
 \centering
 \caption{Detailed MLP Model Performance}
 \label{tab:mlp_performance}
-\begin{tabular}{|l|l|r{2cm}|}
+\begin{tabular}{|l|l|r|}
 \hline
 \textbf{Model} & \textbf{Layer Distribution} & \textbf{\begin{tabular}[c]{@{}c@{}}Execution\\ Time (ms)\end{tabular}} \\
 \hline

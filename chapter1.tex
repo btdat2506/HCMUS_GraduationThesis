@@ -5,24 +5,113 @@
 % Problem Statement, Background, and Motivation
 % The need for research
 
-\chapter{Introduction}
+\chapter{INTRODUCTION}
 \label{Chapter1}
 
-This thesis presents the design, implementation, and evaluation of a \acrshort{riscv} \acrfull{soc} featuring a specialized \acrfull{dnn} accelerator, conducted within the \acrfull{ceslab} of the University of Science, VNUHCM (\acrshort{hcmus}). This work represents a foundational step in our laboratory's strategic transition to the emerging \acrshort{riscv} ecosystem and open-source \acrshort{soc} design automation solutions for future chip development and fabrication.
+This thesis presents a study of the open-source \acrshort{riscv} ecosystem, investigated through the deep-dive implementation and analysis of a specialized \acrfull{dnn} accelerator. The work examines the capabilities of modern open-source hardware by focusing on a state-of-the-art systolic array, Gemmini, and its high-performance integration with a processor core via the \acrfull{rocc} interface. The primary outcome is a complete, \acrshort{linux}-capable \acrfull{soc} that serves as a tangible case study on advanced accelerator co-design and establishes a foundational platform for future research within the Gemmini DNN Accelerator.
 
 \section{Background and Motivation}
 
-The rapid advancement of artificial intelligence and machine learning has created an unprecedented demand for specialized computing architectures. \acrlongpl{dnn}, which form the backbone of modern \acrshort{ai} applications, require enormous computational resources that traditional general-purpose processors struggle to provide efficiently. This computational challenge, combined with the exponential growth in model complexity and the need for energy-efficient solutions, has driven the development of custom hardware accelerators specifically designed for \acrshort{dnn} workloads.
+The advancement of artificial intelligence has created an unprecedented demand for specialized computing architectures. However, this field exists within a processor landscape long dominated by proprietary \acrlongpl{isa}. This paradigm imposes significant barriers to research, including high licensing costs and a lack of freedom to deeply customize core architectures. The emergence of the open-standard \acrshort{riscv} \acrshort{isa} represents a fundamental shift, enabling a new era of permissionless innovation \cite{Asanovic:EECS-2014-146}.
 
-Traditionally, the \acrshort{ceslab} has been involved in designing and developing hardware accelerators (or \acrshort{ip} Cores) on \acrshort{fpga} using \acrshort{intel} \acrshort{quartus}, particularly leveraging the Platform Designer tool with Nios soft processors and Avalon Bus interfaces. While this approach has served well for \acrshort{fpga}-based prototyping, it presents significant limitations for our laboratory's strategic evolution toward chip fabrication and \acrshort{vlsi} design. The Avalon Bus, though functional, lacks the sophistication and industry adoption of modern interconnect standards such as \acrshort{axi4} and TileLink. More critically, the \acrshort{intel} \acrshort{quartus} ecosystem is primarily optimized for \acrshort{fpga} implementation and lacks the comprehensive \acrshort{vlsi} design flow capabilities essential for \acrshort{asic} development and chip fabrication.
+A key feature of \acrshort{riscv} is its inherent extensibility, which reserves opcode space for custom instructions. This has catalyzed the development of sophisticated open-source ecosystems like the Chipyard framework, which not only provide processor core generators but also a library of advanced, research-grade accelerators. Among these, the Gemmini project from \acrshort{ucb} stands out. Gemmini is not just an accelerator; it is a generator for high-performance systolic arrays, embodying years of research into efficient \acrshort{dnn} computation.
 
-As \acrshort{ceslab} envisions a future centered on chip prototyping and semiconductor fabrication, the limitations of our current toolchain have become increasingly apparent. The proprietary nature of \acrshort{intel}'s tools not only imposes licensing costs but also restricts our ability to customize the design flow, integrate with modern \acrshort{vlsi} tools, and contribute to the broader open-source hardware community. Furthermore, the transition from \acrshort{fpga} prototypes to actual silicon requires a design methodology that seamlessly bridges both domains—a capability that traditional \acrshort{fpga}-centric tools cannot provide.
+Furthermore, Chipyard provides a unique mechanism for integrating such components: the \acrfull{rocc} interface. Unlike standard, loosely-coupled memory-mapped peripherals, the \acrshort{rocc} interface is a profound hardware co-design methodology that tightly couples an accelerator to the CPU's own pipeline \cite{pala_master_thesis}. This creates a privileged, low-latency communication channel that is essential for high performance.
 
-The emergence of the \acrshort{riscv} instruction set architecture has fundamentally changed the landscape of processor design and \acrshort{soc} development, offering a pathway to address these limitations. As an open-source \acrshort{isa}, \acrshort{riscv} eliminates the barriers imposed by proprietary architectures, providing unprecedented flexibility for customization and modification. More importantly, this openness has catalyzed the development of comprehensive design ecosystems that support the entire \acrshort{soc} development flow, from high-level specification through \acrshort{fpga} prototyping to final \acrshort{vlsi} implementation and chip fabrication.
+This combination presents a compelling opportunity for study. The central question of this thesis is: How capable is the modern open-source \acrshort{riscv} ecosystem at implementing and analyzing a state-of-the-art, tightly-coupled hardware accelerator? This work answers that question by conducting an end-to-end implementation of the Gemmini accelerator on a \acrshort{linux}-capable \acrshort{soc}, providing a deep analysis of its architecture, integration, and performance.
+
+% This new section establishes the context for your study.
+\section{The Open-Source Hardware Ecosystem}
+
+The processor landscape has historically been dominated by proprietary soft cores, such as the Xilinx MicroBlaze and Intel Nios II. These architectures, while well-established, operate within closed ecosystems, tightly coupling designs to a specific vendor's toolchain and FPGA family \cite{intel_licensing_cores, xilinx_microblaze_faq}. In parallel, the open-source hardware movement has now matured into a powerful and credible force, providing a spectrum of permissively licensed alternatives \cite{tarassov_vivado-risc-v}. This paradigm shift unlocks new levels of flexibility and control, freeing designs from vendor dependency and enabling a more transparent and extensible path for hardware development \cite{gaisler_silicon_ip_licensing}. For academic institutions, this signals a strategic moment: it is time to engage with these emerging platforms to build the foundation for the next generation of custom computing research.
+
+\subsection{A Survey of Open-Source Soft Cores}
+
+The open-source landscape includes a diverse range of soft-core processors spanning multiple Instruction Set Architectures (ISAs). While legacy ISAs like OpenRISC and SPARC have established communities, the RISC-V ISA has seen the most rapid growth and diversification, offering solutions from ultra-low-power microcontrollers to Linux-capable, out-of-order application processors.
+
+% --- TABLE 1: SOFT CORE SURVEY ---
+% Use the 'longtable' package for tables that might span a page.
+\begin{longtable}{p{2.35cm}|p{2.7cm}|p{6cm}|p{3.5cm}} 
+    \caption{A Survey of Major Open-Source Soft-Core Families}\\
+    \toprule
+    \textbf{Family} & \textbf{ISA} & \textbf{Key Traits} & \textbf{Notable Users/\allowbreak Boards} \\
+    \midrule
+    \endfirsthead
+    \multicolumn{4}{c}%
+    {{\bfseries Table \thetable\ continued from previous page}} \\
+    \toprule
+    \textbf{Family} & \textbf{ISA} & \textbf{Key Traits} & \textbf{Notable Users/Boards} \\
+    \midrule
+    \endhead
+    PicoRV32 \cite{yosyshq_picorv32} & RISC-V RV32IMC & Ultra-small footprint (750 - 2,000 LUTs); configurable for size/performance; used as auxiliary processor & Lattice iCE40 boards, Digilent Cmod A7 \\
+    \hline
+    VexRiscv \cite{spinalhdl_vexriscv} (VexiiRiscv is in-progress) & RISC-V RV32I[M][A]\allowbreak [F[D]][C] & Highly scalable Scala/SpinalHDL generator; from tiny MCUs to Linux-capable SMPs; plug-in based configurable pipeline & LiteX SoC Builder, various Linux demos \cite{litexhub_linux_on_vexriscv}, Nordic nRF Connect SDK, RIOT OS \cite{riot_forum_vexriscv_spinalhdl} \\
+    \hline
+    Ibex \cite{lowrisc_ibex_repo} & RISC-V RV32IMCB & 2-stage in-order, area-optimized, production-quality, formally-verified core from lowRISC \cite{lowrisc_ibex_docs} & OpenTitan Root of Trust, Google Open Source Silicon \cite{opentitan_org} \\
+    \hline
+    CV32E40P \cite{openhwgroup_cv32e40p} & RISC-V RV32IM\allowbreak [F|Zfinx]C & 4-stage in-order, high-performance core with PULP extensions for embedded AI/DSP; OBI memory interface & PULP Platform, GreenWaves GAP-8, CORE-V MCU \\
+    \hline
+    Rocket \cite{chipsalliance_rocketchip}/\allowbreak BOOM \cite{riscv_boom_repo} & RISC-V 32/64-bit & High-performance application processor generators; Rocket (5-stage in-order), BOOM (out-of-order); Linux-capable & SiFive Commercial Cores, Chipyard, many academic/industrial projects; BROOM Chip \cite{celio2018broom} \\
+    \hline
+    OpenRISC 1200 \cite{openrisc_or1200_github} & OpenRISC \cite{openrisc_io_website} & Legacy 5-stage RISC with MMU, caches, DSP features; established community; Verilog implementation & Samsung Set-Top Boxes \cite{softcores_embecosm}, various FPGA implementations (e.g., ORPSoC) \\
+    \hline
+    LEON3 \cite{gaisler_leon3_product} & SPARC V8 & 7-stage, configurable, fault-tolerant (FT versions), space-grade & ESA/NASA Satellites (e.g., GR712RC), various space missions \\
+    \hline
+    LEON5 \cite{gaisler_leon5_product} & SPARC V8 & Advanced dual-issue pipeline; high-performance; fault-tolerant (commercial version); enhanced branch prediction & In future GR765 SoC; Xilinx KCU105, Microchip PolarFire Splash Kit (evaluation) \\
+    \hline
+    NOEL-V \cite{gaisler_noel_v_product} & RISC-V RV64GC & Dual-issue, 64-bit, high-performance, fault-tolerant (commercial version), targets space applications & Microchip PolarFire Splash Kit, Xilinx KCU105, Digilent Arty-A7 (evaluation); gaining adoption in space ASICs \\ \bottomrule \end{longtable}
+
+\subsection{The Strategic Advantage of RISC-V}
+
+Among the available open-source ISAs, RISC-V stands out due to its permissive, royalty-free licensing, modular extension scheme, and rapidly expanding commercial and academic ecosystem. This momentum is confirmed by market analysis, which forecasts RISC-V CPU IP revenue to grow from \$156 million in 2023 to \$1.6 billion by 2030 \cite{shd_group_report}. This strong industry adoption justifies the selection of RISC-V as a stable and future-proof foundation for this thesis and for CESLAB's future research. However, the ecosystem is not without challenges, including a risk of fragmentation and the need for robust verification methodologies, which shifts the validation burden to the implementer \cite{jia2014survey,survey_openrisc_fpga_pdf,softcores_isec,tong2006soft}.
 
 \section{A Survey of Modern Open-Source SoC Frameworks}
 
-To address the limitations of our previous proprietary toolchain and select a platform aligned with \acrshort{ceslab}'s strategic goal of \acrshort{vlsi} development, we conducted a survey of prominent open-source \acrfull{soc} design frameworks. The landscape is rich with powerful, mature options, each with a distinct design philosophy and target application domain. Key alternatives considered include the LiteX, PULP, and OpenTitan platforms.
+Having selected RISC-V as the target ISA, the next step is to choose a framework for building a complete System-on-Chip. We conducted a survey of prominent open-source SoC design frameworks, with the key differences summarized in Table~\ref{tab:framework_comparison}.
+
+% --- TABLE 2: FRAMEWORK COMPARISON ---
+\begin{table}[h!]
+    \centering
+    \caption{Comparative Analysis of Major Open-Source SoC Frameworks}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{p{2.5cm}|p{4cm}|p{4cm}|p{4cm}|p{4cm}}
+        \toprule
+        & \textbf{Chipyard} & \textbf{LiteX} & \textbf{PULP Platform} & \textbf{OpenTitan} \\
+        \midrule
+        \textbf{Primary Goal} & 
+        Research-class heterogeneous Linux-capable SoCs & 
+        Fast, flexible FPGA SoC prototyping & 
+        Energy-efficient MCU/AI cluster ASICs & 
+        High-assurance, transparent silicon Root of Trust (RoT) \\
+        \hline
+        \textbf{Integration Style} & 
+        Parameterized generators with Diplomacy bus negotiation & 
+        Python DSL for wiring Wishbone/AXI cores & 
+        Pre-built, optimized subsystems (e.g., cluster, uDMA) & 
+        Generation of secure subsystems from hardened, "comportable" IPs \\
+        \hline
+        \textbf{ASIC Flow} & 
+        Mature, integrated flow via Hammer + OpenROAD \cite{karandikar2023firesim_tutorial} & 
+        SKY130 Backends in active development \cite{nlnet_litex} & 
+        Multiple proven tape-outs on GF12/TSMC16/\allowbreak Intel 16 \cite{pulp_implementation} & 
+        Silicon-proven RoT design (`Earl Grey` Chip \cite{opentitan_earlgrey_spec}); commercially produced \cite{lowrisc_zerorisc_partner} \\
+        \hline
+        \textbf{Accelerator Hooks} & 
+        Tightly-coupled (RoCC) and loosely-coupled (TileLink MMIO) & 
+        Standard bus bridges (Wishbone/AXI) & 
+        Native Tightly-Coupled Data Memory (TCDM) ports for HWPEs & 
+        Integrated cryptographic co-processors (AES, KMAC, OTBN) as core IP \\
+        \hline
+        \textbf{Learning Curve} & 
+        Steep (Scala/Chisel) & 
+        Moderate (Python) & 
+        Moderate (SystemVerilog) & 
+        High (SystemVerilog + complex security principles) \\
+        \bottomrule
+    \end{tabular}%
+    }
+    \label{tab:framework_comparison}
+\end{table}
 
 \subsection{LiteX: The Flexible SoC Builder}
 
@@ -61,33 +150,31 @@ For this thesis, the Rocket Core was undoubtedly the correct choice. While \acrs
 
 \section{Research Objectives and Contributions}
 
-This thesis aims to demonstrate the capabilities of the Chipyard framework through the implementation of a practical \acrshort{riscv} \acrshort{soc} that integrates a Rocket processor core with the Gemmini \acrshort{dnn} accelerator, while establishing a comprehensive foundation for \acrshort{ceslab}'s transition toward chip prototyping and \acrshort{vlsi}-based development. The specific objectives of this work include:
+This thesis aims to investigate the open-source \acrshort{riscv} ecosystem by focusing on the implementation and analysis of the Gemmini \acrshort{dnn} accelerator and its \acrshort{rocc} integration. The specific objectives are:
 
 \begin{enumerate}
-    \item \textbf{Framework Evaluation and Migration}: Comprehensively evaluate the Chipyard framework as a replacement for \acrshort{intel} \acrshort{quartus}-based design flows, specifically assessing its \acrshort{vlsi} capabilities, modern interconnect support \allowbreak(Tile\allowbreak Link/\acrshort{axi4}), and suitability for \acrshort{asic} development workflows.
+    \item \textbf{Study of Advanced Accelerator Architecture}: To conduct a detailed study of the Gemmini systolic array generator, including its internal microarchitecture, command-unrolling hierarchy, decoupled execution model, and flexible dataflow strategies.
     
-    \item \textbf{System Architecture Design}: Develop a comprehensive understanding of the Chipyard framework and utilize it to configure a custom \acrshort{soc} featuring a 64-bit Rocket core coupled with a 16×16 Gemmini systolic array accelerator (Rocket64b1gem16jtag configuration), demonstrating the framework's flexibility and configurability.
+    \item \textbf{Investigation of Co-Design Methodology}: To analyze the \acrfull{rocc} interface as a high-performance integration methodology, contrasting it with standard memory-mapped approaches and detailing its impact on the CPU pipeline.
     
-    \item \textbf{Full-Stack Implementation}: Implement the complete system stack, including hardware generation, software compilation, bootloader configuration, and \acrshort{linux} operating system integration, demonstrating the end-to-end capability of the open-source toolchain from high-level design to functional system.
+    \item \textbf{Full-Stack System Implementation}: To implement a complete \acrshort{soc} featuring a 64-bit Rocket core tightly coupled with a 16×16 Gemmini accelerator, demonstrating the practical application of the Chipyard framework for complex, heterogeneous systems.
     
-    \item \textbf{\acrshort{fpga} Prototyping and Validation}: Successfully deploy and validate the designed \acrshort{soc} on a Xilinx \acrshort{vc707} \acrshort{fpga} board, providing a realistic hardware platform for system evaluation and serving as a crucial stepping stone toward future \acrshort{asic} implementation.
+    \item \textbf{System Verification and Performance Analysis}: To verify the complete system by deploying it on a Xilinx \acrshort{vc707} \acrshort{fpga} and booting a \acrshort{linux} OS. Subsequently, to conduct a quantitative performance analysis to measure the speedup provided by the Gemmini accelerator.
     
-    \item \textbf{Accelerator Integration and Testing}: Demonstrate the integration of the Gemmini accelerator as a \acrfull{rocc}, validate its functionality through comprehensive testing, and showcase how specialized computational units can be seamlessly incorporated into \acrshort{riscv} systems using modern interconnect standards.
-    
-    \item \textbf{Documentation and Knowledge Transfer}: Create comprehensive documentation of the design process, implementation challenges, and solutions to serve as a foundational reference for future \acrshort{ceslab} projects targeting chip prototyping and \acrshort{vlsi} development.
+    \item \textbf{Documentation and Knowledge Transfer}: To produce comprehensive documentation and a reproducible platform for future research into advanced hardware accelerator design and co-design techniques within the \acrshort{riscv} ecosystem.
 \end{enumerate}
 
 \section{Significance and Impact}
 
-This work represents the first comprehensive exploration of the \acrshort{riscv} ecosystem within \acrshort{ceslab} and, more importantly, establishes a critical foundation for our laboratory's strategic transition toward chip prototyping and semiconductor fabrication. By successfully implementing a complete, functioning system that combines a \acrshort{riscv} processor with a state-of-the-art \acrshort{dnn} accelerator using industry-standard design flows, this thesis demonstrates the maturity and practicality of open-source hardware design methodologies for serious \acrshort{vlsi} development.
+The primary significance of this work is its contribution as a comprehensive, practical case study validating the maturity of the open-source \acrshort{riscv} ecosystem for designing complex, high-performance systems. By successfully implementing a complete, functioning \acrshort{soc} using a fully open-source toolchain, this thesis provides tangible evidence that modern open-source hardware methodologies are a viable and powerful alternative to traditional, proprietary design flows.
 
-The strategic significance of this work extends far beyond the immediate technical achievements. This thesis serves as a comprehensive feasibility study and implementation roadmap for \acrshort{ceslab}'s evolution from \acrshort{fpga}-based prototyping to actual chip development. The successful demonstration of the Chipyard framework's \acrshort{vlsi} capabilities, coupled with its support for modern interconnect standards and integration with industry-standard \acrshort{eda} tools, validates our laboratory's decision to adopt this platform as the foundation for future chip development projects.
+\textbf{Furthermore, this work provides one of the first detailed, public-facing analyses of the Gemmini DNN accelerator's internal microarchitecture.} While foundational papers from its creators at \acrshort{ucb} describe its high-level design and performance, this thesis elucidates the step-by-step operational flow of a command through its internal hardware. This includes a detailed breakdown of the two-level command unrolling hierarchy, the decoupled execution model managed by the Reservation Station, and the physical Tile-and-Mesh structure. This in-depth documentation of a state-of-the-art, open-source accelerator is a significant contribution to the research community, making this complex and powerful IP more accessible for future adoption, modification, and study.
 
-Furthermore, this work establishes a new research paradigm within our laboratory that emphasizes open-source collaboration, reproducible research, and the development of freely available intellectual property. This approach not only reduces the barriers to advanced hardware research but also positions \acrshort{ceslab} as a contributor to the global open-source hardware movement, potentially leading to collaborative opportunities with industry and academic partners pursuing similar chip development goals.
+This thesis also serves as a detailed implementation roadmap for researchers and engineers considering the adoption of open-source hardware. The successful demonstration of the Chipyard framework, with its integrated support for modern interconnects and industry-standard \acrshort{eda} tools, confirms that the ecosystem is capable of producing sophisticated designs suitable for both academic research and serious engineering development.
 
-The comprehensive documentation generated by this thesis—covering everything from framework setup and configuration to \acrshort{fpga} deployment and system validation—serves as an invaluable knowledge base for future \acrshort{ceslab} researchers and students. This documentation addresses the practical challenges of implementing complex \acrshort{soc} designs using open-source tools, providing detailed solutions to common problems and establishing best practices for our laboratory's future chip development projects.
+The comprehensive documentation and the reproducible platform generated by this thesis—now including the detailed Gemmini analysis—serve as an invaluable knowledge base for the research community. This material addresses the practical challenges of implementing complex \acrshort{soc} designs with open-source tools, offering detailed solutions and establishing best practices for future projects in this domain.
 
-Most critically, the full-stack nature of this implementation provides valuable insights into the complex interactions between hardware accelerators, operating systems, and application software—interactions that are often overlooked in studies that focus solely on isolated hardware components. These insights are crucial for developing practical, deployable \acrshort{ai} systems that can deliver their theoretical performance benefits in real-world environments, and they will inform our laboratory's approach to designing optimized \acrshort{asic} implementations in future projects. 
+Most critically, the full-stack nature of this implementation provides valuable insights into the complex interactions between hardware accelerators, operating systems, and application software. These system-level insights—often overlooked in studies that focus on isolated hardware components—are crucial for understanding the real-world performance of specialized hardware. The findings from this work can inform the design of future, highly-optimized systems, whether they target \acrshort{fpga} platforms or custom \acrshort{asic} implementations.
 
 \section{Thesis Structure and Organization}
 

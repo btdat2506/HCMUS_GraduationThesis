@@ -1,5 +1,5 @@
 % !TeX root = main.tex
-\chapter{Architectural Foundations of DNN Acceleration}
+\chapter{ARCHITECTURAL FOUNDATIONS OF DNN ACCELERATION}
 \label{chap:dnn_foundations}
 
 % Chapter Introduction
@@ -57,7 +57,7 @@ The TPUv1's design philosophy is a masterclass in optimizing for a specific doma
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.7\textwidth]{TPU_v1_Overview.pdf} 
+    \includegraphics[width=0.75\textwidth]{TPU_v1_Overview.pdf} 
     \caption[The Google TPUv1 Block Diagram]{A high-level block diagram of the Google TPUv1. The design is dominated by the systolic Matrix Multiply Unit and its large on-chip Unified Buffer. \cite{jouppi2017tpu, mittal2021survey}.}
     \label{fig:tpu_diagram}
 \end{figure}
@@ -67,7 +67,7 @@ The TPUv1's design philosophy is a masterclass in optimizing for a specific doma
 
 % As shown in Figure \ref{fig:nvdla_diagram}, the \acrshort{nvdla} has a more modular design, with a dedicated Convolutional Core (which contains the \acrshort{mac} units), a Post-Processing unit for activation functions and pooling, and a Convolutional Buffer for storing weights and inputs. Unlike the \acrshort{tpu}'s custom interface, the \acrshort{nvdla} uses industry-standard bus protocols (AXI and APB) for memory access and control, simplifying its integration into third-party \acrshort{soc} designs. Its configurability (e.g., \texttt{nv\_small}, \texttt{nv\_large}) allows a system designer to trade off area and performance, making it a flexible solution for the embedded space.
 
-In contrast to the monolithic, datacenter-focused \acrshort{tpu}, the \acrfull{nvdla} is an open-source, configurable \acrshort{ip} core designed for integration into a wide range of \acrfullpl{soc}, particularly for embedded systems \cite{farshchi2019nvdla}. The \acrshort{nvdla}'s design philosophy prioritizes \textbf{modularity and integration flexibility} over raw scale.
+In contrast to the monolithic, datacenter-focused \acrshort{tpu}, the \acrfull{nvdla} is an open-source, configurable \acrshort{ip} core designed for integration into a wide range of \acrfullpl{soc}, particularly for embedded systems \cite{farshchi2019nvdla, nvidia2018xavier}. The \acrshort{nvdla}'s design philosophy prioritizes \textbf{modularity and integration flexibility} over raw scale.
 
 As shown in Figure~\ref{fig:nvdla_diagram}, the architecture is partitioned into distinct, specialized hardware units for convolution, post-processing, and memory management. This modularity is a key feature, allowing an \acrshort{soc} designer to integrate only the necessary components. A significant design choice differentiating the \acrshort{nvdla} from the \acrshort{tpu} is its reliance on industry-standard bus protocols like AXI. While this may introduce more protocol overhead than a custom interface, it dramatically simplifies the process of integrating the \acrshort{nvdla} into a third-party \acrshort{soc} from a different vendor. Furthermore, its configurability (e.g., in the number of \acrshort{mac} units from the \texttt{nv\_small} to \texttt{nv\_large} configurations) makes it a versatile solution that can be tailored to the specific power, performance, and area (PPA) constraints of an embedded device.
 
@@ -87,16 +87,16 @@ The design choices made in architectures like the \acrshort{tpu} and \acrshort{n
 \end{itemize}
 These strategies, visually contrasted in Figure \ref{fig:dataflow_taxonomy} and \ref{fig:dataflow_comparison}, represent a fundamental trade-off in accelerator design. The choice of dataflow directly impacts which types of data reuse, shown in Figure \ref{fig:dnn_reuse}, are most effectively exploited.
 
-\begin{figure}[h]
+\begin{figure}[htbp]
     \centering
     \includegraphics[width=0.9\textwidth]{EfficientDNN_DataReuse.pdf} 
     \caption[Data Reuse Opportunities in DNNs]{The three primary forms of data reuse in convolutional layers: convolutional, filter, and input reuse. \cite{sze2020efficient}.}
     \label{fig:dnn_reuse}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.9\textwidth]{EfficientDNN_ModernDataflow.pdf} 
+    \includegraphics[width=\textwidth]{EfficientDNN_ModernDataflow.pdf} 
     \caption[Taxonomy of Common DNN Dataflows]{A visual comparison of Weight, Output and Input Stationary dataflows. \cite{sze2020efficient}.}
     \label{fig:dataflow_taxonomy}
 \end{figure}
@@ -106,7 +106,7 @@ These strategies, visually contrasted in Figure \ref{fig:dataflow_taxonomy} and 
 \section{The Gemmini Approach: A Full-Stack Research Platform}
 \label{sec:gemmini_approach}
 
-While the \acrshort{tpu} demonstrates the immense potential of large-scale systolic arrays and the \acrshort{nvdla} showcases the value of modular, open-source \acrshort{ip}, both present challenges for comprehensive, system-level academic research. The \acrshort{tpu} is a proprietary, closed-source design, limiting deep architectural inspection. The \acrshort{nvdla}, while open, is often evaluated as an isolated hardware block, which can obscure the real-world performance bottlenecks that arise from interactions with the host \acrshort{cpu}, operating system, and shared memory hierarchy \cite{gemini-dac}.
+While the \acrshort{tpu} demonstrates the immense potential of large-scale systolic arrays and the \acrshort{nvdla} showcases the value of modular, open-source \acrshort{ip}, both present challenges for comprehensive, system-level academic research. The \acrshort{tpu} is a proprietary, closed-source design, limiting deep architectural inspection. The \acrshort{nvdla}, while open, is often evaluated as an isolated hardware block, which can obscure the real-world performance bottlenecks that arise from interactions with the host \acrshort{cpu}, operating system, and shared memory hierarchy \cite{gemini-dac}. Alternative approaches to RISC-V-based DNN acceleration have explored different architectural paradigms, such as heterogeneous processor designs with \acrfull{vliw} pipelines and \acrfull{simd} processing units for edge computing applications \cite{zhang2021heterogeneous}.
 
 To address these challenges, this thesis utilizes \textbf{Gemmini}, an open-source, full-stack \acrshort{dnn} accelerator generator from the \acrlong{ucb} \cite{gemini-dac}. Gemmini's design is founded on the philosophy that to truly understand an accelerator's performance, it must be evaluated as part of a complete, functioning system. It achieves this by leveraging the Chipyard framework to generate not only the accelerator \acrshort{rtl} but also a \acrshort{linux}-capable \acrshort{soc}, enabling the study of critical cross-stack effects such as:
 \begin{itemize}
