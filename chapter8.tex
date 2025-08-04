@@ -182,7 +182,7 @@ Starting kernel ...
 After booting, the system provides a standard \acrlong{debian} environment. Listing \ref{lst:linux_env} confirms this by showing a successful login and the output of standard \acrshort{linux} commands. The \texttt{uname -a} command verifies the kernel version and the \texttt{riscv64} architecture. Critically, the output of \texttt{cat /proc/cpuinfo} confirms the processor's identity as \texttt{sifive,rocket0} and details its \acrshort{isa} as \texttt{rv64imafdc\_...}, matching the design specification. This successful boot to a full-featured \acrshort{os} validates the entire hardware and software co-design process.
 
 \begin{lstlisting}[style=terminalstyle, caption={Demonstration of a functional \acrshort{debian} \acrshort{linux} environment on the implemented \acrshort{soc}.}, label={lst:linux_env}]
-\acrlong{debian} trixie/sid debian ttyAU0
+Debian trixie/sid debian ttyAU0
 
 debian login: debian
 Password:
