@@ -1,0 +1,57 @@
+\chapter{CONCLUSION AND FUTURE WORK}
+\label{chap:conclusion_and_future_work}
+
+% --- REVISED OPENING PARAGRAPH ---
+% Reflects the new focus on studying the RISC-V ecosystem *through* the lens of Gemmini.
+This thesis presented a study of advanced hardware acceleration within the open-source \acrshort{riscv} ecosystem. The investigation centered on the implementation and microarchitectural analysis of the Gemmini \acrshort{dnn} accelerator, a state-of-the-art systolic array generator, and its tightly-coupled integration into a \acrshort{linux}-capable \acrfull{soc} via the \acrfull{rocc} interface. The objective was to assess the capabilities of the modern open-source toolchain (Chipyard) for implementing and analyzing such a sophisticated, co-designed system, thereby providing a practical case study on the maturity of the \acrshort{riscv} paradigm as an alternative to proprietary ISAs. The work culminated in a functional FPGA-based prototype and a quantitative performance analysis, yielding key insights into both the accelerator's architecture and the effectiveness of the overall open-source workflow.
+
+% --- REVISED SECTION: SUMMARY OF WORK AND FINDINGS ---
+% Now perfectly mirrors the final objectives from Chapter 1.
+\section{Summary of Work and Findings}
+This thesis fulfilled the objectives laid out in Chapter 1. The scope of the work and its primary findings are summarized as follows:
+
+\begin{enumerate}
+    \item \textbf{Architectural Elucidation of Gemmini:} The Gemmini accelerator's internal architecture was studied and documented in detail, providing one of the first comprehensive, public-facing analyses of its operational flow. Key findings from this study include the elucidation of its two-level command unrolling hierarchy, which translates high-level commands into tiled micro-operations, and its decoupled execution model, a mechanism critical for hiding memory latency.
+
+    \item \textbf{Analysis of the RoCC Co-Design Methodology:} The \acrshort{rocc} interface was analyzed and implemented as the integration mechanism. The study confirmed its effectiveness as a high-performance co-design methodology, providing a privileged, low-latency communication path that enables the tight coupling necessary for high-throughput accelerators.
+
+    \item \textbf{Full-Stack System Implementation and Verification:} The architectural study was grounded in a practical, full-stack system implementation. A custom \acrshort{soc} integrating the Rocket Core and Gemmini was successfully deployed on a Xilinx \acrshort{vc707} \acrshort{fpga}. The functional correctness of the entire open-source toolchain and the hardware/software co-design was verified by the successful boot of a full \acrshort{debian} \acrshort{linux} operating system.
+
+    \item \textbf{Quantitative Performance Analysis:} A performance analysis was conducted to measure the impact of the tightly-coupled accelerator. The findings show that for workloads co-designed with the hardware's preferred dataflow, the Gemmini accelerator provided a speedup of over \textbf{1,300$\times$} compared to a software-only implementation. This result empirically validates the performance potential of leveraging the \acrshort{riscv} ISA's custom extension capabilities.
+\end{enumerate}
+
+% This section is excellent and remains highly relevant. No changes needed.
+\section{Limitations and Key Insights}
+The empirical results from Chapter 8 provided critical insights into the system's performance characteristics and limitations. The analysis of a real-world workload, MobileNetV1, revealed that overall performance is not dictated by peak speedup alone. The inference time was dominated by depthwise convolution layers, which, due to their lower computational intensity, achieved a more modest speedup of approximately 15$\times$.
+
+Furthermore, performance analysis revealed that even during high-speedup operations, the systolic array's peak utilization was only 2\%. This strongly suggests that the system is primarily limited by memory bandwidth, not computational capacity. This "memory wall" is a common challenge in accelerator design and highlights that simply adding more compute units will not yield better performance without corresponding improvements in the memory subsystem.
+
+% --- REVISED SECTION: FUTURE WORK ---
+% Now framed as building upon the specific findings of the thesis.
+\section{Future Work}
+The successful implementation and the insights gained from this study open several clear and promising avenues for future research. This work establishes a baseline system upon which the following investigations can be built, categorized into direct architectural enhancements, broader platform development, and long-term strategic goals.
+
+\subsubsection{Architectural Enhancements to the Gemmini Accelerator}
+The empirical results highlighted specific performance bottlenecks that can be addressed with targeted architectural improvements.
+\begin{itemize}
+    \item \textbf{Addressing the Observed Memory Bottlenecks:} Based on the key finding of low systolic array utilization, future work should prioritize improving Gemmini's memory subsystem. This could involve studying the implementation of more sophisticated \acrshort{dma} prefetching mechanisms within the accelerator's Load/Store controllers or exploring novel scratchpad memory architectures.
+
+    \item \textbf{Architectural Exploration for Common Workloads:} Given that low-intensity layers like depthwise convolutions dominate many modern neural networks, a key research direction is to explore architectural modifications that specifically target these layers. This could involve designing a more flexible compute fabric or a secondary, smaller accelerator optimized for non-\acrshort{gemm} operations.
+\end{itemize}
+
+\subsubsection{Platform and Ecosystem Development}
+The validated platform itself can be extended and improved to enable a wider range of future research.
+\begin{itemize}
+    \item \textbf{Extending the Co-Design with New Accelerators:} The \acrshort{rocc} interface was confirmed to be a highly effective integration methodology. Future research could leverage this platform to design and integrate new, custom \acrshort{rocc}-based accelerators for different workloads (e.g., cryptography, signal processing), further exploring the hardware/software co-design space enabled by \acrshort{riscv}.
+
+    \item \textbf{Platform Optimization for FPGA-Based Research:} A valuable strategic direction would be to create an FPGA-optimized version of this Chipyard/Gemmini platform. This would involve tuning the hardware generators to better map to \acrshort{fpga} primitives, with the goal of reducing resource utilization and improving clock frequency, thereby enabling more complex accelerator research on available hardware.
+\end{itemize}
+
+\subsubsection{Long-Term Strategic Goal}
+Finally, the platform enables the pursuit of the ultimate goal of custom silicon design.
+\begin{itemize}
+    \item \textbf{Transition to \acrshort{asic} Implementation:} This project has validated the Chipyard framework's entire \acrshort{fpga} flow. The logical next step is to leverage Chipyard's integrated \acrshort{vlsi} flow (Hammer) to transition this design from an \acrshort{fpga} prototype to a full \acrshort{asic} implementation, a critical step toward producing custom silicon.
+\end{itemize}
+
+% REVISED FINAL PARAGRAPH: The final, powerful concluding statement.
+In conclusion, the detailed study of the Gemmini accelerator and its \acrshort{rocc} integration has shown that the open-source \acrshort{riscv} ecosystem is a mature and powerful environment for conducting research into state-of-the-art computer architecture and specialized hardware co-design. The findings of this thesis, particularly the elucidation of Gemmini's internal mechanisms and the quantification of its performance, serve as a strong validation of the open-source paradigm. The resulting system stands as a robust and well-documented foundation for future academic research.

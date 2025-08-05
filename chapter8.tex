@@ -1,7 +1,7 @@
 % !TeX root = main.tex
 
-\chapter{IMPLEMENTATION RESULTS AND DISCUSSION}
-\label{chap:results}
+\chapter{FPGA IMPLEMENTATION RESULTS AND DISCUSSION}
+\label{chap:fpga_results}
 
 This chapter presents the culminating results of the thesis, transitioning from theoretical design to tangible implementation and empirical validation. The \acrfull{soc}, designed programmatically in \acrshort{chisel}, was compiled through the \acrshort{firrtl} intermediate representation and subsequently implemented using the Xilinx \acrshort{vivado} toolchain for the \acrshort{vc707} \acrshort{fpga} target. This chapter is organized into three main sections. First, it details the hardware implementation results, including the final system architecture and an analysis of on-chip resource utilization and power consumption. Second, it documents the successful deployment of the full software stack, demonstrating a boot-to-\acrshort{linux} environment. Finally, and most critically, it evaluates the performance of the integrated Gemmini \acrshort{dnn} accelerator, providing quantitative evidence of its effectiveness.
 

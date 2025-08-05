@@ -1,0 +1,183 @@
+% !TeX root = main.tex
+
+\chapter{VLSI PHYSICAL IMPLEMENTATION RESULTS}
+\label{chap:openroad_librelane}
+
+---
+This chapter is temporarily used as drafting space for the VLSI Physical Design Algorithms chapter.
+---
+
+% !TeX root = main.tex
+
+% CHAPTER 10: PHYSICAL DESIGN IMPLEMENTATION: FROM VLSI THEORY TO SOC GDSII GENERATION
+% I've retitled the chapter to be more descriptive and impactful.
+
+% \chapter{Physical Design Implementation: A Full-Stack Study from VLSI Theory to SoC GDSII Generation}
+% \label{chap:physical_design}
+
+% --- REVISED INTRODUCTION ---
+% The introduction now bridges the gap from the previous chapters and clearly states
+% the chapter's objective and methodology, immediately highlighting your research approach.
+
+The preceding chapters documented the design, integration, and functional verification of a complete RISC-V System-on-Chip (SoC) featuring a Gemmini DNN accelerator, culminating in a successful prototype on an FPGA platform. This chapter undertakes the subsequent and final step in the journey towards silicon: \textbf{physical design}. This is the process of transforming the abstract, logical netlist synthesized from Verilog into a concrete, geometric layout of transistors and interconnects, a format known as GDSII, which is ready for fabrication.
+
+The primary objective of this chapter is not merely to generate a final layout, but to conduct a systematic case study that bridges the gap between the foundational theory of VLSI physical design and its modern, open-source implementation. Each stage of the physical design flow presents a set of theoretically difficult, often NP-hard, optimization problems \cite{vlsi-springer}. We will firstly cover the physical design and verification flow of VLSI circuits, focusing on the steps that are most relevant to ASIC design. Then, we will explore the theoretical foundation of each major stage—such as placement, clock tree synthesis, and routing—by drawing upon established academic literature. Subsequently, we will analyze how these challenges are addressed by the heuristic-based, highly-automated algorithms within the \textbf{OpenROAD} toolchain, as orchestrated by the \textbf{LibreLane} flow. Finally, for each stage, we will present the tangible results of applying this flow to the RISC-V SoC developed in this thesis, effectively documenting the journey from theory to practice.
+
+Although it may be argued that open-source tools for ASIC physical design are not as mature as commercial tools, the open-source community has made significant strides in recent years. Tools like OpenROAD and LibreLane have emerged as powerful alternatives, providing a complete and automated flow for physical design. These tools are designed to be extensible and adaptable, allowing designers to customize the flow to meet their specific needs. That's why this chapter is dedicated to the algorithms and techniques used in ASIC physical design, with a focus on open-source tools that are becoming increasingly relevant in the industry.
+
+
+\begin{figure}[htbp]
+    \centering
+    % It's good practice to keep figures in a dedicated subfolder.
+    \includegraphics[width=\textwidth]{VLSI_Flow.pdf}
+    \caption{The major steps in the VLSI physical design flow, from logic synthesis to final sign-off. This chapter will follow this sequence to analyze the implementation of the RISC-V SoC. Adapted from \cite{vlsi-springer}.}
+    \label{fig:vlsi_flow} % Changed the label to be more descriptive.
+\end{figure}
+
+\section{The Open-Source Physical Design Methodology}
+\label{sec:pd_methodology}
+
+% --- COMBINED AND REFRAMED OPENROAD/LIBRELANE SECTIONS ---
+% This section now sets the context by introducing the specific tools used in YOUR research.
+
+The physical implementation of the SoC was performed using a fully open-source toolchain, demonstrating a complete "RTL-to-GDSII" flow without reliance on proprietary EDA software. This methodology is centered around two key projects:
+
+\paragraph{The OpenROAD Project} An autonomous, open-source tool suite that provides the core engines for every stage of physical design. Initiated by DARPA, the project's goal is to create a no-human-in-the-loop layout generation flow, drastically reducing the cost and expertise barriers to chip design \cite{OpenROAD-Project}. The tool performs the heavy lifting of synthesis, placement, routing, and verification.
+
+\paragraph{LibreLane} An infrastructure library that orchestrates the sequence of tool invocations required for a complete physical design flow. Based on OpenLane 2, LibreLane provides a structured and configurable environment, using a single configuration file to manage the complex interactions between different EDA tools \cite{LibreLane-GitHub}. For this thesis, LibreLane serves as the top-level manager, invoking the necessary OpenROAD tools to process the SoC design. The entire flow is executed using the open-source SkyWater 130nm (\texttt{sky130A}) Process Design Kit (PDK).
+
+% TODO: You should create a flowchart of the LibreLane "Classic" flow and include it here.
+% This will be a great visual guide for the rest of the chapter.
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=0.6\textwidth]{LibreLane_Flow}
+    \caption{The LibreLane flow, showing the sequence of OpenROAD and various tools orchestrated to transform an RTL netlist into a final GDSII layout.}
+    \label{fig:librelane_flow}
+\end{figure}
+
+\section{Logic Synthesis: From RTL to a Technology-Mapped Netlist}
+
+\subsection{Theoretical Foundation}
+The first step in the physical design flow is logic synthesis. The goal is to transform a high-level Register-Transfer Level (RTL) description, written in a Hardware Description Language (HDL) such as Verilog, into a gate-level netlist. This process, known as technology mapping, involves converting abstract logic representations (e.g., additions, case statements) into a graph of specific standard cells available in a given Process Design Kit (PDK) \cite{vlsi-springer}. The synthesis engine must perform this mapping while optimizing for the three primary design constraints: Power, Performance, and Area (PPA).
+
+\subsection{OpenROAD Implementation}
+Within the LibreLane flow, logic synthesis is performed by \textbf{Yosys}, an open-source synthesis suite. Yosys reads the Verilog source files for the SoC and the standard cell library (`.lib` file) from the SkyWater PDK. It performs a series of optimization passes to produce a functionally equivalent, technology-mapped Verilog netlist that serves as the input for floorplanning and placement.
+
+\subsection{Application to the SoC}
+The RISC-V SoC, including the Rocket Core, Gemmini accelerator, and all peripherals, was synthesized using Yosys. The process produced a netlist composed entirely of cells from the `sky130\_fd\_sc\_hd` library.
+
+% TODO: Fill in this table with the results from your synthesis report.
+% You can find this in: ./runs/RUN_.../reports/synthesis/1-synthesis.stat.rpt
+\begin{table}[h]
+    \centering
+    \caption{Post-Synthesis Cell Utilization for the RISC-V SoC.}
+    \label{tab:synth_cells}
+    \begin{tabular}{lr}
+        \toprule
+        \textbf{Cell Type} & \textbf{Instance Count} \\
+        \midrule
+        Combinational Cells (AND, OR, XOR, etc.) & XX,XXX \\
+        Sequential Cells (Flip-Flops, Latches) & XX,XXX \\
+        Buffer Cells & X,XXX \\
+        \midrule
+        \textbf{Total Instance Count} & \textbf{XXX,XXX} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{Floorplanning and Power Delivery Network (PDN) Generation}
+
+\subsection{Theoretical Foundation: Establishing the Chip's Foundation}
+% --- REVISED SECTION FROM YOUR DRAFT ---
+% I've integrated your original draft's content here, but framed it as the "Why" and added citations.
+
+Floorplanning determines the overall shape and arrangement of the major architectural blocks on the chip, including macros and I/O pads. Its primary objectives are to minimize the total chip area and the estimated wirelength between blocks, which directly impacts performance and power consumption \cite{vlsi-springer}. Concurrently, a robust Power Delivery Network (PDN) must be designed. This involves creating a grid of metal wires for power (VDD) and ground (GND) to ensure that every cell receives a stable voltage with minimal \textit{IR drop}, even during peak computational activity \cite{vlsi-springer}.
+
+\subsection{OpenROAD Implementation}
+The LibreLane flow automates this stage using several OpenROAD tools. \textbf{ioPlacer} first determines the positions of the I/O pads around the chip's periphery. \textbf{tapcell} inserts special cells (tap cells, well taps) into the design to prevent latch-up issues. Finally, \textbf{pdnGen} generates the power grid based on a configuration file, creating the interlocking mesh of power and ground stripes on the upper metal layers. For a "flat" design like this SoC without large pre-designed macros, the floorplanning step primarily involves defining the core area dimensions and target utilization.
+
+\subsection{Application to the SoC}
+The SoC was floorplanned with a target core utilization of 60\% to leave adequate space for routing. A multi-layer power grid was generated to supply the core.
+
+% TODO: Insert a screenshot of your floorplan from OpenROAD here.
+% You can generate this by opening the DEF file from the "1-floorplan" stage in the OpenROAD GUI.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/floorplan.png}
+    \caption{Floorplan of the RISC-V SoC showing the core area (center), I/O pads (periphery), and the power delivery network (grid). The target core utilization was 60\%.}
+    \label{fig:floorplan}
+\end{figure}
+
+% --- SKELETON FOR THE REST OF THE CHAPTER ---
+% Now, I will create the structure for the remaining sections. You can fill these in
+% using the same "Why -> How -> What" pattern, pulling metrics and figures from your results.
+
+\section{Placement: Assigning Locations to Standard Cells}
+
+\subsection{Theoretical Foundation}
+% TODO: Briefly explain the goal of placement (minimizing HPWL, congestion) and the
+% difference between global and detailed placement. Cite the textbook.
+
+\subsection{OpenROAD Implementation}
+% TODO: Mention the tools used, likely RePlAce (global placement) and OpenDP (detailed placement).
+
+\subsection{Application to the SoC}
+% TODO: This is a key results section.
+% 1. Show a cell density heatmap after global placement.
+% 2. Show a zoomed-in screenshot of the legalized detailed placement.
+% 3. Report the pre-placement and post-placement HPWL from the logs.
+
+\section{Clock Tree Synthesis and Routing}
+
+\subsection{Theoretical Foundation}
+% TODO: Explain the goal of CTS (minimizing skew) and the techniques used (buffer insertion).
+% Cite the textbook.
+
+\subsection{OpenROAD Implementation}
+% TODO: Mention the tool used: TritonCTS.
+
+\subsection{Application to the SoC}
+% TODO: Show a visualization of your synthesized clock tree.
+% Report the key metrics: Number of buffers inserted, worst-case skew, and insertion delay.
+
+\section{Global and Detailed Routing}
+
+\subsection{Theoretical Foundation}
+% TODO: Describe the routing problem (connecting pins without DRC violations). Differentiate
+% between global routing (congestion-aware pathfinding) and detailed routing (exact track assignment).
+% Cite the textbook.
+
+\subsection{OpenROAD Implementation}
+% TODO: Name the tool: TritonRoute.
+
+\subsection{Application to the SoC}
+% TODO: Show a global routing congestion map. Show a detailed, zoomed-in screenshot of the
+% final routes from KLayout. Report the final wirelength and confirm that there are zero DRC violations.
+
+\section{GDSII Generation and Final Sign-off Verification}
+\label{sec:final_verification}
+
+% --- REVISED SECTION FROM YOUR DRAFT ---
+% This section now serves as the conclusion to the technical flow.
+
+The final stage of the physical design flow is to generate the master layout file in the industry-standard GDSII format, which is the final deliverable for fabrication. Before this, however, a series of critical sign-off checks must be performed to ensure the design is both correct and manufacturable. This process, known as \textbf{physical verification}, includes:
+
+\begin{itemize}
+    \item \textbf{Design Rule Checking (DRC):} Verifies that the layout adheres to all geometric constraints imposed by the manufacturing process, such as minimum wire spacing and width \cite{vlsi-springer}. The LibreLane flow uses the Magic tool for this purpose.
+    \item \textbf{Layout vs. Schematic (LVS):} Compares the netlist extracted from the final layout against the original synthesized netlist to ensure they are functionally identical. This crucial check confirms that the physical design process did not inadvertently alter the circuit's logic \cite{vlsi-springer}. The Netgen tool is used for LVS.
+\end{itemize}
+
+Upon successfully passing all DRC and LVS checks, the final GDSII file for the RISC-V SoC was generated. This file represents the culmination of the entire design process, containing the precise geometric shapes on every layer required to manufacture the chip.
+
+% TODO: THIS IS YOUR "MONEY SHOT". Put the best screenshot of your final, complete GDSII here.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]{figures/final_gds.png}
+    \caption{Final GDSII layout of the RISC-V SoC, generated using the open-source LibreLane and OpenROAD toolchain with the SkyWater 130nm PDK. The design passed all sign-off DRC and LVS checks.}
+    \label{fig:final_gds}
+\end{figure}
+
+\section{Chapter Summary}
+% TODO: Write a summary that recaps the journey and emphasizes your key finding:
+% the successful application of an open-source flow to a complex SoC design,
+% and how modern tools solve classical VLSI problems.

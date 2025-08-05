@@ -1,57 +1,166 @@
-\chapter{CONCLUSION AND FUTURE WORK}
-\label{chap:conclusion_and_future_work}
+% !TeX root = main.tex
 
-% --- REVISED OPENING PARAGRAPH ---
-% Reflects the new focus on studying the RISC-V ecosystem *through* the lens of Gemmini.
-This thesis presented a study of advanced hardware acceleration within the open-source \acrshort{riscv} ecosystem. The investigation centered on the implementation and microarchitectural analysis of the Gemmini \acrshort{dnn} accelerator, a state-of-the-art systolic array generator, and its tightly-coupled integration into a \acrshort{linux}-capable \acrfull{soc} via the \acrfull{rocc} interface. The objective was to assess the capabilities of the modern open-source toolchain (Chipyard) for implementing and analyzing such a sophisticated, co-designed system, thereby providing a practical case study on the maturity of the \acrshort{riscv} paradigm as an alternative to proprietary ISAs. The work culminated in a functional FPGA-based prototype and a quantitative performance analysis, yielding key insights into both the accelerator's architecture and the effectiveness of the overall open-source workflow.
+\chapter{MODERN ALGORITHMS IN THE ASIC PHYSICAL DESIGN FLOW}
+\label{chap:asic_algorithms}
 
-% --- REVISED SECTION: SUMMARY OF WORK AND FINDINGS ---
-% Now perfectly mirrors the final objectives from Chapter 1.
-\section{Summary of Work and Findings}
-This thesis fulfilled the objectives laid out in Chapter 1. The scope of the work and its primary findings are summarized as follows:
+The preceding chapters documented the design and FPGA-based validation of a complete RISC-V SoC, culminating in a synthesizable Verilog netlist. This chapter undertakes the subsequent and final step in the journey towards silicon: \textbf{physical design and physical verification}. This is the process of transforming that abstract, logical netlist into a concrete, geometric layout of transistors and wires that is ready for manufacturing. 
 
-\begin{enumerate}
-    \item \textbf{Architectural Elucidation of Gemmini:} The Gemmini accelerator's internal architecture was studied and documented in detail, providing one of the first comprehensive, public-facing analyses of its operational flow. Key findings from this study include the elucidation of its two-level command unrolling hierarchy, which translates high-level commands into tiled micro-operations, and its decoupled execution model, a mechanism critical for hiding memory latency.
+This chapter will firstly cover the physical design and verification flow of VLSI circuits, focusing on the steps that are most relevant to ASIC design. It will then delve into the algorithms and techniques used in each step of the physical design flow, highlighting modern approaches and tools that have been developed to optimize this process. 
 
-    \item \textbf{Analysis of the RoCC Co-Design Methodology:} The \acrshort{rocc} interface was analyzed and implemented as the integration mechanism. The study confirmed its effectiveness as a high-performance co-design methodology, providing a privileged, low-latency communication path that enables the tight coupling necessary for high-throughput accelerators.
+Although it may be argued that open-source tools for ASIC physical design are not as mature as commercial tools, the open-source community has made significant strides in recent years. Tools like OpenROAD and LibreLane have emerged as powerful alternatives, providing a complete and automated flow for physical design. These tools are designed to be extensible and adaptable, allowing designers to customize the flow to meet their specific needs. That's why this chapter is dedicated to the algorithms and techniques used in ASIC physical design, with a focus on open-source tools that are becoming increasingly relevant in the industry.
 
-    \item \textbf{Full-Stack System Implementation and Verification:} The architectural study was grounded in a practical, full-stack system implementation. A custom \acrshort{soc} integrating the Rocket Core and Gemmini was successfully deployed on a Xilinx \acrshort{vc707} \acrshort{fpga}. The functional correctness of the entire open-source toolchain and the hardware/software co-design was verified by the successful boot of a full \acrshort{debian} \acrshort{linux} operating system.
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=\textwidth]{VLSI_Flow.pdf}
+    \caption{The major steps in the VLSI circuit design flow, with a focus on the physical design steps: partitioning, chip planning, placement, clock tree synthesis and routing, and finally timing closure. \cite{vlsi-springer}}
+    \label{fig:asic_flow}
+\end{figure}
 
-    \item \textbf{Quantitative Performance Analysis:} A performance analysis was conducted to measure the impact of the tightly-coupled accelerator. The findings show that for workloads co-designed with the hardware's preferred dataflow, the Gemmini accelerator provided a speedup of over \textbf{1,300$\times$} compared to a software-only implementation. This result empirically validates the performance potential of leveraging the \acrshort{riscv} ISA's custom extension capabilities.
-\end{enumerate}
+\section{ASIC Physical Design and Verification Workflow}
+\label{sec:asic_physical_intro}
 
-% This section is excellent and remains highly relevant. No changes needed.
-\section{Limitations and Key Insights}
-The empirical results from Chapter 8 provided critical insights into the system's performance characteristics and limitations. The analysis of a real-world workload, MobileNetV1, revealed that overall performance is not dictated by peak speedup alone. The inference time was dominated by depthwise convolution layers, which, due to their lower computational intensity, achieved a more modest speedup of approximately 15$\times$.
+This section provides a comprehensive overview of the ASIC physical design and verification workflow, detailing the transformation process from a logical netlist to a manufacturable layout. The workflow encompasses multiple interconnected stages, each with specific objectives and challenges that must be addressed to achieve a successful silicon implementation. Understanding this workflow is essential for grasping the complexity and precision required in modern ASIC design, where every decision impacts the final chip's performance, power consumption, area utilization, and manufacturing yield.
 
-Furthermore, performance analysis revealed that even during high-speedup operations, the systolic array's peak utilization was only 2\%. This strongly suggests that the system is primarily limited by memory bandwidth, not computational capacity. This "memory wall" is a common challenge in accelerator design and highlights that simply adding more compute units will not yield better performance without corresponding improvements in the memory subsystem.
+\subsection{Overview of Physical Design}
+During physical design, all design components are instantiated with their geometric representations. In other words, all macros, cells, gates, transistors, etc., with fixed shapes and sizes per fabrication layer, are assigned spatial locations on the chip (placement) and have appropriate routing connections (routing) completed in metal layers on the upper surface of the chip. The result of physical design is a set of manufacturing specifications that must subsequently be verified.
 
-% --- REVISED SECTION: FUTURE WORK ---
-% Now framed as building upon the specific findings of the thesis.
-\section{Future Work}
-The successful implementation and the insights gained from this study open several clear and promising avenues for future research. This work establishes a baseline system upon which the following investigations can be built, categorized into direct architectural enhancements, broader platform development, and long-term strategic goals.
+Physical design is performed with respect to design rules that represent the physical limitations of the fabrication process for a particular manufacturing technology. For instance, all wires must be a prescribed minimum distance apart and have prescribed minimum width. As such, the design layout must be recreated in (migrated to) each new manufacturing technology.
 
-\subsubsection{Architectural Enhancements to the Gemmini Accelerator}
-The empirical results highlighted specific performance bottlenecks that can be addressed with targeted architectural improvements.
+Physical design directly impacts circuit performance, area, reliability, power, and manufacturing yield. Examples of these impacts include the following:
+
 \begin{itemize}
-    \item \textbf{Addressing the Observed Memory Bottlenecks:} Based on the key finding of low systolic array utilization, future work should prioritize improving Gemmini's memory subsystem. This could involve studying the implementation of more sophisticated \acrshort{dma} prefetching mechanisms within the accelerator's Load/Store controllers or exploring novel scratchpad memory architectures.
-
-    \item \textbf{Architectural Exploration for Common Workloads:} Given that low-intensity layers like depthwise convolutions dominate many modern neural networks, a key research direction is to explore architectural modifications that specifically target these layers. This could involve designing a more flexible compute fabric or a secondary, smaller accelerator optimized for non-\acrshort{gemm} operations.
+    \item \textbf{Performance}: long routes have significantly longer signal delays.
+    \item \textbf{Area}: placing connected modules far apart results in larger and slower chips.
+    \item \textbf{Reliability}: large number of vias can significantly reduce the reliability of the circuit.
+    \item \textbf{Power}: transistors with smaller gate lengths achieve greater switching speeds at the cost of higher leakage current and manufacturing variability; larger transistors and longer wires result in greater dynamic power dissipation.
+    \item \textbf{Yield}: wires routed too close together may decrease yield due to electrical shorts occurring during manufacturing, but spreading gates too far apart may also undermine yield due to longer wires and a higher probability of opens.
 \end{itemize}
 
-\subsubsection{Platform and Ecosystem Development}
-The validated platform itself can be extended and improved to enable a wider range of future research.
-\begin{itemize}
-    \item \textbf{Extending the Co-Design with New Accelerators:} The \acrshort{rocc} interface was confirmed to be a highly effective integration methodology. Future research could leverage this platform to design and integrate new, custom \acrshort{rocc}-based accelerators for different workloads (e.g., cryptography, signal processing), further exploring the hardware/software co-design space enabled by \acrshort{riscv}.
+Due to its high complexity, physical design is split into several key steps \ref{fig:asic_flow}:
 
-    \item \textbf{Platform Optimization for FPGA-Based Research:} A valuable strategic direction would be to create an FPGA-optimized version of this Chipyard/Gemmini platform. This would involve tuning the hardware generators to better map to \acrshort{fpga} primitives, with the goal of reducing resource utilization and improving clock frequency, thereby enabling more complex accelerator research on available hardware.
+\begin{itemize}
+    \item \textbf{Partitioning (Chap. 2)} breaks up a circuit into smaller subcircuits or modules, which can each be designed or analyzed individually.
+    \item \textbf{Floorplanning (Chap. 3)} determines the shapes and arrangement of subcircuits or modules, as well as the locations of external ports and IP or macro blocks.
+    \item \textbf{Power and ground routing (Chap. 3)}, often intrinsic to floorplanning, distributes power (VDD) and ground (GND) nets throughout the chip.
+    \item \textbf{Placement (Chap. 4)} finds the spatial locations of all cells within each block.
+    \item \textbf{Clock network synthesis (Chap. 7)} determines the buffering, gating (e.g., for power management), and routing of the clock signal to meet prescribed skew and delay requirements.
+    \item \textbf{Global routing (Chap. 5)} allocates routing resources that are used for connections; example resources include routing tracks in global cells (gcells).
+    \item \textbf{Detailed routing (Chap. 6)} assigns routes to specific metal layers and routing tracks within the global routing resources.
+    \item \textbf{Timing closure (Chap. 8)} optimizes circuit performance by specialized placement and routing techniques.
 \end{itemize}
 
-\subsubsection{Long-Term Strategic Goal}
-Finally, the platform enables the pursuit of the ultimate goal of custom silicon design.
+After detailed routing, electrically accurate layout optimization is performed at a small scale. Parasitic resistances (R), capacitances (C), and inductances (L) are extracted from the completed layout, and then passed to timing analysis tools to check the functional behavior of the chip. If the analyses reveal erroneous behavior or an insufficient design margin (guard band) against possible manufacturing and environmental variations, then incremental design optimizations are performed.
+
+
+\subsection{Physical Verification}
+
+After physical design is completed, the layout must be fully verified to ensure correct electrical and logical functionality. Some problems found during physical verification can be tolerated if their impact on chip yield will be negligible during manufacturing. In other cases, the layout must be changed, but these changes must be minimal, and care must be taken not to introduce new problems. Therefore, at this stage, layout changes are usually performed manually by experienced design engineers:
+
 \begin{itemize}
-    \item \textbf{Transition to \acrshort{asic} Implementation:} This project has validated the Chipyard framework's entire \acrshort{fpga} flow. The logical next step is to leverage Chipyard's integrated \acrshort{vlsi} flow (Hammer) to transition this design from an \acrshort{fpga} prototype to a full \acrshort{asic} implementation, a critical step toward producing custom silicon.
+    \item \textbf{Design rule checking (DRC)} verifies that the layout meets all technology-imposed constraints. DRC also verifies layer density for uniform chemical-mechanical polishing (CMP).
+    \item \textbf{Layout vs. schematic (LVS) checking} verifies the functionality of the design. To do this, the layout is used to derive (i.e., reverse engineer) a netlist, which is compared with the original netlist produced from logic synthesis or circuit design.
+    \item \textbf{Parasitic extraction} derives electrical parameters of the layout elements from their geometric representations; the resulting accurate analog netlist is used to verify the electrical characteristics of the circuit.
+    \item \textbf{Antenna rule checking} seeks to prevent antenna effects, which may damage transistor gates during manufacturing plasma-etch steps through the accumulation of excess charge on metal wires that are not connected to PN junction nodes.
+    \item \textbf{Electrical rule checking (ERC)} verifies the correctness of power and ground connections, and that signal transition times (slew), capacitive loads, and fanouts are appropriately bounded.
 \end{itemize}
 
-% REVISED FINAL PARAGRAPH: The final, powerful concluding statement.
-In conclusion, the detailed study of the Gemmini accelerator and its \acrshort{rocc} integration has shown that the open-source \acrshort{riscv} ecosystem is a mature and powerful environment for conducting research into state-of-the-art computer architecture and specialized hardware co-design. The findings of this thesis, particularly the elucidation of Gemmini's internal mechanisms and the quantification of its performance, serve as a strong validation of the open-source paradigm. The resulting system stands as a robust and well-documented foundation for future academic research.
+Both synthesis and analysis techniques are integral to the design of VLSI circuits. Synthesis generally precedes analysis in the design flow \ref{fig:asic_flow}. Analysis typically entails the modeling of circuit parameters and signal transitions, and often involves the solution of various equations using established numerical methods. The choice of algorithms for these tasks is relatively straightforward, compared to the vast possibilities for syntheses and optimization. Therefore, this book focuses on optimization algorithms used in IC physical design (which focus on synthesis), and does not cover computational techniques used during physical verification and signoff (where the emphasis is on analysis).
+
+\section{Open-Source Tools for ASIC Physical Workflow}
+
+\subsection{OpenROAD}
+OpenROAD is an open-source project that aims to provide a complete, automated flow for the physical design of integrated circuits. It encompasses all stages of the physical design process, from floorplanning to detailed routing, and is designed to be extensible and adaptable to various design requirements. OpenROAD leverages advanced algorithms and techniques to optimize the physical layout of chips, ensuring high performance, low power consumption, and manufacturability.
+
+The OpenROAD (“Foundations and Realization of Open, Accessible Design”) project was launched in June 2018 within the DARPA IDEA program. OpenROAD aims to bring down the barriers of cost, expertise and unpredictability that currently block designers' access to hardware implementation in advanced technologies. The project team (Qualcomm, Arm and multiple universities and partners, led by UC San Diego) is developing a fully autonomous, open-source tool chain for digital SoC layout generation, focusing on the RTL-to-GDSII phase of system-on-chip design. Thus, OpenROAD holistically attacks the multiple facets of today's design cost crisis: engineering resources, design tool licenses, project schedule, and risk.
+
+\subsection{LibreLane}
+LibreLane is made by The FOSSi Foundation (Free and Open Source Silicon). LibreLane is based off OpenLane2 by Efabless Corporation, which is also based off OpenLane, made by M. Shalan and T. Edwards \cite{openlane-2020}.
+
+LibreLane is a powerful and versatile infrastructure library that enables the construction of digital ASIC physical implementation flows based on open-source and commercial EDA tools. It includes a reference flow (Classic) that is constructed entirely using open-source EDA tools –abstracting their behavior and allowing the user to configure them using a single file (See Figure 1). LibreLane also supports extending or modifying flows using Python scripts and utilities. Here are some of the key benefits of using LibreLane:
+
+\begin{itemize}
+    \item \textbf{Flexibility and extensibility}: LibreLane is designed to be flexible and extensible, allowing designers to customize the flow to meet their specific needs by developing Python scripts (plugins) and utilities or by modifying the existing configuration file.
+    \item \textbf{Open source}: LibreLane is an open-source project that is freely available to use and modify, which makes it a good choice for designers looking for a transparent, cost-effective solution.
+    \item \textbf{Community support}: LibreLane capitalizes on LibreLane's existing community of users and contributors, which means that a wealth of resources is available to help designers get started and troubleshoot any problems they encounter.
+\end{itemize}
+
+\section{Scale of Modern Design, and the need for Algorithms}
+
+The scale of modern integrated circuit (IC) design has grown exponentially, driven by the demand for higher performance, increased functionality, and lower power consumption. As a result, the design process has become more complex, requiring advanced algorithms and tools to manage the intricacies of modern ICs. The need for efficient algorithms is particularly evident in areas such as placement, routing, and optimization, where the design space is vast and the constraints are numerous.
+
+In other words, the Electronics Design Automation (EDA) industry has been driven by the need to solve increasingly complex problems in IC design. 
+
+\section{Netlist and System Partitioning}
+
+Modern integrated circuits (ICs) have become increasingly complex, while the level of integration has reached unprecedented levels. As a result, the design of ICs has become a highly complex and challenging task, requiring sophisticated algorithms and tools to manage the complexity and ensure that the final product meets the desired specifications. One of the key steps in this process is partitioning, which involves breaking down a large circuit into smaller, more manageable subcircuits or modules.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{VLSI_Partitioning_Graph}
+    \caption{An example of a partitioned circuit, where the original circuit is divided into smaller subcircuits or modules. Each module can be designed or analyzed individually, allowing for more efficient design and verification processes.}
+    \label{fig:partitioning_example}
+\end{figure}
+
+The partitioner divides the circuit into several subcircuits (partitions or blocks) while minimizing the number of connections between partitions, subject to design constraints such as maximum partition sizes and maximum path delay.
+
+If each block is implemented independently, i.e., without considering other partitions, then connections between these partitions may negatively affect the overall design performance such as increased circuit delay or decreased reliability. Moreover, a large number of connections between partitions may introduce interblock dependencies that hamper design productivity.1 Therefore, the primary goal of partitioning is to divide the circuit such that the number of connections between subcircuits is minimized (Fig. 2.1). Each partition must also meet all design constraints. For example, the amount of logic in a partition can be limited by the size of an FPGA chip with which it is to be implemented. The number of external connections of a partition may also be limited, e.g., by the number of I/O pins in the chip package.
+
+\subsection{Partitioning Algorithms, and their Complexity}
+
+---
+
+The partitioning algorithms that was proposed is a framework which combining clustering and Fiduccia-Mattheyses (FM) algorithm for (bi)partitioning (which is a heuristic algorithm for circuit partitioning that is optimized from the low-order polynomial time—the Kernighan-Lin (KL) algorithm).
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=\textwidth]{VLSI_Partitioning_MultiLevel.pdf}
+    \caption{An illustration of multilevel partitioning. (a) The original graph is first coarsened through several levels. (b) The graph after coarsening. (c) After coarsening, a heuristic partition is found of the most coarsened graph. (d) That partition is then projected onto the next coarsest graph (dotted line) and then refined (solid line). Projection and refinement continue until a partitioning solution for the original graph is found.}
+    \label{fig:partitioning_algorithms}
+\end{figure}
+
+---
+
+Circuit partitioning, like many other combinatorial optimization problems in VLSI design, is NP-hard. This means that there is no known polynomial-time algorithm that can solve all instances of the problem optimally. However, many heuristic algorithms have been developed to find good approximate solutions in a reasonable amount of time. These algorithms often use techniques such as greedy methods, genetic algorithms, simulated annealing, and spectral methods to achieve effective partitioning.
+
+Circuit partitioning, like many other combinatorial optimization problems discussed in this book, is NP-hard. That is, as the problem size grows linearly, the effort needed to find an optimal solution grows faster than any polynomial function. To date, there is no known polynomial-time, globally optimal algorithm for balanceconstrained partitioning (Chap. 1, Sect. 1.6). However, several efficient heuristics were developed in the 1970s and 1980s. These algorithms find high-quality circuit partitioning solutions and in practice are implemented to run in low-order polynomial time—the Kernighan–Lin (KL) algorithm (Sect. 2.4.1), its extensions (Sect. 2.4.2), and the Fiduccia–Mattheyses (FM) algorithm (Sect. 2.4.3). Additionally, optimization by simulated annealing can be used to solve particularly difficult partitioning formulations. In general, stochastic hill-climbing algorithms require more than polynomial time to produce high-quality solutions, but can be accelerated by sacrificing solution quality. In practice, simulated annealing is rarely competitive.
+
+% I don't know which of the two following name should be used, so I left here both for deciding later.
+\subsection{OpenROAD Partitioning Approach: TritonPart}
+\subsection{TritonPart: the first open-source, constraints-driven partitioning tool for VLSI physical design}
+
+OpenROAD have the partitioning module (par) based on TritonPart, an open-source constraints-driven partitioner. par can be used to partition a hypergraph or a gate-level netlist.
+
+
+---
+
+Abstract—With the increasing complexity of IC products, large-scale designs must be efficiently partitioned into multiple blocks, tiles, or devices for concurrent backend place-and-route (P&R) implementation. State-of-the-art partitioners focus on balanced min-cut without considering constraints such as timing or heterogeneity of resource types. They are thus increasingly unsuitable for current physical design requirements. We introduce TritonPart, the first open-source, constraints-driven partitioning tool for VLSI physical design. TritonPart employs efficient algorithms to handle constraints, including multi-dimensional balance, embedding, and timing constraints. Our experimental work affirms its benefits. For standard min-cut partitioning, TritonPart outperforms hMETIS [17], with improvements of up to ∼20\% on some benchmarks. For embedding-aware partitioning, TritonPart effectively leverages the embeddings generated by SpecPart [4] and improves upon it by ∼2\%. For timing-aware partitioning, TritonPart significantly reduces the number of cuts on timing-critical paths and prevents timing-noncritical paths from becoming critical (∼21X, ∼119X reduction relative to hMETIS and KaHyPar [31], respectively).
+
+Index Terms—hypergraph partitioning, multi-dimensional weights, timing, embedding, VLSI constraints
+
+Ismail Bustany; Grigor Gasparyan; et al.; An Open-Source Constraints-Driven General Partitioning Multi-Tool for VLSI Physical Design
+https://ieeexplore.ieee.org/document/10323975
+https://github.com/ABKGroup/TritonPart
+https://openroad.readthedocs.io/en/latest/main/src/par/README.html
+
+---
+
+\section{Floorplanning, Pin Assignment and Power Routing: Establishing the Chip's Foundation}
+
+\subsection{Floorplanning}
+
+\subsection{Pin Assignment}
+
+\subsection{Power and Ground Routing}
+Power and ground routing (also known as Power Planning, Power Distribution Network (PDN) Design, or Power Grid Design) is a critical step in the physical design flow. It ensures that all components of the chip receive stable and sufficient power while minimizing voltage drops and noise. The power grid must be designed to handle the current demands of the circuit, which can vary significantly based on the activity of different components.
+
+\section{Global and Detailed Placement}
+
+\section{Routing}
+\subsection{Global Routing}
+\subsection{Detailed Routing}
+
+\section{Specialized Routing and Clock Tree Synthesis}
+
+\section{Timing Closure}
+
+\section{Physical Verification and Signoff}
